@@ -1,0 +1,10 @@
+TODO write in-depth README with api and setup info
+
+For running metax please run:
+	1. $ npm install
+	2. npm start storage=[storage_path] port=[port_number] key=[ssl_private_key_path] cert=[ssl_certificate_path]
+	example:
+		$ npm start storage=./storage/ port=8001 key=./keys/privkey.pem cert=./keys/fullchain.pem
+
+For running test please run:
+	$ npm run test

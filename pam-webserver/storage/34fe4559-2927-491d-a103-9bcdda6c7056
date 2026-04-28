@@ -1,0 +1,134 @@
+const objectUUID = application;
+const json_uuid_queue = [];
+const simple_uuid_queue = [];
+const processed_uuids = [];
+async function main() {
+        document.body.style.cursor = "wait";
+        if(!metax.isValidUUID(objectUUID)) {
+                console.log("Please enter valid uuid for parent and object.");
+                return;
+        }
+        json_uuid_queue.push(objectUUID);
+        await process_vostan_objects();
+        await process_simple_files();
+        await substitute_uuids_in_files();
+        let i = processed_uuids.findIndex(el => el.old == objectUUID);
+        console.log("Done copying, object's new uuid - " + processed_uuids[i].new);
+        await add_new_object_in_parent();
+        console.log("Done adding in parent object, you can find newly copied object in parent uuid");
+        document.body.style.cursor = "default";
+        
+}
+
+async function add_new_object_in_parent() {
+        let i = processed_uuids.findIndex(el => el.old == objectUUID);
+        let obj = await metax.get(processed_uuids[i].new)
+                                .then(r => r.json());
+        obj.name = obj.name +"_"+ Date();
+        await metax.update(processed_uuids[i].new, JSON.stringify(obj),
+                          processed_uuids[i].content_type);
+        let parent = await metax.get(vostan_user_account)
+                                .then(r => r.json());
+        parent.inbox.push(processed_uuids[i].new);
+        await metax.update(parent.uuid,
+                           JSON.stringify(parent),
+                           "application/json");
+}
+
+async function getVostanObject(uuid) {
+        let inn = processed_uuids.findIndex(el => el.old == uuid);
+        if(inn !== -1) { return; }
+        const obj = await metax.get(uuid).then(r => r.json()).catch(e => {
+                console.log("Cannot get object",uuid, e);
+        });
+        if (!obj) return
+        const newUuid = await metax.save(JSON.stringify(obj), "application/json");
+        addProcessedUuid(uuid, newUuid, "application/json");
+        const c = await getObjectCollections(obj);
+        for(let i = 0; i < c.length; i++) {
+                if(c[i] != "types") continue; 
+                if (obj[c[i]] === undefined) continue
+                for(let j = 0; j < obj[c[i]].length; j++) {
+                        json_uuid_queue.push(obj[c[i]][j]);
+                }
+        }
+}
+
+async function check_for_external_text(obj, type) {
+        let ext_uuid = "3e76b8ff-9063-4052-b67a-ecd43302d269";
+        let i = type.properties.findIndex(el => el.value_type == ext_uuid);
+        if(type.uuid == ext_uuid || i == -1) return
+        else {
+                let id = type.properties[i].id;
+                if(!obj[id]) { return; }
+                json_uuid_queue.push(obj[id]);
+                let ext_text = await metax.get(obj[id]).then(r => r.json());
+                simple_uuid_queue.push({
+                        "uuid": ext_text.body,
+                        "content_type":ext_text.mime
+                });
+        }
+}
+
+async function process_simple_files() {
+        if(simple_uuid_queue.length == 0) {
+                console.log("quiting uuid save process for simple files as no uuids are left." + simple_uuid_queue)
+                return;
+        }
+        console.log("processing uuid - " + simple_uuid_queue[0].uuid)
+        const file = await metax.get(simple_uuid_queue[0].uuid).then(r => r.text());
+        const newUuid = await metax.save(file, simple_uuid_queue[0].content_type);
+        addProcessedUuid(simple_uuid_queue[0].uuid, newUuid, simple_uuid_queue[0].content_type)
+        console.log("END processing uuid - " + simple_uuid_queue[0].uuid)
+        //json_uuid_queue.shift();
+        simple_uuid_queue.shift();
+        //await process_vostan_objects();
+        await process_simple_files();
+}
+
+async function process_vostan_objects() {
+        if(json_uuid_queue.length == 0) {
+                console.log("quiting uuid save process as no uuids are left." + json_uuid_queue)
+                return;
+        }
+        console.log("processing uuid - " + json_uuid_queue[0])
+        await getVostanObject(json_uuid_queue[0]);
+        console.log("END processing uuid - " + json_uuid_queue[0])
+        json_uuid_queue.shift();
+        await process_vostan_objects();
+}
+
+async function getObjectCollections(obj, isObj = true) {
+        let type = await metax.get(obj.type).then(r => r.json());
+        if(isObj) {
+                await check_for_external_text(obj, type);
+        }
+        let res = [];
+        for (let i = 0; i < type.collections.length; i++) {
+                res.push(type.collections[i].id);
+        }
+        return res;
+}
+
+function addProcessedUuid(old_uuid, new_uuid, mime) {
+        processed_uuids.push({
+                "old": old_uuid,
+                "new": new_uuid,
+                "content_type": mime
+        });
+}
+
+async function substitute_uuids_in_files() {
+        for (let i = 0; i < processed_uuids.length; i++) {
+                let subbed_version = await metax.get(processed_uuids[i].new)
+                        .then( r => r.text());
+                for(let j = 0; j < processed_uuids.length; j++) {
+                        subbed_version = subbed_version.replace(
+                                processed_uuids[j].old, processed_uuids[j].new);
+                }
+                await metax.update(
+                        processed_uuids[i].new, subbed_version, processed_uuids[i].content_type);
+        }
+}
+
+main();

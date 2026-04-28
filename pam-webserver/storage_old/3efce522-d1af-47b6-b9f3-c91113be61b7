@@ -1,0 +1,1 @@
+{"uuid":"3efce522-d1af-47b6-b9f3-c91113be61b7","id":"upload_document","name":"Upload Document ","type":"104be51f-4857-4668-b7ce-406d634a1979","description":"This function uploads files from filesystem.","arguments":[{"name":"document","value":"","id":"New argument"}]}

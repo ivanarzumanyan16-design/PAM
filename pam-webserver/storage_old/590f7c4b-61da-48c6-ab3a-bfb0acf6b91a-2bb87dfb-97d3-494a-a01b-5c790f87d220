@@ -1,0 +1,2654 @@
+import mani from '/db/get?id=09431fbd-3295-4805-a888-ac2041b70184';
+import metax from '/db/get?id=0111ab39-9520-4b6b-9ff0-8d2959079a88';
+
+async function getJSON(uuid) {
+        return metax.get(uuid).then(r => r.json())
+                .catch(e => console.log(e));
+};
+
+async function saveJSON(data) {
+        return await metax.save(data)
+                .catch(e => console.log(e));
+};
+
+async function updateJSON(uuid, data) {
+        return await metax.update(uuid, data, "application/json")
+                .catch(e => console.log(e));
+};
+
+async function deleteJSON(uuid) {
+        return await metax.delete_from_db(uuid)
+};
+
+window.onload = async () => {
+        const host = window.location.hostname;
+        const port = window.location.port;
+        let secure = false;
+        if(window.location.protocol == "https:") { 
+                secure = true;
+        };
+        await metax.connect(host, port, false, secure);
+        await mani.connect(metax);
+        const messenger_interface = document.getElementById('messenger_interface')
+        const body = document.getElementById('messenger_body');
+        const header = document.getElementById('messenger_header');
+        const footer = document.getElementById('messenger_footer');
+
+        body.style.pointerEvents = "none";
+        body.style.display = "flex"
+        header.style.display = "flex"
+        footer.style.display = "flex"
+
+        await get_chats()
+};
+
+let messenger_uuid = 'b74c25c0-41e3-4bad-906a-31d05ac3c0f4-0e6d3bda-f097-4c68-a9ac-635c2a6bb762';
+
+let chat_interface = document.getElementById('chat_interface');
+let header = document.getElementById('header');
+let chat_body = document.getElementById('body');
+let footer = document.getElementById('footer');
+
+let messenger_chat_interface = document.getElementById('messenger_interface');
+let messenger_header = document.getElementById('messenger_header');
+let messenger_chat_body = document.getElementById('messenger_body');
+let messenger_settings_body = document.getElementById('settings_body');
+let messenger_account_body = document.getElementById('account_body');
+let messenger_footer = document.getElementById('messenger_footer');
+
+let back = document.getElementById('back');
+let burger = document.getElementById('burger');
+let chat_name_div = document.getElementById('chat_name_div')
+let input_message = document.getElementById('input_message');
+let submit_message = document.getElementById('submit_message');
+let edit_message = document.getElementById('edit_message')
+
+let record_message = document.getElementById('voicemsg_btn');
+let recording_time = document.getElementById('recording_div');
+let cancel_recording = document.getElementById('cancel_recording');
+let send_voice_msg = document.getElementById('send_btn');
+
+let message_div = document.getElementById('message_div');
+let attach = document.getElementById('attach');
+let voice_footer = document.getElementById('voice_footer')
+let footer_div = document.getElementById('footer_div');
+
+let personal = document.getElementById('personal');
+let settings = document.getElementById('settings');
+let chats = document.getElementById('chats');
+
+let message_uuids_array = [];
+let chat_edits_array = [];
+let date_array = [];
+let audio_chunks = [];
+let user_chats = [];
+let message_date_array = [];
+let register_listener_uuids = [];
+let audio_elements = {};
+
+let media_recorder = null;
+let start_time = null;
+let timer_interval = null;
+let touch_timer = null;
+let last_logged_index = null;
+let correct_chat_uuid = null;
+let my_user_account = null;
+let person_uuid = null;
+let previous_date = null;
+
+let is_recording_canceled = false;
+let touch_active = false;
+
+let is_android = typeof Android !== 'undefined';
+let last_scroll_position = 0;
+let initial_viewport_height = window.innerHeight;
+let created = false
+let waiting_time;
+if(is_android) {
+        waiting_time = 1000;
+} else {
+        waiting_time = 0
+}
+window.addEventListener('popstate', async function(event) {
+        try {
+                if (event.state) {
+                        const { title, visibility } = event.state;
+                        if (visibility === 'show_messages') {
+                                remove_image_div()
+                        } else if(visibility === 'show_chats') {
+                                const persons = document.querySelector('.transparent_div');
+                                if(persons) {
+                                        persons.remove()
+                                } else if(messenger_body.style.display === "flex"){
+                                        return
+                                } else {
+                                        back_click()
+                                }
+                        } else if(visibility === 'show_persons') {
+                                const persons = document.querySelector('.transparent_div');
+                                if(persons) {
+                                        persons.remove();
+                                }
+                        } else if(visibility === 'show_image'){
+                                return
+                        }
+                }
+        } catch(e) {
+                console.log(e)
+        }
+});
+
+async function get_chats() {
+        history.pushState({ title: 'Messenger Interface', visibility: 'show_chats' }, 'Show Div', '/db/get?id=b41414a4-e503-4df2-b104-1a831b51f6ba-15ebcfce-0817-4733-bb47-4280be75a648');
+        try {
+                const messenger = await getJSON(messenger_uuid);
+                const author_data = await metax.getUserID();
+
+                const user_promises = messenger.users.map(async user_id => {
+                        const user = await getJSON(user_id);
+                        if (user.mani_account === author_data) {
+                                my_user_account = user.uuid;
+                                await get_name(my_user_account);
+                                if(is_android) {
+                                        AndroidInterface.sendData(my_user_account);
+                                }
+
+                                for (const chat of user.chats) {
+                                        const chat_data = await getJSON(chat);
+                                        const msg_data = chat_data.messages.length 
+                                        ? await getJSON(chat_data.messages.at(-1)) 
+                                        : { date: "" };
+
+                                        user_chats.push({ chat: chat_data, message: msg_data });
+                                }
+
+                                user_chats.sort((a, b) => {
+                                        if (a.message.date === "") return -1;
+                                        if (b.message.date === "") return 1;
+
+                                        const date_a = new Date(a.message.date);
+                                        const date_b = new Date(b.message.date);
+
+                                        return date_a - date_b;
+                                });
+
+
+                                for (const user_data of user_chats) {
+                                        create_chat(user_data.chat);
+
+                                        const is_listened = register_listener_uuids.includes(user_data.chat.uuid);
+                                        if(!is_listened) {
+                                                register_listener_uuids.push(user_data.chat.uuid)
+                                                metax.registerListener(user_data.chat.uuid, async function listener() {
+                                                        await get_new_message(user_data.chat.uuid);
+                                                });
+                                        }
+                                }
+
+                                messenger_chat_body.style.pointerEvents = "auto";
+                        }
+                });
+
+                await Promise.all(user_promises);
+        } catch (e) {
+                console.error(e);
+        }
+}
+
+async function get_name(uuid) {
+        try {
+                const author_data = await getJSON(uuid); 
+
+                const author_name = document.createElement('p');
+                const create_icon = document.createElement('img');
+
+                author_name.id = "compitation";
+                create_icon.id = "create_chat"
+
+                author_name.textContent = author_data.name;
+                create_icon.src = "/db/get?id=2fd75104-5e98-422c-bf45-e57c6605e495-705f6cc4-ba66-48b8-b4c4-3862a2811d6b"
+
+                messenger_header.appendChild(author_name);
+                messenger_header.appendChild(create_icon);
+        } catch(e) {
+                console.log(e)
+        }
+}
+
+async function create_chat(chat_data) {
+        try {
+                const chat_div = document.createElement('div');
+                chat_div.id = chat_data.uuid;
+                chat_div.className = "chat_div";
+
+                messenger_body.insertBefore(chat_div, messenger_body.firstChild);
+
+                chat_div.style.pointerEvents = "auto"
+
+                await update_chat_element(chat_data, chat_div);
+
+                setTimeout(() => {
+                        chat_div.style.pointerEvents = "auto"
+                }, 100);
+
+                chat_div.addEventListener('click', async () => {
+                        await handle_chat_div(chat_data.uuid);
+                });
+        } catch (error) {
+                console.error('Error in create_chat:', error);
+        }
+}
+
+async function update_chat_element(details, chat_div) {
+        try {
+                const chat_content_div = document.createElement('div');
+                const chat_name = document.createElement('a');
+                const last_msg_div = document.createElement('div');
+                const chat_last_msg = document.createElement('a');
+                const chat_time_div = document.createElement('div');
+                const chat_time = document.createElement('a');
+
+                chat_content_div.id = `${details.uuid}_div`;
+                chat_content_div.className = "chat_content_div";
+                chat_time_div.className = "chat_time_div";
+                chat_name.className = "chat_name";
+                last_msg_div.className = "last_msg_div";
+                chat_last_msg.className = "chat_last_msg";
+
+                chat_name.textContent = details.name || (await Promise.all(details.users.filter(u => u !== my_user_account).map(async user_id => {
+                        const user_data = await getJSON(user_id);
+                        return user_data.name;
+                })))[0];
+
+                if (details.messages.length === 0) {
+                        chat_last_msg.textContent = "Հաղորդագրութիւնները բացակայում են";
+                        chat_time.textContent = "";
+                } else {
+                        const last_msg_data = await getJSON(details.messages.at(-1));
+                        const msg_from = await getJSON(last_msg_data.from);
+                        chat_last_msg.id = `${details.uuid}_msg`;
+                        chat_time.id = `${details.uuid}_time`;
+                        chat_last_msg.textContent = `${msg_from.name}: ${last_msg_data.text || "Հաղորդագրութիւն"}`;
+
+                        const message_date = new Date(last_msg_data.date);
+                        const now = new Date();
+                        const is_same_day = now.getFullYear() === message_date.getFullYear() &&
+                              now.getMonth() === message_date.getMonth() &&
+                              now.getDate() === message_date.getDate();
+
+                        chat_time.textContent = is_same_day
+                                ? create_time(last_msg_data.date)
+                        : `${String(message_date.getDate()).padStart(2, '0')}.${String(message_date.getMonth() + 1).padStart(2, '0')}`;
+
+                        if (!last_msg_data.seens.includes(my_user_account)) {
+                                chat_last_msg.style.fontWeight = chat_time.style.fontWeight = "bolder";
+                                const new_msg_div = document.createElement('div');
+                                new_msg_div.className = "new_msg_icon";
+                                chat_content_div.appendChild(new_msg_div);
+                        }
+                }
+
+                last_msg_div.appendChild(chat_last_msg);
+                chat_content_div.append(chat_name, last_msg_div);
+                chat_time_div.appendChild(chat_time);
+                chat_div.append(chat_content_div, chat_time_div);
+        } catch (error) {
+                console.error(error);
+        }
+}
+
+async function handle_chat_div(chat) {
+        try {
+                reset_input_styles();
+                correct_chat_uuid = chat;
+                messenger_chat_body.innerHTML = "";
+                chat_interface.style.display = "flex";
+                header.style.display = "flex";
+                chat_body.style.display = "flex";
+                footer.style.display = "flex";
+                messenger_interface.style.display = "none";
+                messenger_header.style.display = "none";
+                messenger_chat_body.style.display = "none";
+                messenger_footer.style.display = "none";
+
+                input_message.value = ""; 
+                const background_div = document.querySelector('.background_div')
+
+                if(background_div) {
+                        background_div.remove()     
+                }
+
+                await loading_page;
+                await get_chat_messages(chat);
+                history.pushState({ title: chat, visibility: 'show_messages' }, 'Show div', '/db/get?id=b41414a4-e503-4df2-b104-1a831b51f6ba-15ebcfce-0817-4733-bb47-4280be75a648');
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+async function get_chat_messages(chat_uuid) {
+        try {
+                chat_body.innerHTML = "";
+
+                if(!chat_uuid) {
+                        chat_uuid = correct_chat_uuid;
+                }
+
+                const chat = await getJSON(chat_uuid);
+
+                const author_name_element = document.createElement('p');
+                if (!chat.name) {
+                        for (const user of chat.users) {
+                                if (user !== my_user_account) {
+                                        const user_data = await getJSON(user);
+                                        author_name_element.textContent = user_data.name;
+                                }
+                        }
+                } else {
+                        author_name_element.textContent = chat.name;
+                }
+                chat_name_div.appendChild(author_name_element);
+
+                if (author_name_element.scrollWidth > chat_name_div.clientWidth) {
+                        author_name_element.classList.add('running-text');
+                }
+
+                burger.onclick = async () => {
+                        if(!chat.name) {
+                                return
+                        }
+                        burger.style.pointerEvents = "none";
+                        const chat_users = [];
+                        for(const user of chat.users) {
+                                const user_data = await getJSON(user)
+                                chat_users.push({name: user_data.name, uuid: user})
+                        }
+                        await show_chat_users(chat_users)
+                }
+
+                if (!chat.messages) {
+                        return;
+                }
+
+                message_uuids_array = chat.messages;
+
+                if (chat.edits) {
+                        chat_edits_array = chat.edits;
+                }
+
+                const messages = await fetch_messages(chat.uuid, message_uuids_array, 20);
+                const message_promises = messages.map(async (message) => {
+                        const message_data = await getJSON(message);
+                        const is_message_seen = message_data.seens.includes(my_user_account);
+                        if (!is_message_seen) {
+                                message_data.seens.push(my_user_account);
+                                await updateJSON(message, JSON.stringify(message_data));
+                        }
+                        return message_data;
+                });
+
+                const message_array = await Promise.all(message_promises);
+
+                await Promise.all(message_array.map(async (message_data) => {
+                        await draw_messages(message_data, false, chat_uuid, false);
+                        await handle_message_status(message_data);
+                }));
+
+                let is_loading = false;
+                let scroll_timeout;
+
+                chat_body.addEventListener('scroll', async () => {
+                        if (scroll_timeout) {
+                                clearTimeout(scroll_timeout);
+                        }
+
+                        scroll_timeout = setTimeout(async () => {
+                                if (chat_body.scrollTop <= 5 && !is_loading) {
+                                        is_loading = true;
+                                        await load_previous_messages();
+                                        is_loading = false;
+                                }
+                        }, 100); 
+                });
+
+                async function load_previous_messages() {
+                        const loading_image = document.createElement('img');
+                        loading_image.src = "/db/get?id=3a476ee2-3373-412a-aa77-b9b931744f30-4e4f89ef-cb57-4dbc-aa2a-cde92fb3235f";
+                        loading_image.className = "loading_img";
+                        chat_body.appendChild(loading_image);
+
+                        let previous_scroll_height = chat_body.scrollHeight;
+                        const previous_messages = await fetch_messages(chat.uuid, message_uuids_array, 20);
+                        if (previous_messages.length === 0) {
+                                loading_image.remove();
+                                return;
+                        }
+
+                        const previous_message_promises = previous_messages.map(async (message) => {
+                                const message_data = await getJSON(message);
+                                const is_message_seen = message_data.seens.includes(my_user_account);
+                                if (!is_message_seen) {
+                                        message_data.seens.push(my_user_account);
+                                        await updateJSON(message, JSON.stringify(message_data));
+                                }
+                                return message_data;
+                        });
+
+                        const previous_message_array = await Promise.all(previous_message_promises);
+                        previous_message_array.reverse(); 
+
+                        await Promise.all(previous_message_array.map(async (message_data) => {
+                                await draw_messages(message_data, true, chat_uuid, false);
+                                await handle_message_status(message_data);
+                        }));
+
+                        const new_scroll_height = chat_body.scrollHeight;
+                        const scroll_delta = new_scroll_height - previous_scroll_height;
+                        chat_body.scrollTop += scroll_delta;
+
+                        loading_image.remove();
+                }
+
+                async function handle_message_status(message) {
+                        const status = document.getElementById(`${message.uuid}_status`);
+                        const host = window.location.hostname;
+                        const port = window.location.port;
+
+                        if(!status) {
+                                return;
+                        }
+
+                        async function check_status() {
+                                status.src = "/db/get?id=50215a59-81a6-44f0-a1ff-6e11d276d52a-41a76b9d-adc3-408f-867b-beea3bb0b12c";
+                                await metax.unregisterListener(message.uuid, check_status);
+                        }
+
+                        if (my_user_account === message.from) {
+                                if (status.src === `https://${host}:${port}/db/get?id=25d2a899-4507-4242-bbd2-b3c82aaeed9c-503b01ba-3737-41ac-bbaa-d4683c4f250e`) {
+                                        const is_listened = register_listener_uuids.includes(message.uuid);
+                                        if(!is_listened) {
+                                                register_listener_uuids.push(message.uuid)
+                                                await metax.registerListener(message.uuid, check_status);
+                                        }
+                                }
+                        }
+                }
+
+                chat_body.style.display = "flex";
+                header.style.pointerEvents = "auto";
+                footer.style.pointerEvents = "auto";
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+async function get_new_message(uuid) {
+        try {
+                let chat = await getJSON(uuid);
+                
+                if(chat.messages.length === 0) {
+                        chat_body.innerHTML = ""
+                        return
+                }
+                
+                let last_message = chat.messages.length - 1;
+                let message = await getJSON(chat.messages[last_message]);
+
+                if(!is_android) {
+                        get_notification_permission_status().then(status => {
+                                if(status === 'denied' || message.from === my_user_account) {
+                                        return
+                                }
+
+                                const sound = document.createElement('audio');
+                                sound.src = "/db/get?id=8ec13fc6-4b8f-4b99-a46b-fe02bc8bd8c5-1770dfff-84db-489a-97f9-fab94074cb88";
+                                sound.preload = "auto";
+                                sound.play();
+                        }).catch(error => {
+                                console.error(error);
+                        });
+                }
+
+                if(correct_chat_uuid !== uuid && uuid !== null) {
+                        if(!correct_chat_uuid) {
+                                await show_new_message(uuid, message)
+                                const chat_div = document.getElementById(uuid);
+                                if(chat_div && chat_div !== messenger_chat_body.firstChild) {
+                                        chat_div.remove();
+                                        const chat_data = await getJSON(uuid)
+                                        await create_chat(uuid);
+                                }
+                                return
+                        }
+                        return
+                }
+
+                let child = chat_body.lastChild;
+                let already_exist_count = message_uuids_array.length;
+                let updated_count = chat.messages.length;
+                let already_exist_edits_count = chat_edits_array.length;
+                let updated_edits_count = chat.edits.length;
+
+                if(already_exist_count === updated_count) {
+                        if(already_exist_edits_count < updated_edits_count) {
+                                const edited = await getJSON(chat.edits[chat.edits.length - 1]);
+                                chat_edits_array.unshift(edited.uuid);
+                                await edit_my_text_message(edited.uuid, uuid)
+                        }
+                        return
+                } 
+
+                if (already_exist_count > updated_count) {
+                        let difference = diff_arrays(message_uuids_array, chat.messages)
+                        message_uuids_array = message_uuids_array.filter(item => item !== difference[0])
+                        document.getElementById(difference[0]).remove();
+                        already_exist_count = chat.messages.length
+                        return
+                }
+
+                if(message.from !== my_user_account) {
+                        await draw_messages(message, false, uuid, true);
+                }
+
+                const is_message_seen = message.seens.includes(my_user_account);
+                if (!is_message_seen) {
+                        message.seens.push(my_user_account);
+                        await updateJSON(message.uuid, JSON.stringify(message));
+                        const status = document.getElementById(`${message.uuid}_status`)
+                        if(status) {
+                                status.src = "/db/get?id=50215a59-81a6-44f0-a1ff-6e11d276d52a-41a76b9d-adc3-408f-867b-beea3bb0b12c"
+                        }
+                }
+
+                message_uuids_array.push(message.uuid);
+
+                async function check_status() {
+                        const status = document.getElementById(`${message.uuid}_status`)
+
+                        if(!status) {
+                                return
+                        }
+
+                        status.src = "/db/get?id=50215a59-81a6-44f0-a1ff-6e11d276d52a-41a76b9d-adc3-408f-867b-beea3bb0b12c"
+                        await metax.unregisterListener(message.uuid, check_status);
+                }
+
+                const is_listened = register_listener_uuids.includes(message.uuid);
+                if(!is_listened) {
+                        register_listener_uuids.push(message.uuid)
+                        await metax.registerListener(message.uuid, check_status);
+                }
+        }catch(e) {
+                console.error(e)
+        }
+}
+
+function get_notification_permission_status() {
+        return new Promise((resolve, reject) => {
+                if (Notification.permission === "granted") {
+                        resolve("granted");
+                } else if (Notification.permission === "denied") {
+                        resolve("denied");
+                } else if (Notification.permission === "default") {
+                        Notification.requestPermission().then(permission => {
+                                if (permission === "granted" || permission === "denied") {
+                                        resolve(permission);
+                                } else {
+                                        reject("Permission request was ignored or blocked.");
+                                }
+                        }).catch(error => {
+                                reject(error);
+                        });
+                }
+        });
+}
+
+function get_duration(event) {
+        try {
+                event.target.currentTime = 0
+                event.target.removeEventListener('timeupdate', get_duration)
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+async function toggle_audio(event, voice) {
+        try {
+                const play_button = event.target;
+                const audio_id = play_button.dataset.audio_id;
+                const audio_element = audio_elements[audio_id];
+
+                if (audio_element.src) {
+                        if (audio_element.paused) {
+                                audio_element.play();
+                                play_button.src = "/db/get?id=e5a902be-be80-477f-949b-63713b27a301-99ccd8bb-e6e8-4413-9b52-4c50546eb4df";
+                        } else {
+                                audio_element.pause();
+                                play_button.src = "/db/get?id=1e7a7179-0784-4d85-a662-fb10bd58a877-bc5dd792-e712-49b8-9b1e-b19f58c0f3df";
+                        }
+                } else {
+                        play_button.src = "/db/get?id=e5a902be-be80-477f-949b-63713b27a301-99ccd8bb-e6e8-4413-9b52-4c50546eb4df";
+
+                        audio_element.src = `/db/get?id=${voice}`;
+                        audio_element.play();
+
+                        audio_element.addEventListener('playing', () => {
+                                play_button.src = "/db/get?id=e5a902be-be80-477f-949b-63713b27a301-99ccd8bb-e6e8-4413-9b52-4c50546eb4df";
+                        });
+
+                        audio_element.addEventListener('pause', () => {
+                                play_button.src = "/db/get?id=1e7a7179-0784-4d85-a662-fb10bd58a877-bc5dd792-e712-49b8-9b1e-b19f58c0f3df";
+                        });
+                }
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+function update_audio_progress(audio, duration_id, progress_id, button_id, duration) {
+        try {
+                const duration_display = document.getElementById(duration_id);
+                const progress_bar = document.getElementById(progress_id);
+                const remaining_time = audio.duration - audio.currentTime;
+                const remaining_minutes = Math.floor(remaining_time / 60);
+                const remaining_seconds = Math.floor(remaining_time % 60);
+                const display_time = remaining_minutes + ":" + (remaining_seconds < 10 ? '0' : '') + remaining_seconds;
+
+                duration_display.textContent = display_time;
+
+                const progress = ((audio.duration - remaining_time) / audio.duration) * 100;
+                progress_bar.style.width = progress + "%";
+                if(progress == 100) {
+                        document.getElementById(button_id).src = "/db/get?id=1e7a7179-0784-4d85-a662-fb10bd58a877-bc5dd792-e712-49b8-9b1e-b19f58c0f3df"
+                }
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+
+async function show_message_seens(uuid, clone_element, remove_div) {
+        try {
+                const seens_div = document.createElement('div');
+                const element = document.createElement('div');
+                const back = document.createElement('img');
+
+                back.src = "/db/get?id=23f352c0-e956-4e46-83a2-d28f5c9d0952-c9509fdf-a197-444f-8a71-e86f472f1f59"
+                back.style.paddingRight = "calc(100% - 30px)";
+
+                back.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        remove_div.style.display = "flex";
+                        seens_div.remove();
+                })
+
+                element.appendChild(back);
+                seens_div.appendChild(element)
+
+                const chat = await getJSON(uuid);
+                for(const seen_user of chat.seens) {
+                        const seen = await getJSON(seen_user)
+                        const element = document.createElement('div');
+                        const element_p = document.createElement('p');
+
+                        element_p.textContent = seen.name;
+                        element.style.flexDirection = "row"
+                        element.style.justifyContent = "flex-start"
+
+                        element.className = "select";
+                        element_p.className = "select_p";
+
+                        element.appendChild(element_p);
+                        seens_div.appendChild(element);
+                }
+                seens_div.className = "remove_div";
+                element.className = "select";
+
+                clone_element.appendChild(seens_div)
+                remove_div.style.display = "none";
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+function create_time(date) {
+        try {
+                const message_date = new Date(date);
+                const hours = message_date.getHours();
+                const minutes = message_date.getMinutes();
+                const formatted_hours = (hours < 10 ? '0' : '') + hours; 
+                const formatted_minutes = (minutes < 10 ? '0' : '') + minutes; 
+                const message_time = `${formatted_hours}:${formatted_minutes}`;
+
+                return message_time
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+
+async function loading_page() {
+        let div = document.createElement('div');
+        let img = document.createElement('img');
+
+        img.src = "/db/get?id=3a476ee2-3373-412a-aa77-b9b931744f30-4e4f89ef-cb57-4dbc-aa2a-cde92fb3235f";
+        img.className = "loading_img";
+        div.id = "loading_div";
+
+        div.appendChild(img);
+        chat_interface.appendChild(div);
+
+        header.style.pointerEvents = "none";
+        footer.style.pointerEvents = "none";
+        chat_body.style.display = "none";
+}
+
+back.addEventListener('click', back_click)
+
+async function back_click() {
+        messenger_chat_body.innerHTML = "";
+        messenger_header.innerHTML = '';
+        chat_name_div.innerHTML = '';
+        chat_body.innerHTML = '';
+
+        messenger_chat_body.style.pointerEvents = "none";
+
+        const person = document.querySelector('.transparent_div');
+        if(person) {
+                person.remove();
+        }
+
+        get_chats();
+
+        message_uuids_array = [];
+        user_chats = [];
+        message_date_array = [];
+        last_logged_index = null;
+        correct_chat_uuid = null;
+
+        chat_interface.style.display = "none";
+        header.style.display = "none";
+        chat_body.style.display = "none";
+        footer.style.display = "none";
+
+        messenger_interface.style.display = "flex";
+        messenger_header.style.display = "flex";
+        messenger_chat_body.style.display = "flex";
+        messenger_footer.style.display = "flex";
+}
+
+async function open_image(event) { 
+        try {
+                if (touch_active) return; 
+
+                touch_active = true;
+
+                let div = document.createElement('div');
+                let image_div = document.createElement('div');
+                let image = document.createElement('img');
+                let close_div = document.createElement('div');
+                let close = document.createElement('img');
+
+                div.id = 'image_preview_div';
+                image.className = "image_preview"
+                div.className = 'image_preview_div';
+                close_div.className = "close_image_div";
+                close.className = "close_img";
+                image_div.className = "image_div"
+
+                image.src = event.target.src;
+                close.src = "/db/get?id=84135d0c-ed71-4376-bff0-b8fe2b62655c-282c698f-8374-4d83-9541-ca099a58ab3d";
+
+                image.addEventListener('load', function() {
+                        image_div.style.height = image.offsetHeight + "px";
+                });
+
+                close_div.appendChild(close);
+                div.appendChild(close_div);
+                div.appendChild(image_div);
+                image_div.appendChild(image);
+                chat_interface.appendChild(div);
+
+                close_div.addEventListener('click', remove_image_div)
+
+                pinch_zoom(image, image_div)
+
+                history.pushState({ title: 'Image Interface', visibility: 'show_image' }, 'Show Image', '/db/get?id=b41414a4-e503-4df2-b104-1a831b51f6ba-15ebcfce-0817-4733-bb47-4280be75a648');
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+function remove_image_div() {
+        const image_div = document.getElementById('image_preview_div');
+
+        if(image_div) {
+                image_div.remove()
+                touch_active = false;
+        }
+}
+
+const pinch_zoom = (img, divImg) => {
+        try {
+                var initial_distance = 0;
+                var initial_width = img.width;
+                var initial_height = img.height;
+                var start_x = 0, start_y = 0;
+                var initial_left = 0, initial_top = 0;
+                var is_moving = false;
+
+                function getDistance(touch1, touch2) {
+                        var dx = touch2.clientX - touch1.clientX;
+                        var dy = touch2.clientY - touch1.clientY;
+                        return Math.sqrt(dx * dx + dy * dy);
+                }
+
+                img.addEventListener('touchstart', function (e) {
+                        const close_divs = document.getElementsByClassName("close_image_div");
+                        close_divs[0].style.display = "none";
+                        if (e.touches.length === 2) {
+                                initial_distance = getDistance(e.touches[0], e.touches[1]);
+                                initial_width = img.width;
+                                initial_height = img.height;
+                                is_moving = false;
+                        } else if (e.touches.length === 1) {
+                                start_x = e.touches[0].clientX;
+                                start_y = e.touches[0].clientY;
+                                initial_left = img.offsetLeft;
+                                initial_top = img.offsetTop;
+                                is_moving = true;
+                        }
+                });
+
+                img.addEventListener('touchmove', function (e) {
+                        const close_divs = document.getElementsByClassName("close_image_div");
+                        close_divs[0].style.display = "none";
+                        if (e.touches.length === 2) {
+                                e.preventDefault(); 
+                                var new_distance = getDistance(e.touches[0], e.touches[1]);
+                                var scale = new_distance / initial_distance;
+                                var new_width = initial_width * scale;
+                                var new_height = initial_height * scale;
+
+                                if (new_width >= divImg.clientWidth && new_height >= divImg.clientHeight) {
+                                        img.style.width = new_width + 'px';
+                                        img.style.height = new_height + 'px';
+                                }
+                        } else if (e.touches.length === 1 && is_moving) {
+                                e.preventDefault();
+                                var delta_x = e.touches[0].clientX - start_x;
+                                var delta_y = e.touches[0].clientY - start_y;
+                                var new_left = initial_left + delta_x;
+                                var new_top = initial_top + delta_y;
+
+                                var right_bound = divImg.clientWidth - img.clientWidth;
+                                var bottom_bound = divImg.clientHeight - img.clientHeight;
+
+                                if (new_left > 0) new_left = 0;
+                                if (new_top > 0) new_top = 0;
+                                if (new_left < right_bound) new_left = right_bound;
+                                if (new_top < bottom_bound) new_top = bottom_bound;
+
+                                img.style.left = new_left + 'px';
+                                img.style.top = new_top + 'px';
+                        }
+                });
+
+                img.addEventListener('touchend', function (e) {
+                        const close_divs = document.getElementsByClassName("close_image_div");
+                        close_divs[0].style.display = "flex";
+                        if (e.touches.length < 2) {
+                                initial_distance = 0;
+                        }
+                        if (e.touches.length === 0) {
+                                is_moving = false;
+                        }
+                });
+        } catch(e) {
+                console.error(e)
+        }
+};
+
+async function fetch_messages(uuid, array, num_elements) {
+        try {
+                if(uuid !== correct_chat_uuid) {
+                        uuid = correct_chat_uuid
+                        let chat = await getJSON(uuid)
+                        if(chat) {
+                                array = chat.messages
+                        }
+                }
+                const total_elements = array.length;
+                let start_index, end_index;
+
+                if (last_logged_index === null) {
+                        end_index = total_elements;
+                        start_index = Math.max(0, end_index - num_elements);
+                } else {
+                        end_index = last_logged_index;
+                        start_index = Math.max(0, end_index - num_elements);
+                }
+                last_logged_index = start_index;
+                return array.slice(start_index, end_index);
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+async function show_new_message(uuid, message) {
+        try {
+                if(!uuid || !message) {
+                        return
+                }
+                const last_msg = document.getElementById(`${uuid}_msg`);
+                const msg_time = document.getElementById(`${uuid}_time`)
+                const chat_content_div = document.getElementById(`${uuid}_div`)
+                const msg_sender = await getJSON(message.from);
+
+                if(last_msg !== null) {
+                        if(message.text !== undefined) {
+                                last_msg.textContent = `${msg_sender.name}: ${message.text}`;
+                        } else {
+                                last_msg.textContent = `${msg_sender.name}: Հաղորդագրութիւն`;
+                        }
+
+                        const time = create_time(message.date);
+                        msg_time.textContent = time;
+
+                        const is_message_seen = message.seens.includes(my_user_account);
+
+                        if(!is_message_seen) {
+                                msg_time.style.fontWeight = "bolder"
+                                last_msg.style.fontWeight = "bolder"
+
+                                const new_msg_div = document.createElement('div');
+                                new_msg_div.className = "new_msg_icon";
+                                chat_content_div.appendChild(new_msg_div)
+                        }
+                }
+        } catch(e) {
+                console.log(e)
+        }
+}
+
+function diff_arrays(arr1, arr2) {
+        return arr1.filter(item => !arr2.includes(item));
+} 
+
+submit_message.addEventListener('click', async () => {
+        chat_body.style.bottom = '65px';
+
+        const message_text = input_message.value.trim();
+        const message_date = new Date();
+
+        reset_input_styles();
+
+        if (message_text) {
+                try {
+                        let chat = await getJSON(correct_chat_uuid);
+                        const msg_data = {
+                                text: input_message.value,
+                                type: "b463f227-88c1-4dd5-9d0a-2158808068d5-7653c1c6-f1b0-4b71-979f-eaf129746ef7",
+                                from: my_user_account,
+                                date: message_date,
+                                seens: [my_user_account],
+                                is_first: chat.messages.length === 0
+                        };
+
+                        draw_date(false, false, msg_data, false, true);
+                        
+                        await create_my_text_message(msg_data.text, msg_data.date, `pending_${msg_data.date.valueOf()}`, true, correct_chat_uuid, false, msg_data.seens);
+
+                        chat_body.scrollTo(0, chat_body.scrollHeight);
+                        input_message.value = ''; 
+
+
+                        const uuid = await saveJSON(JSON.stringify(msg_data), 'application/json');
+                        msg_data.uuid = uuid;
+                        await updateJSON(uuid, JSON.stringify(msg_data), 'application/json');
+
+                        chat.messages.push(uuid);
+
+                        const response = await updateJSON(chat.uuid, JSON.stringify(chat), 'application/json');
+
+                        if(response !== "success") {
+                                message_status.src = "!"
+                                return
+                        }
+
+                        const message_element = document.getElementById(`pending_${msg_data.date.valueOf()}`)
+                        const message_status = document.getElementById(`pending_${msg_data.date.valueOf()}_status`)
+                        message_element.id = uuid;
+                        message_status.id = `${uuid}_status`
+                        message_status.src = "/db/get?id=25d2a899-4507-4242-bbd2-b3c82aaeed9c-503b01ba-3737-41ac-bbaa-d4683c4f250e"
+                } catch (error) {
+                        console.error("failed:", error);
+                }
+        }
+});
+
+record_message.addEventListener('click', async function() {
+        if(!correct_chat_uuid) {
+                create_alert_box("Ձայնային հաղորդագրութիւն ուղարկելու հնարաւորութիւնը ակտիւացնելու համար խնդրում ենք ուղարկել գրահիւսային հաղորդագրութիւն");
+                return
+        };
+
+        is_recording_canceled = false; 
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        window.local_stream = stream;
+        media_recorder = new MediaRecorder(stream);
+        media_recorder.start();
+
+        recording_time.textContent = "0:00";
+        footer.style.display = "none";  
+        voice_footer.style.display = "flex";
+
+        start_time = Date.now();
+        timer_interval = setInterval(update_recording_time, 1000);
+
+        media_recorder.addEventListener('dataavailable', event => {
+                audio_chunks.push(event.data);
+        });
+
+        media_recorder.addEventListener('stop', async () => {
+                if (!is_recording_canceled) {
+                        await handle_recording_stop();
+                }
+        });
+});
+
+function update_recording_time() {
+        const elapsed_time = Date.now() - start_time;
+        const seconds = Math.floor(elapsed_time / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const remaining_seconds = seconds % 60;
+        recording_time.textContent = `${minutes}:${remaining_seconds.toString().padStart(2, '0')}`;
+}
+
+function blob_to_base64(blob) {
+        return new Promise((resolve, _) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+        });
+}
+
+async function handle_recording_stop() {
+        try {
+                footer.style.display = "flex";  
+                voice_footer.style.display = "none";
+
+                const message_date = new Date();
+                clearInterval(timer_interval);
+
+                const duration_in_seconds = (Date.now() - start_time) / 1000;
+                const minutes = Math.floor(duration_in_seconds / 60);
+                const seconds = Math.floor(duration_in_seconds % 60);
+                const formatted_duration = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                const audio_blob = new Blob(audio_chunks, { type: 'audio/ogg; codecs=opus' });
+                const audio_uuid = await saveJSON(audio_blob, 'audio/ogg; codecs=opus');
+
+                const chat = await getJSON(correct_chat_uuid);
+
+                const msg_data = {
+                        type: "b463f227-88c1-4dd5-9d0a-2158808068d5-7653c1c6-f1b0-4b71-979f-eaf129746ef7",
+                        from: my_user_account,
+                        date: message_date,
+                        voice_message: audio_uuid,
+                        voice_duration: formatted_duration,
+                        seens: [my_user_account],
+                        is_first: chat.messages.length === 0
+                };
+
+                draw_date(false, false, msg_data, false, true);
+                await create_my_voice_message(msg_data.voice_message, msg_data.date, msg_data.voice_duration, `pending_${msg_data.date.valueOf()}`, false, correct_chat_uuid, msg_data.seens);
+                chat_body.scrollTo(0, chat_body.scrollHeight);
+
+                const uuid = await saveJSON(JSON.stringify(msg_data), 'application/json');
+                msg_data.uuid = uuid;
+                await updateJSON(uuid, JSON.stringify(msg_data), 'application/json');
+
+                chat.messages.push(uuid);
+                const response = await updateJSON(correct_chat_uuid, JSON.stringify(chat), 'application/json');
+
+                if(response !== "success") {
+                        message_status.src = "!"
+                        return
+                }
+
+                const message_element = document.getElementById(`pending_${msg_data.date.valueOf()}`)
+                const message_status = document.getElementById(`pending_${msg_data.date.valueOf()}_status`)
+                message_element.id = uuid;
+                message_status.id = `${uuid}_status`
+                message_status.src = "/db/get?id=25d2a899-4507-4242-bbd2-b3c82aaeed9c-503b01ba-3737-41ac-bbaa-d4683c4f250e"
+
+                audio_chunks = [];
+                stop_media_stream(); 
+        } catch(e) {
+                console.log(e)
+        }
+}
+
+function stop_media_stream() {
+        if (window.local_stream) {
+                window.local_stream.getTracks().forEach(track => track.stop());
+                window.local_stream = null;
+        }
+}
+
+window.addEventListener('beforeunload', stop_media_stream);
+
+
+send_voice_msg.addEventListener('click', async function() {
+        if (media_recorder && media_recorder.state !== 'inactive') {
+                media_recorder.stop();
+        }
+});
+
+cancel_recording.addEventListener('click', async function() {
+        is_recording_canceled = true;
+        recording_time.textContent = "0:00";
+        audio_chunks = [];
+        footer.style.display = "flex";  
+        voice_footer.style.display = "none";
+        if (media_recorder && media_recorder.state !== 'inactive') {
+                media_recorder.stop();
+        }
+        stop_media_stream();
+});
+
+attach.addEventListener('click', async function () {
+        try {
+                if(!correct_chat_uuid) {
+                        create_alert_box("Նիշային հաղորդագրութիւն ուղարկելու հնարաւորութիւնը ակտիւացնելու համար խնդրում ենք ուղարկել գրահիւսային հաղորդագրութիւն");
+                        return
+                };
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.click();
+
+                input.onchange = async function () {
+                        const file = this.files[0];
+                        let formdata = new FormData();
+                        let mime, name;
+
+                        if (file && file.type.startsWith('image/') && file.type !== 'image/gif') {
+                                const compressed_file = await compress_image(file);
+                                formdata.append(1, compressed_file);
+                                formdata.append('name', compressed_file.name);
+                                formdata.append('size', compressed_file.size);
+                                mime = compressed_file.type;
+                                name = compressed_file.name
+                        } else {
+                                formdata.append(1, file);
+                                formdata.append('name', file.name);
+                                formdata.append('size', file.size);
+                                mime = file.type;
+                                name = file.name
+                        }
+                        mani.metax.saveData(formdata, mime).then(async r => {
+                                const message_date = new Date();
+                                const chat = await getJSON(correct_chat_uuid);
+
+                                const msg_data = {
+                                        type: "b463f227-88c1-4dd5-9d0a-2158808068d5-7653c1c6-f1b0-4b71-979f-eaf129746ef7",
+                                        from: my_user_account,
+                                        date: message_date,
+                                        name: name,
+                                        format: mime,
+                                        file: r,
+                                        seens: [my_user_account],
+                                        is_first: chat.messages.length === 0
+                                };
+
+                                draw_date(false, false, msg_data, false, true)
+                                await create_my_file_message(msg_data.file, msg_data.date, msg_data.format, msg_data.name, `pending_${msg_data.date.valueOf()}`, false, correct_chat_uuid, msg_data.seens);
+                                chat_body.scrollTo(0, chat_body.scrollHeight);
+
+                                const uuid = await saveJSON(JSON.stringify(msg_data), 'application/json');
+                                msg_data.uuid = uuid;
+                                await updateJSON(uuid, JSON.stringify(msg_data), 'application/json');
+
+                                chat.messages.push(uuid);
+                                const response = await updateJSON(correct_chat_uuid, JSON.stringify(chat), 'application/json');
+
+                                if(response !== "success") {
+                                        message_status.src = "!"
+                                        return
+                                }
+
+                                const message_element = document.getElementById(`pending_${msg_data.date.valueOf()}`)
+                                const message_status = document.getElementById(`pending_${msg_data.date.valueOf()}_status`)
+                                message_element.id = uuid;
+                                message_status.id = `${uuid}_status`
+                                message_status.src = "/db/get?id=25d2a899-4507-4242-bbd2-b3c82aaeed9c-503b01ba-3737-41ac-bbaa-d4683c4f250e"
+                        });
+                };
+        } catch(e) {
+                console.log(e)
+        }
+});
+
+async function compress_image(file) {
+        try {
+                return new Promise((resolve, reject) => {
+                        const img = document.createElement('img');
+                        img.src = URL.createObjectURL(file);
+
+                        img.onload = () => {
+                                const canvas = document.createElement('canvas');
+                                const ctx = canvas.getContext('2d');
+
+                                const max_width = 800;
+                                const scale_size = max_width / img.width;
+                                canvas.width = max_width;
+                                canvas.height = img.height * scale_size;
+
+                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                                canvas.toBlob(blob => {
+                                        const compressed_file = new File([blob], file.name, {
+                                                type: 'image/jpeg',
+                                                last_modified: Date.now()
+                                        });
+                                        resolve(compressed_file);
+                                }, 'image/jpeg', 0.7);
+                        };
+
+                        img.onerror = error => reject(error);
+                });
+        } catch(e) {
+                console.log(e)
+        }
+}
+
+async function convert_base64(file) {
+        return new Promise((resolve, reject) => {
+                const file_reader = new FileReader();
+                file_reader.readAsDataURL(file);
+
+                file_reader.onload = () => resolve(file_reader.result);
+                file_reader.onerror = error => reject(error);
+        });
+}
+
+function download_uri(uri, name) {
+        const link = document.createElement('a');
+        link.setAttribute('download', name);
+        link.href = uri;
+        chat_body.appendChild(link);
+        link.click();
+        link.remove();
+}
+
+function add_input_styles() {
+        const currentScrollTop = chat_body.scrollTop;
+
+        submit_message.style.display = 'block';
+        attach.style.display = 'none';
+        record_message.style.display = 'none';
+        input_message.style.height = '24px';
+        footer_div.style.paddingRight = '20px';
+        input_message.style.height = input_message.scrollHeight + 'px';
+        message_div.style.height = input_message.scrollHeight + 5 + 'px';
+        footer_div.style.height = input_message.scrollHeight + 33 + 'px';
+        footer.style.height = input_message.scrollHeight + 33 + 'px';
+        chat_body.style.bottom = input_message.scrollHeight + 33 + 'px';
+
+        chat_body.scrollTop = currentScrollTop + input_message.scrollHeight + 33;
+}
+
+function add_second_input_styles() {
+        const currentScrollTop = chat_body.scrollTop;
+        input_message.style.height = '24px';
+        input_message.style.height = input_message.scrollHeight + 'px';
+        message_div.style.height = input_message.scrollHeight + 5 + 'px';
+        footer_div.style.height = input_message.scrollHeight + 33 + 'px';
+        footer.style.height = input_message.scrollHeight + 33 + 'px';
+        chat_body.style.bottom = input_message.scrollHeight + 33 + 'px';
+        chat_body.scrollTop = currentScrollTop + input_message.scrollHeight + 33;
+}
+
+function reset_input_styles() {
+        input_message.style.height = '24px';
+        message_div.style.height = '37px';
+        footer.style.height = '65px';
+        footer_div.style.height = '65px';
+        attach.style.display = 'block';
+        chat_body.style.bottom = '65px';
+        submit_message.style.display = 'none';
+        record_message.style.display = 'flex';
+        footer_div.style.paddingRight = '0';
+}
+
+function break_line() {
+        const cursorPos = input_message.selectionStart;
+        const textBefore = input_message.value.substring(0, cursorPos);
+        const textAfter = input_message.value.substring(cursorPos);
+        input_message.value = textBefore + "\n" + textAfter;
+        input_message.selectionStart = input_message.selectionEnd = cursorPos + 1;
+}
+
+input_message.addEventListener('input', () => {
+        const is_input_empty = input_message.value.trim().length > 0;
+        const is_line_breaked = input_message.value.includes("\n");
+
+        if (is_input_empty) {
+                add_input_styles();
+        } else if(is_line_breaked) {
+                add_second_input_styles();
+        } else {
+                reset_input_styles();
+        }
+});
+
+chat_body.addEventListener('scroll', () => {
+        last_scroll_position = chat_body.scrollTop;
+})
+
+window.visualViewport.addEventListener('resize', event => {
+        let keyboardHeight = initial_viewport_height - window.innerHeight;
+        chat_body.scrollTop = last_scroll_position + keyboardHeight;
+});
+
+input_message.addEventListener("keypress", function(event) {
+
+        const edit_div = document.querySelector('.edit_div')
+
+        if(!is_android) {
+                if (event.key === "Enter" && event.shiftKey) {
+                        event.preventDefault(); 
+                        break_line();
+
+                        if(input_message.value.trim().length > 0) {
+                                if(edit_message.style.display === "block") {
+                                        add_input_styles();
+                                        submit_message.style.display = "none"
+                                        if(edit_div) {
+                                                edit_div.style.bottom = (footer.offsetHeight) - 1 + 'px';
+                                        }
+                                } else {
+                                        add_input_styles();
+                                }
+                        } else {
+                                add_second_input_styles();
+                                if(edit_div) {
+                                        edit_div.style.bottom = (footer.offsetHeight) - 1 + 'px';
+                                }
+                        }
+                } else if (event.key === "Enter") {
+                        event.preventDefault();
+                        if(submit_message.style.display === "block") {
+                                submit_message.click();
+                        } else {
+                                edit_message.click();
+                        }
+                }
+        } else {
+                if (event.key === "Enter") {
+                        event.preventDefault(); 
+                        break_line();
+                        if(input_message.value.trim().length > 0) {
+                                if(edit_message.style.display === "block") {
+                                        add_input_styles();
+                                        submit_message.style.display = "none"
+                                        if(edit_div) {
+                                                edit_div.style.bottom = (footer.offsetHeight) - 1 + 'px';
+                                        }
+                                } else {
+                                        add_input_styles();
+                                }
+                        } else {
+                                add_second_input_styles();
+                                if(edit_div) {
+                                        edit_div.style.bottom = (footer.offsetHeight) - 1 + 'px';
+                                }
+                        }
+                }
+        }
+});
+
+settings.addEventListener('click', () => {
+        settings.src = "/db/get?id=7f676d1b-8ccd-4d58-a80b-5240ada0aacf-ebe1e849-7e3b-423b-9fb7-60e52ac9bd86"
+        personal.src = "/db/get?id=2aec465e-3ea3-4818-bba3-927fa1782f88-bfe162ad-d45e-4f32-9b06-299684ec665b"
+        chat.src = "/db/get?id=62a17ebd-28bc-4ba7-b786-876b2a2d8cd6-079bf29b-86ca-48de-a546-e9e5054c5d58"
+        messenger_settings_body.style.display = "flex";
+        messenger_account_body.style.display = "none";
+        messenger_chat_body.style.display = "none";
+});
+
+personal.addEventListener('click', () => {
+        personal.src = "/db/get?id=3f57b6c6-2c20-438b-be8e-874aa625e108-f4c12498-9588-4126-a968-eeab053cde12"
+        settings.src = "/db/get?id=d33d0e32-c8c1-415e-8ac3-d6fec8d4fb87-f34b3639-a251-4263-ac06-4cd56d18f391"
+        chat.src = "/db/get?id=62a17ebd-28bc-4ba7-b786-876b2a2d8cd6-079bf29b-86ca-48de-a546-e9e5054c5d58"
+        messenger_settings_body.style.display = "none";
+        messenger_account_body.style.display = "flex";
+        messenger_chat_body.style.display = "none";
+});
+
+chat.addEventListener('click', () => {
+        personal.src = "/db/get?id=2aec465e-3ea3-4818-bba3-927fa1782f88-bfe162ad-d45e-4f32-9b06-299684ec665b"
+        settings.src = "/db/get?id=d33d0e32-c8c1-415e-8ac3-d6fec8d4fb87-f34b3639-a251-4263-ac06-4cd56d18f391"
+        chat.src = "/db/get?id=36c80135-44f7-42dd-82cb-6ee067915e0f-568c8a6c-b3c9-4583-bf3b-262acce589a6"
+        messenger_settings_body.style.display = "none";
+        messenger_account_body.style.display = "none";
+        messenger_chat_body.style.display = "flex";
+});
+
+function draw_date(is_first, is_new, message, new_msg, not_saved) {
+        const month_names = [
+                "Հունուար", "Փետրուար", "Մարտ", "Ապրիլ", "Մայիս", "Հունիս",
+                "Հուլիս", "Աւգոստոս", "Սեպտեմբեր", "Հոկտեմբեր", "Նոյեմբեր", "Դեկտեմբեր"
+        ];
+
+        if(!message) {
+                return
+        }
+
+        const parsed_date = new Date(message.date);
+
+        const year = parsed_date.getFullYear();
+        const month = parsed_date.getMonth();
+        const day = parsed_date.getDate();
+
+        const msg_date_obj =  {
+                year,
+                month,
+                day
+        }
+
+        message_date_array.unshift(msg_date_obj)
+        if (is_first === true) {
+                const formatted_date = `${year} ${month_names[month]}ի ${day}`;
+                let date_div = document.createElement('div');
+                let date_string = document.createElement('p');
+
+                date_div.className = "date_div";
+                date_string.className = "date_string";
+
+                date_string.textContent = formatted_date;
+
+                date_div.appendChild(date_string);
+                chat_body.insertBefore(date_div, chat_body.firstChild);
+                date_array.unshift(parsed_date);
+                return
+        } else if(message_date_array.length > 1){
+                let date = null;
+
+                if(not_saved) {
+                        let is_equal = compare_dates(message_date_array[0], message_date_array[1])
+
+                        if(is_equal.compare === true) {
+                                new_msg = true
+                        } else {
+                                new_msg = false
+                        }
+                }
+
+                if(!new_msg) {
+                        date = compare_dates(message_date_array[0], message_date_array[1], is_new) 
+                } else {
+                        date = compare_dates(message_date_array[0], message_date_array[message_date_array.length - 1], is_new) 
+                }
+
+                if(message_date_array.length === 20) {
+                        message_date_array.reverse();
+                }
+
+                if(!is_new && date.compare === true){
+                        const formatted_date = `${date.higher.year} ${month_names[date.higher.month]}ի ${date.higher.day}`;
+                        let date_div = document.createElement('div');
+                        let date_string = document.createElement('p');
+
+                        date_div.className = "date_div";
+                        date_string.className = "date_string";
+
+                        date_string.textContent = formatted_date;
+
+                        date_div.appendChild(date_string);
+                        chat_body.insertBefore(date_div, document.getElementById(message.uuid));
+                } else if(is_new && date.compare === true) {
+                        const formatted_date = `${date.higher.year} ${month_names[date.higher.month]}ի ${date.higher.day}`;
+                        let date_div = document.createElement('div');
+                        let date_string = document.createElement('p');
+
+                        date_div.className = "date_div";
+                        date_string.className = "date_string";
+
+                        date_string.textContent = formatted_date;
+
+                        date_div.appendChild(date_string);
+                        chat_body.insertBefore(date_div, document.getElementById(message.uuid).nextSibling);
+                }
+        }
+}
+
+function compare_dates(date1, date2, is_new) {
+        if (date1 === undefined || date2 === undefined) {
+                return { compare: false };
+        }
+
+        if (date1.year !== date2.year) {
+                if(!is_new) {
+                        return {
+                                compare: date1.year > date2.year,
+                                higher: date1
+                        };
+                } else {
+                        return {
+                                compare: date1.year < date2.year,
+                                higher: date2
+                        };
+                }
+        }
+
+        if (date1.month !== date2.month) {
+                if(!is_new) {
+                        return {
+                                compare: date1.month > date2.month,
+                                higher: date1
+                        };
+                } else {
+                        return {
+                                compare: date1.month < date2.month,
+                                higher: date2
+                        };
+                }
+        }
+
+        if (date1.day !== date2.day) {
+                if(!is_new) {
+                        return {
+                                compare: date1.day > date2.day,
+                                higher: date1
+                        };
+                } else {
+                        return {
+                                compare: date1.day < date2.day,
+                                higher: date2
+                        };
+                }
+        }
+
+        return { compare: false };
+}
+
+async function create_alert_box(text) {
+        let body = document.getElementById('alert_body') 
+        if(body) {
+                body.remove(); 
+        }
+        body = document.createElement('div');
+        const alert_title = document.createElement('h4');
+        const content = document.createElement('p');
+
+        body.className = "alert_body"
+        body.id = "alert_body"
+
+        alert_title.textContent = "Հաղորդակ";
+        content.textContent = text;
+
+        chat_body.appendChild(body);
+        body.appendChild(alert_title);
+        body.appendChild(content);
+
+        chat_body.onclick = () => {
+                body.remove();
+        }
+}
+
+async function draw_messages(message, is_new, chat_uuid, new_msg) {
+        try {
+                const is_my_message = message.from === my_user_account;
+                const message_element = document.createElement('div');
+                const loading_image = document.createElement('img');
+
+                loading_image.src = "/db/get?id=3a476ee2-3373-412a-aa77-b9b931744f30-4e4f89ef-cb57-4dbc-aa2a-cde92fb3235f";
+                loading_image.className = "element_loading_img";
+
+                if (message.from === my_user_account) {
+                        message_element.className = "my_loading_element"; 
+                        if(message.file !== undefined) {
+                                const image_div = document.createElement('div');
+
+                                image_div.className = "loading_img_div"
+                                loading_image.className = "img_element_loading_img";
+
+                                image_div.appendChild(loading_image);
+                                message_element.appendChild(image_div);
+                        } else {
+                                message_element.appendChild(loading_image);
+                        }
+                } else {
+                        message_element.className = "other_loading_element";
+                        if(message.file !== undefined) {
+                                const image_div = document.createElement('div');
+
+                                image_div.className = "loading_img_div"
+                                loading_image.className = "img_element_loading_img";
+
+                                image_div.appendChild(loading_image)
+                                message_element.appendChild(image_div);
+                        } else {
+                                message_element.appendChild(loading_image);
+                        }
+                }
+
+                message_element.id = message.uuid;
+
+
+                if (!is_new) {
+                        chat_body.appendChild(message_element);
+                } else {
+                        chat_body.insertBefore(message_element, chat_body.firstChild);
+                } 
+
+                const update_message_element = async (details) => {
+                        if (details.text !== undefined) {
+                                message_element.innerHTML = "";
+                                if (is_my_message) {
+                                        create_my_text_message(details.text, details.date, details.uuid, is_new, chat_uuid, details.edited, details.seens);
+                                } else {
+                                        create_other_text_message(details.from, details.text, details.date, details.uuid, is_new, chat_uuid, details.edited);
+                                }
+                        } else if (details.voice_message !== undefined) {
+                                message_element.innerHTML = "";
+                                if (is_my_message) {
+                                        create_my_voice_message(details.voice_message, details.date, details.voice_duration, details.uuid, is_new, chat_uuid, details.seens);
+                                } else {
+                                        create_other_voice_message(details.from, details.voice_message, details.date, details.voice_duration, details.uuid, is_new, chat_uuid);
+                                }
+                        } else if (details.file !== undefined) {
+                                message_element.innerHTML = "";
+                                if (is_my_message) {
+                                        create_my_file_message(details.file, details.date, details.format, details.name, details.uuid, is_new, chat_uuid, details.seens);
+                                } else {
+                                        create_other_file_message(details.from, details.file, details.date, details.format, details.name, details.uuid, is_new, chat_uuid);
+                                }
+                        }
+                        draw_date(details.is_first, is_new, details, new_msg, false)
+                };
+
+                update_message_element(message);
+        } catch (e) {
+                console.log(e);
+        }
+}
+
+async function create_my_text_message(text, time, uuid, is_new, chat_uuid, edited, seens) {
+        try {
+                const msg_time = create_time(time);
+
+                let message_element = document.getElementById(uuid);
+                if(!message_element) {
+                        message_element = document.createElement("div");
+                        message_element.id = uuid
+                }
+                const message_data_div = document.createElement('div');
+                const message_text_div = document.createElement('div');
+                const edited_div = document.createElement('div');
+                const edited_span = document.createElement('span');
+                const message_time = document.createElement('span');
+                const status = document.createElement('img')
+
+                status.id = `${uuid}_status`
+
+                message_element.className = 'msg_element';
+                message_data_div.className = 'msg_div';
+                message_text_div.className = 'msg_text';
+                message_time.className = 'msg_time';
+                edited_div.className = "edited";
+                status.className = "msg_status"
+
+                edited_span.textContent = "փոփոխուած";
+                message_time.textContent = msg_time;
+                message_text_div.textContent = text;
+
+                message_element.appendChild(message_data_div);
+                message_data_div.appendChild(message_text_div);
+
+                if(uuid.includes("pending_")) {
+                        status.src = "/db/get?id=4c46641b-d921-45c4-89d9-5d0e02b29d75-34a1297c-e82b-4ff2-8301-a180d76f4422";
+                } else if(seens.length === 1) {
+                        status.src = "/db/get?id=25d2a899-4507-4242-bbd2-b3c82aaeed9c-503b01ba-3737-41ac-bbaa-d4683c4f250e"
+                } else {
+                        status.src = "/db/get?id=50215a59-81a6-44f0-a1ff-6e11d276d52a-41a76b9d-adc3-408f-867b-beea3bb0b12c"
+                }
+
+                if (edited === true) {
+                        edited_div.appendChild(edited_span);
+                        edited_div.appendChild(message_time);
+                        edited_div.appendChild(status);
+                        message_data_div.appendChild(edited_div);
+
+                        message_data_div.style.flexDirection = "column";
+                        message_data_div.style.alignItems = "flex-start";
+                        message_time.style.padding = "0 5px 0 5px";
+                        message_text_div.style.maxWidth = "100%";
+                } else {
+                        edited_div.appendChild(message_time);
+                        edited_div.appendChild(status);
+                        message_data_div.appendChild(edited_div);
+                }
+                message_data_div.addEventListener('touchstart', (event) => handle_touch_timer(event, message_text_div, message_element, chat_uuid, message_element.id));
+
+                message_data_div.addEventListener('contextmenu', (event) => {
+                        event.preventDefault();
+                        handle_touch_timer(event, message_text_div, message_element, chat_uuid, message_element.id)
+                });
+
+                message_data_div.addEventListener('touchend', () => {
+                        touch_active = false;
+                        clearTimeout(touch_timer);
+                });
+
+                message_data_div.addEventListener('touchcancel', () => {
+                        touch_active = false;
+                        clearTimeout(touch_timer);
+                });
+
+                if(uuid.includes("pending_")) {
+                        chat_body.appendChild(message_element);
+                }
+
+                if (is_new === true) {
+                        return;
+                }
+
+                chat_body.scrollTo(0, chat_body.scrollHeight);
+
+        } catch (e) {
+                console.log(e);
+        }
+}
+
+async function create_other_text_message(from, text, time, uuid, is_new, chat_uuid, edited) {
+        try {
+                const msg_time = create_time(time)
+                const msg_sender = await getJSON(from)
+
+                const message_element = document.getElementById(uuid);
+                const message_div = document.createElement('div');
+                const message_elements_div = document.createElement('div');
+                const message_text_div = document.createElement('div');
+                const details_div = document.createElement('div');
+                const edited_span = document.createElement('span')
+                const message_time = document.createElement('span');
+                const name_div = document.createElement('div');
+
+                message_elements_div.id = `${uuid}_elements`;
+                message_text_div.id = `${uuid}_text;`
+
+                message_element.className = 'other_sender_element';
+                message_div.className = 'other_sender_div';
+                name_div.className = 'other_sender_name';
+                message_elements_div.className = 'other_elements';
+                message_text_div.className = 'other_sender_text';
+                details_div.className = 'other_details_div';
+                message_time.className = 'other_sender_time';
+                edited_span.className = 'other_sender_time';
+
+                name_div.textContent = msg_sender.name;
+                message_text_div.textContent = text;
+                message_time.textContent = msg_time;
+                edited_span.textContent = "փոփոխուած";
+
+                message_element.appendChild(message_div);
+                message_div.appendChild(name_div);
+                message_div.appendChild(message_elements_div);
+                message_elements_div.appendChild(message_text_div);
+                message_elements_div.appendChild(details_div);
+
+                if(edited === true) {
+                        details_div.appendChild(edited_span);
+                }
+
+                details_div.appendChild(message_time);
+
+                if(is_new === true) {
+                        return
+                }
+
+                chat_body.scrollTo(0, chat_body.scrollHeight);
+
+        } catch(e) {
+                console.log(e)
+        }
+}
+
+async function create_my_file_message(uuid, time, format, name, main_uuid, is_new, chat_uuid, seens) {
+        try {
+                const msg_time = create_time(time);
+
+                let message_element = document.getElementById(main_uuid);
+                if(!message_element) {
+                        message_element = document.createElement("div");
+                        message_element.id = main_uuid
+                }
+
+                const message_data_div = document.createElement('div');
+                const download_img = document.createElement("img");
+                const message_content_div = document.createElement('div');
+                const message_text_div = document.createElement('div');
+                const message_time = document.createElement('span');
+                const image = document.createElement('img');
+                const status = document.createElement('img');
+                const time_div = document.createElement('div');
+
+                status.id = `${main_uuid}_status`;
+                message_element.className = 'msg_element';
+                message_data_div.className = 'img_div';
+                status.className = "msg_status";
+
+                if(uuid.includes("pending_")) {
+                        status.src = "/db/get?id=4c46641b-d921-45c4-89d9-5d0e02b29d75-34a1297c-e82b-4ff2-8301-a180d76f4422";
+                } else if(seens.length === 1) {
+                        status.src = "/db/get?id=25d2a899-4507-4242-bbd2-b3c82aaeed9c-503b01ba-3737-41ac-bbaa-d4683c4f250e"
+                } else {
+                        status.src = "/db/get?id=50215a59-81a6-44f0-a1ff-6e11d276d52a-41a76b9d-adc3-408f-867b-beea3bb0b12c"
+                }
+
+                if (!format || format.includes("image")) {
+                        image.src = `/db/get?id=${uuid}`;
+                        image.className = 'image';
+                        message_time.className = 'img_time';
+                        time_div.className = 'my_img_time_div';
+
+                        message_time.textContent = msg_time;
+
+                        message_data_div.appendChild(image);
+                        message_data_div.appendChild(time_div);
+                        time_div.appendChild(message_time);
+                        time_div.appendChild(status);
+                        message_element.appendChild(message_data_div);
+                        image.addEventListener('click', async (event) => await open_image(event));
+                } else {
+                        download_img.src = "/db/get?id=7cdffe6f-7be8-4b8d-977e-d67a9f13c72c-b3c471f7-c9ae-4c9e-85d8-8fbcb89c6c19";
+
+                        download_img.addEventListener('click', () => {
+                                download_uri(`/db/get?id=${uuid}`, name);
+                        });
+
+                        download_img.className = "download_img";
+                        message_data_div.className = 'msg_div';
+                        message_text_div.className = 'msg_text';
+                        message_time.className = 'msg_time';
+                        message_content_div.className = 'content_div';
+                        time_div.className = 'edited';
+
+                        message_time.textContent = msg_time;
+                        message_text_div.textContent = name;
+
+                        message_content_div.appendChild(download_img);
+                        message_content_div.appendChild(message_text_div);
+                        message_data_div.appendChild(message_content_div);
+                        message_data_div.appendChild(time_div);
+                        time_div.appendChild(message_time);
+                        time_div.appendChild(status);
+                        message_element.appendChild(message_data_div);
+                }
+
+                message_data_div.addEventListener('touchstart', (event) => handle_media_touch_timer(event, message_text_div, message_element, chat_uuid, message_element.id, uuid));
+                message_data_div.addEventListener('contextmenu', (event) => {
+                        event.preventDefault();
+                        handle_media_touch_timer(event, message_text_div, message_element, chat_uuid, message_element.id, uuid);
+                });
+
+                message_data_div.addEventListener('touchend', () => {
+                        touch_active = false;
+                        clearTimeout(touch_timer);
+                });
+
+                message_data_div.addEventListener('touchcancel', () => {
+                        touch_active = false;
+                        clearTimeout(touch_timer);
+                });
+
+                if(main_uuid.includes("pending_")) {
+                        chat_body.appendChild(message_element);
+                }
+
+                if (is_new === true) {
+                        return;
+                }
+
+                setTimeout(() => {
+                        chat_body.scrollTo(0, chat_body.scrollHeight);
+                }, 300)
+
+        } catch (e) {
+                console.log("Error creating file message:", e);
+        }
+}
+
+async function create_other_file_message(sender_name, uuid, time, format, name, main_uuid, is_new, chat_uuid) {
+        try {
+                const msg_time = create_time(time)
+                const msg_sender = await getJSON(sender_name)
+
+                const message_element = document.getElementById(main_uuid);
+                const message_div = document.createElement('div');
+                const message_time = document.createElement('span');
+                const time_div = document.createElement('div');
+                const name_span = document.createElement('span');
+                const image = document.createElement('img');
+                const download_img = document.createElement("img");
+                const message_elements_div = document.createElement('div');
+                const message_text_div = document.createElement('div');
+                const message_content_div = document.createElement('div');
+                const name_div = document.createElement('div');
+
+                name_span.className = 'img_name';
+                time_div.className = 'img_time_div';
+                message_element.className = 'other_sender_element';
+                message_div.className = 'other_img_div';
+                message_time.className = 'other_img_time';
+
+                if(!format || format.includes("image")) {
+                        image.src = `/db/get?id=${uuid}`;
+                        image.className = 'image'
+
+                        name_span.textContent = msg_sender.name;
+                        message_time.textContent = msg_time;
+
+                        message_element.appendChild(message_div);
+                        message_div.appendChild(name_span);
+                        message_div.appendChild(image);
+                        message_div.appendChild(time_div);
+                        time_div.appendChild(message_time);
+                        image.addEventListener('click', async (event) => await open_image(event));
+                } else { 
+                        download_img.src = "/db/get?id=7cdffe6f-7be8-4b8d-977e-d67a9f13c72c-b3c471f7-c9ae-4c9e-85d8-8fbcb89c6c19"
+
+                        download_img.addEventListener('click', (e) => {
+                                download_uri(`/db/get?id=${uuid}`, name);
+                        });
+
+                        download_img.className = "download_img";
+                        message_element.className = 'other_sender_element';
+                        message_div.className = 'other_sender_div';
+                        name_div.className = 'other_sender_name';
+                        message_elements_div.className = 'other_elements';
+                        message_content_div.className = 'other_content_div';
+                        message_text_div.className = 'other_sender_text';
+                        message_time.className = 'other_sender_time';
+
+                        name_div.textContent = msg_sender.name;
+                        message_text_div.textContent = name;
+                        message_time.textContent = msg_time;
+
+                        message_element.appendChild(message_div);
+                        message_div.appendChild(name_div);
+                        message_div.appendChild(message_elements_div);
+                        message_content_div.appendChild(download_img);
+                        message_content_div.appendChild(message_text_div);
+                        message_elements_div.appendChild(message_content_div);
+                        message_elements_div.appendChild(message_time);
+                }
+
+                if(is_new === true) {
+                        return
+                }
+
+                setTimeout(() => {
+                        chat_body.scrollTo(0, chat_body.scrollHeight);
+                }, 300)
+
+        } catch(e) {
+                console.log(e);
+        }
+}
+
+async function create_my_voice_message(voice, time, duration, uuid, is_new, chat_uuid, seens) {
+        try {
+                let message_element = document.getElementById(uuid);
+
+                if(!message_element) {
+                        message_element = document.createElement('div');
+                        message_element.id = uuid
+                }
+                const message_data_div = document.createElement('div');
+                const message_text_div = document.createElement('div');
+                const message_time = document.createElement('span');
+                const play_button = document.createElement('img');
+                const voice_duration = document.createElement('div');
+                const progress_div = document.createElement('div');
+                const progress_bar = document.createElement('div');
+                const speed_controll = document.createElement('div');
+                const audio_element = document.createElement('audio');
+                const status = document.createElement('img')
+                const msg_time = create_time(time)
+
+                const duration_id = 'durationDisplay_' + Date.now();
+                const progress_id = 'progress_bar_' + Date.now(); 
+                const audio_id = 'audio_' + Date.now();
+                const button_id = 'play_button_' + Date.now(); 
+
+                voice_duration.id = duration_id;
+                progress_bar.id = progress_id;
+                audio_element.id = audio_id;
+                play_button.id = button_id;
+                status.id = `${uuid}_status`
+
+                progress_div.className = 'progress_div';
+                message_element.className = 'msg_element';
+                message_data_div.className = 'msg_voice_div';
+                message_text_div.className = 'voice_div';
+                message_time.className = 'msg_time';
+                status.className = "msg_status"
+                speed_controll.className = 'controll';
+                progress_bar.className = 'progress_bar';
+                play_button.classList.add('play_button');
+
+                speed_controll.textContent = '1x';
+                message_time.textContent = msg_time;
+                voice_duration.textContent = duration;
+
+                play_button.src = "/db/get?id=1e7a7179-0784-4d85-a662-fb10bd58a877-bc5dd792-e712-49b8-9b1e-b19f58c0f3df";
+
+                audio_element.playbackRate= 1;
+                audio_elements[audio_id] = audio_element;
+                play_button.dataset.audio_id = audio_id;
+
+                play_button.addEventListener('click', (e) => {
+                        toggle_audio(e, voice)
+                });
+
+                audio_element.addEventListener('loadedmetadata', async () => {
+                        if (audio_element.duration === Infinity || isNaN(Number(audio_element.duration))) {
+                                audio_element.currentTime = 1e101
+                                audio_element.addEventListener('timeupdate', get_duration)
+                        }
+                })
+
+                audio_element.ontimeupdate = function() { update_audio_progress(this, duration_id, progress_id, button_id, duration); };
+
+                if(uuid.includes("pending_")) {
+                        status.src = "/db/get?id=4c46641b-d921-45c4-89d9-5d0e02b29d75-34a1297c-e82b-4ff2-8301-a180d76f4422";
+                } else if(seens.length === 1) {
+                        status.src = "/db/get?id=25d2a899-4507-4242-bbd2-b3c82aaeed9c-503b01ba-3737-41ac-bbaa-d4683c4f250e"
+                } else {
+                        status.src = "/db/get?id=50215a59-81a6-44f0-a1ff-6e11d276d52a-41a76b9d-adc3-408f-867b-beea3bb0b12c"
+                }
+
+                message_element.appendChild(message_data_div);
+                message_data_div.appendChild(message_text_div);
+                message_data_div.appendChild(message_time);
+                message_data_div.appendChild(status);
+                message_text_div.appendChild(play_button);
+                message_text_div.appendChild(progress_div);
+                progress_div.appendChild(progress_bar);
+                message_text_div.appendChild(voice_duration);
+                message_text_div.appendChild(speed_controll);
+
+                speed_controll.addEventListener('click', function() {
+                        if(audio_element.playbackRate == 1) {
+                                speed_controll.textContent = '1.5x';
+                                audio_element.playbackRate = 1.5;
+                        } else if(audio_element.playbackRate == 1.5) {
+                                speed_controll.textContent = '2x';
+                                audio_element.playbackRate = 2;
+                        } else if(audio_element.playbackRate == 2) {
+                                speed_controll.textContent = '1x';
+                                audio_element.playbackRate = 1;
+                        }
+                });
+
+                message_data_div.addEventListener('touchstart', (event) => handle_media_touch_timer(event, message_text_div, message_element, chat_uuid, message_element.id, voice));
+
+                message_data_div.addEventListener('contextmenu', (event) => {
+                        event.preventDefault();
+                        handle_media_touch_timer(event, message_text_div, message_element, chat_uuid, message_element.id, voice)
+                });
+
+                message_data_div.addEventListener('touchend', () => {
+                        touch_active = false;
+                        clearTimeout(touch_timer);
+                });
+
+                message_data_div.addEventListener('touchcancel', () => {
+                        touch_active = false;
+                        clearTimeout(touch_timer);
+                });
+
+                if(uuid.includes("pending_")) {
+                        chat_body.appendChild(message_element);
+                }
+
+                if(is_new === true) {
+                        return
+                }
+
+                chat_body.scrollTo(0, chat_body.scrollHeight);
+
+        } catch(e) {
+                console.log(e)
+        }
+}
+
+async function create_other_voice_message(from, voice, time, duration, uuid, is_new, chat_uuid) {
+        try {
+                const msg_sender = await getJSON(from)
+                const msg_time = create_time(time)
+
+                const message_element = document.getElementById(uuid);
+                const name_div = document.createElement('div');
+                const message_div = document.createElement('div');
+                const message_text_div = document.createElement('div');
+                const message_time = document.createElement('span');
+                const play_button = document.createElement('img');
+                const voice_duration = document.createElement('div');
+                const progress_div = document.createElement('div');
+                const progress_bar = document.createElement('div');
+                const speed_controll = document.createElement('div');
+                const audio_element = document.createElement('audio');
+
+                const duration_id = 'durationDisplay_' + Date.now();
+                const progress_id = 'progress_bar_' + Date.now(); 
+                const audio_id = 'audio_' + Date.now();
+                const button_id = 'play_button_' + Date.now(); 
+
+                voice_duration.id = duration_id;
+                progress_bar.id = progress_id;
+                audio_element.id = audio_id;
+                play_button.id = button_id;
+                progress_div.className = 'progress_div';
+                message_element.className = 'other_sender_element';
+                message_div.className = 'other_sender_voice_div';
+                message_text_div.className = 'other_voice_div';
+                message_time.className = 'other_sender_time_voice';
+                name_div.className = 'other_sender_name_voice';
+
+                speed_controll.className = 'controll';
+                progress_bar.className = 'progress_bar';
+                play_button.classList.add('play_button');
+
+                speed_controll.textContent = '1x';
+                name_div.textContent = msg_sender.name;
+                message_time.textContent = msg_time;
+                voice_duration.textContent = duration;
+
+                play_button.src = "/db/get?id=1e7a7179-0784-4d85-a662-fb10bd58a877-bc5dd792-e712-49b8-9b1e-b19f58c0f3df";
+
+                audio_element.playbackRate= 1;
+                audio_elements[audio_id] = audio_element;
+                play_button.dataset.audio_id = audio_id;
+
+                play_button.addEventListener('click', (e) => {
+                        toggle_audio(e, voice)
+                });
+
+                audio_element.addEventListener('loadedmetadata', async () => {
+                        if (audio_element.duration === Infinity || isNaN(Number(audio_element.duration))) {
+                                audio_element.currentTime = 1e101
+                                audio_element.addEventListener('timeupdate', get_duration)
+                        }
+                })
+
+                audio_element.ontimeupdate = function() { update_audio_progress(this, duration_id, progress_id, button_id, duration); };
+
+                message_element.appendChild(message_div);
+                message_div.appendChild(name_div);
+                message_div.appendChild(message_text_div);
+                name_div.appendChild(message_time);
+                message_text_div.appendChild(play_button);
+                message_text_div.appendChild(progress_div);
+                progress_div.appendChild(progress_bar);
+                message_text_div.appendChild(voice_duration);
+                message_text_div.appendChild(speed_controll);
+
+                speed_controll.addEventListener('click', function() {
+                        if(audio_element.playbackRate == 1) {
+                                speed_controll.textContent = '1.5x';
+                                audio_element.playbackRate = 1.5;
+                        } else if(audio_element.playbackRate == 1.5) {
+                                speed_controll.textContent = '2x';
+                                audio_element.playbackRate = 2;
+                        } else if(audio_element.playbackRate == 2) {
+                                speed_controll.textContent = '1x';
+                                audio_element.playbackRate = 1;
+                        }
+                });
+
+                if(is_new === true) {
+                        return
+                }
+
+                chat_body.scrollTo(0, chat_body.scrollHeight);
+
+        } catch(e) {
+                console.log(e)
+        }
+}
+
+async function edit_my_text_message(uuid, chat_uuid) {
+        try {
+                const message = await getJSON(uuid);
+
+                const message_element = document.getElementById(uuid);
+                const edited_span = document.createElement('span');
+                const msg_time = create_time(message.date);
+                edited_span.textContent = "փոփոխուած"
+
+                if(my_user_account === message.from) {
+                        message_element.innerHTML = "";
+
+                        const message_data_div = document.createElement('div');
+                        const message_text_div = document.createElement('div');
+                        const edited_div = document.createElement('div');
+                        const message_time = document.createElement('span');
+                        const status = document.createElement('img')
+
+                        message_element.className = 'msg_element';
+                        message_data_div.className = 'msg_div';
+                        message_text_div.className = 'msg_text'
+                        message_time.className = 'msg_time';
+                        edited_div.className = "edited";
+                        status.className = "msg_status";
+
+                        message_time.textContent = msg_time;
+                        message_text_div.textContent = message.text;
+
+                        status.src = message.seens.length === 1
+                                ? "/db/get?id=25d2a899-4507-4242-bbd2-b3c82aaeed9c-503b01ba-3737-41ac-bbaa-d4683c4f250e"
+                        : "/db/get?id=50215a59-81a6-44f0-a1ff-6e11d276d52a-41a76b9d-adc3-408f-867b-beea3bb0b12c";
+
+                        message_element.appendChild(message_data_div);
+                        message_data_div.appendChild(message_text_div);
+                        edited_div.appendChild(edited_span);
+                        edited_div.appendChild(message_time);
+                        edited_div.appendChild(status);
+                        message_data_div.appendChild(edited_div);
+
+                        message_data_div.style.flexDirection = "column";
+                        message_data_div.style.alignItems = "flex-start";
+                        message_time.style.padding = "0 5px 0 5px";
+                        message_text_div.style.maxWidth = "100%";
+
+                        message_data_div.addEventListener('touchstart', (event) => handle_touch_timer(event, message_text_div, message_element, chat_uuid, uuid));
+                        message_data_div.addEventListener('contextmenu', (event) => {
+                                event.preventDefault();
+                                handle_touch_timer(event, message_text_div, message_element, chat_uuid, uuid)
+                        });
+
+
+                        message_data_div.addEventListener('touchend', () => {
+                                clearTimeout(touch_timer); 
+                                touch_active = false;
+                        });
+                        message_data_div.addEventListener('touchcancel', () => {
+                                clearTimeout(touch_timer);
+                                touch_active = false
+                        });
+                } else {
+                        const message_elements_div = document.getElementById(`${message.uuid}_elements`);
+                        message_elements_div.innerHTML = '';
+
+                        const message_text_div = document.createElement('div');
+                        const other_details_div = document.createElement('div');
+                        const time_span = document.createElement('span');
+
+                        time_span.textContent = msg_time;
+                        message_text_div.textContent = message.text;
+
+                        message_text_div.className = "other_sender_text";
+                        other_details_div.className = "other_details_div";
+                        edited_span.className = "other_sender_time";
+                        time_span.className = "other_sender_time";
+
+                        message_elements_div.appendChild(message_text_div);
+                        message_elements_div.appendChild(other_details_div);
+                        other_details_div.appendChild(edited_span);
+                        other_details_div.appendChild(time_span);
+                }
+        } catch(e) {
+                console.log(e)
+        }
+}
+
+function handle_touch_timer( event, message_text_div, message_element, chat_uuid, uuid ) {
+        try {
+                touch_timer = setTimeout(() => {
+                        if (touch_active) return; 
+                        touch_active = true;
+
+                        const background_div = document.createElement('div');
+                        const remove_div = document.createElement('div');
+
+                        const select_seen_div = document.createElement('div');
+                        const select_remove_div = document.createElement('div');
+                        const select_edit_div = document.createElement('div');
+                        const select_copy_div = document.createElement('div');
+
+                        const seen = document.createElement('img');
+                        const remove = document.createElement('img');
+                        const edit = document.createElement('img');
+                        const copy = document.createElement('img');
+
+                        const seen_p = document.createElement('p');
+                        const remove_p = document.createElement('p');
+                        const edit_p = document.createElement('p');
+                        const copy_p = document.createElement('p');
+
+                        seen.src = "/db/get?id=dfd4e83c-4a29-41cd-b8f2-9faf731ccb64-b17b1754-7228-4ee3-af76-c8cc06d95bd9"
+                        remove.src = "/db/get?id=ff29965f-255f-4125-84ee-b0ebd413d0f7-26bbfd6a-0c64-41fc-9d84-c7681ee73383";
+                        edit.src = "/db/get?id=2bd455e5-824d-48cf-9cbf-c0af63d43df8-8c7156db-9508-44c4-a3ac-18c78bef7917";
+                        copy.src = "/db/get?id=c9ddab57-1c5c-40c2-821d-8589541bd120-217b8947-ccb7-40e2-a26e-6471d1f55484";
+
+                        background_div.className = "background_div"
+                        remove_div.className = "remove_div";
+                        [select_seen_div, select_edit_div, select_remove_div, select_copy_div].forEach(el => el.className = 'select');
+                        [seen_p, edit_p, remove_p, copy_p].forEach(el => el.className = 'select_p');
+                        [seen, edit, remove, copy].forEach(el => el.className = 'select_img');
+
+
+                        seen_p.textContent = "Դիտել են";
+                        remove_p.textContent = "Ջնջել";
+                        edit_p.textContent = "Փոփոխել"
+                        copy_p.textContent = "Պատճենել"
+
+                        select_seen_div.appendChild(seen);
+                        select_remove_div.appendChild(remove);
+                        select_edit_div.appendChild(edit);
+                        select_copy_div.appendChild(copy);
+
+                        select_seen_div.appendChild(seen_p);
+                        select_remove_div.appendChild(remove_p);
+                        select_edit_div.appendChild(edit_p);
+                        select_copy_div.appendChild(copy_p);
+
+                        remove_div.appendChild(select_seen_div);
+                        remove_div.appendChild(select_remove_div);
+                        remove_div.appendChild(select_edit_div);
+                        remove_div.appendChild(select_copy_div);
+
+                        chat_interface.appendChild(background_div);
+
+                        const clone_element = message_element.cloneNode(true);
+                        clone_element.appendChild(remove_div);
+                        background_div.appendChild(clone_element)
+
+                        clone_element.style.zIndex = "1000";
+                        clone_element.style.paddingRight = "10px";
+                        clone_element.style.marginBottom = "214px";
+
+                        background_div.scrollTo(0, background_div.scrollHeight);
+
+                        background_div.addEventListener('click', () => {
+                                touch_active = false;
+                                background_div.remove();
+                        });
+
+                        select_seen_div.addEventListener('click', async (event) => {
+                                event.stopPropagation();
+                                await show_message_seens(uuid, clone_element, remove_div)
+                        })
+
+                        select_copy_div.addEventListener('click', () => {
+                                touch_active = false;
+                                let text = message_text_div.textContent;
+                                let temp_input = document.createElement('input');
+                                temp_input.value = text;
+                                document.body.appendChild(temp_input);
+                                temp_input.select();
+                                temp_input.setSelectionRange(0, 99999);
+                                document.execCommand('copy');
+                                document.body.removeChild(temp_input);
+                                background_div.remove();
+                        })
+
+                        select_edit_div.addEventListener('click', () => {
+                                touch_active = false;
+                                background_div.remove();
+                                remove_div.remove();
+
+                                const edit_div = document.createElement('div');
+                                const edit_text = document.createElement('div');
+                                const line_div = document.createElement('div');
+                                const editing_div = document.createElement('div');
+                                const edit_icon = document.createElement('img');
+                                const remove = document.createElement('img');
+
+                                edit_text.textContent = message_text_div.textContent; 
+                                remove.src = "/db/get?id=0f0a0fd9-869d-41e3-819f-45ece96f2654-8caaca49-41af-4330-baca-7edbeb03276a";
+                                edit_icon.src = "/db/get?id=ffb30837-5eb2-4795-b21e-8923ac7a8fe0-c24bab06-dbbb-4995-af7d-50003d79dccd";
+
+                                input_message.value = message_text_div.textContent;
+                                input_message.focus();
+
+                                edit_message.style.display = 'block';
+                                submit_message.style.display = 'none';
+                                attach.style.display = 'none';
+                                record_message.style.display = 'none';
+                                footer_div.style.paddingRight = '20px';
+
+                                edit_div.className = "edit_div";
+                                edit_text.className = "edit_text";
+                                line_div.className = "edit_line";
+                                editing_div.className = "editing_div";
+                                edit_icon.className = "edit_icon";
+
+                                editing_div.appendChild(edit_icon);
+                                editing_div.appendChild(line_div);
+                                editing_div.appendChild(edit_text);
+                                edit_div.appendChild(editing_div);
+                                edit_div.appendChild(remove);
+                                chat_body.appendChild(edit_div);
+
+                                input_message.removeEventListener('input', input_settings); 
+                                input_message.addEventListener('input', input_settings);
+
+                                remove.addEventListener('click', () => {
+                                        background_div.remove();
+                                        edit_div.remove();
+
+                                        edit_message.style.display = 'none';
+                                        attach.style.display = 'block';
+                                        record_message.style.display = 'block';
+
+                                        input_message.style.height = '24px';
+                                        message_div.style.height = '37px';
+                                        footer.style.height = '65px';
+                                        footer_div.style.height = '65px';
+                                        chat_body.style.bottom = '65px';
+                                        footer_div.style.paddingRight = '0';
+
+                                        input_message.removeEventListener('input', input_settings);
+                                        input_message.value = "";
+                                });
+
+                                edit_message.onclick = function(){handle_edit_message_click()}        
+
+                                function input_settings() {
+                                        submit_message.style.display = "none";
+                                        if (input_message.value.trim().length > 0 ) {
+                                                const currentScrollTop = chat_body.scrollTop;
+
+                                                edit_message.style.display = "block";
+                                                input_message.style.height = '24px';
+                                                input_message.style.height = input_message.scrollHeight + 'px';
+                                                message_div.style.height = input_message.scrollHeight + 5 + 'px';
+                                                footer_div.style.height = input_message.scrollHeight + 33 + 'px';
+                                                footer.style.height = input_message.scrollHeight + 33 + 'px';
+                                                chat_body.style.bottom = input_message.scrollHeight + 33 + 'px';
+                                                edit_div.style.bottom = (footer.offsetHeight) - 1 + 'px';
+                                                chat_body.scrollTop = currentScrollTop + input_message.scrollHeight + 33;
+                                        } else if(input_message.value.includes("\n")) {
+                                                const currentScrollTop = chat_body.scrollTop;
+
+                                                input_message.style.height = '24px';
+                                                input_message.style.height = input_message.scrollHeight + 'px';
+                                                message_div.style.height = input_message.scrollHeight + 5 + 'px';
+                                                footer_div.style.height = input_message.scrollHeight + 33 + 'px';
+                                                footer.style.height = input_message.scrollHeight + 33 + 'px';
+                                                chat_body.style.bottom = input_message.scrollHeight + 33 + 'px';
+                                                edit_div.style.bottom = (footer.offsetHeight) - 1 + 'px';
+
+                                                chat_body.scrollTop = currentScrollTop + input_message.scrollHeight + 33;
+                                        } else {
+                                                edit_message.style.display = "none";
+                                                edit_div.style.bottom = (footer.offsetHeight) + 'px';
+                                                reset_input_styles()
+                                        }
+                                }
+
+                                async function handle_edit_message_click() {
+                                        if(!input_message.value) {
+                                                return
+                                        }
+                                        const message = await getJSON(message_element.id);
+                                        const chat = await getJSON(chat_uuid);
+                                        message.text = input_message.value;
+                                        message.edited = true;
+
+                                        chat.edits.push(message_element.id);
+                                        await updateJSON(message_element.id, JSON.stringify(message));
+                                        await updateJSON(correct_chat_uuid, JSON.stringify(chat));
+
+                                        edit_div.remove();
+                                        input_message.value = "";
+
+                                        edit_message.style.display = 'none';
+                                        submit_message.style.display = 'none';
+                                        attach.style.display = 'block';
+                                        record_message.style.display = 'block';
+                                        footer_div.style.paddingRight = '0';
+                                        message_div.style.height = '37px';
+                                        input_message.style.height = '24px';
+                                        footer.style.height = '65px';
+                                        footer_div.style.height = '65px';
+                                        chat_body.style.bottom = '65px';
+                                        input_message.removeEventListener('input', input_settings);
+                                }
+                        });
+
+                        select_remove_div.addEventListener('click', async () => {
+                                touch_active = false;
+                                background_div.remove() 
+                                const chat = await getJSON(chat_uuid);
+                                chat.messages = chat.messages.filter(item => item !== uuid);
+                                chat.edits = chat.edits.filter(item => item !== uuid);
+                                await updateJSON(chat.uuid, JSON.stringify(chat));
+                                await deleteJSON(uuid)
+                        });
+                }, waiting_time); 
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+function handle_media_touch_timer(event, message_text_div, message_element, chat_uuid, uuid, media) {
+        try {
+                touch_timer = setTimeout(() => {
+                        if (touch_active) return; 
+                        touch_active = true;
+
+                        const background_div = document.createElement('div');
+                        const remove_div = document.createElement('div');
+                        const select_seen_div = document.createElement('div');
+                        const select_remove_div = document.createElement('div');
+                        const seen = document.createElement('img');
+                        const remove = document.createElement('img');
+                        const seen_p = document.createElement('p');
+                        const remove_p = document.createElement('p');
+
+                        seen.src = "/db/get?id=dfd4e83c-4a29-41cd-b8f2-9faf731ccb64-b17b1754-7228-4ee3-af76-c8cc06d95bd9"
+                        remove.src = "/db/get?id=ff29965f-255f-4125-84ee-b0ebd413d0f7-26bbfd6a-0c64-41fc-9d84-c7681ee73383";
+
+                        background_div.className = "background_div"
+                        remove_div.className = "remove_div";
+
+                        [select_seen_div, select_remove_div].forEach(el => el.className = 'select');
+                        [seen_p, remove_p].forEach(el => el.className = 'select_p');
+                        [seen, remove].forEach(el => el.className = 'select_img');
+
+                        seen_p.textContent = "Դիտել են";
+                        remove_p.textContent = "Ջնջել";
+
+                        select_seen_div.appendChild(seen);
+                        select_remove_div.appendChild(remove);
+                        select_seen_div.appendChild(seen_p);
+                        select_remove_div.appendChild(remove_p);
+                        remove_div.appendChild(select_seen_div);
+                        remove_div.appendChild(select_remove_div);
+                        chat_interface.appendChild(background_div);
+
+                        const clone_element = message_element.cloneNode(true);
+                        clone_element.appendChild(remove_div);
+                        background_div.appendChild(clone_element);
+
+                        clone_element.style.zIndex = "1000";
+                        clone_element.style.paddingRight = "10px";
+                        clone_element.style.bottom = "214px";
+                        background_div.scrollTo(0, background_div.scrollHeight);
+
+                        background_div.addEventListener('click', () => {
+                                touch_active = false;
+                                background_div.remove();
+                        })
+
+                        select_seen_div.addEventListener('click', async (event) => {
+                                event.stopPropagation();
+                                await show_message_seens(uuid, clone_element, remove_div)
+                        })
+
+                        select_remove_div.addEventListener('click', async () => {
+                                touch_active = false;
+                                background_div.remove() 
+                                const chat = await getJSON(chat_uuid);
+                                chat.messages = chat.messages.filter(item => item !== uuid);
+                                chat.edits = chat.edits.filter(item => item !== uuid);
+                                await updateJSON(chat.uuid, JSON.stringify(chat));
+                                await deleteJSON(media)
+                                await deleteJSON(uuid)
+                        });
+                }, waiting_time); 
+        } catch(e) {
+                console.error(e)
+        }
+}
+
+async function show_chat_users(users_array) {
+        try {
+                const transparent = document.createElement('div');
+                const users_div = document.createElement('div');
+                const title_div = document.createElement('div');
+                const close = document.createElement('img');
+                const title = document.createElement('p');
+                const add = document.createElement('img');
+
+                close.src = "/db/get?id=0f0a0fd9-869d-41e3-819f-45ece96f2654-8caaca49-41af-4330-baca-7edbeb03276a";
+                add.src = "/db/get?id=ec73315e-d08d-4627-9887-8944a564b008-f431af84-fbb7-4818-b608-6ca284e4216d";
+
+                transparent.className = "transparent_div";
+                users_div.className = "users_div";
+                title_div.className = "users_title_div";
+                title.textContent = "Զրուցարանի աւգտատէրեր";
+
+                close.addEventListener('click', () => {
+                        transparent.remove();
+                        burger.style.pointerEvents = "auto";
+                })
+
+                chat_interface.appendChild(transparent);
+                transparent.appendChild(title_div);
+                transparent.appendChild(users_div);
+                title_div.appendChild(close);
+                title_div.appendChild(title);
+                title_div.appendChild(add);
+
+                const user_promises = users_array.map(async user => {
+                        const user_div = document.createElement('div');
+                        user_div.className = "user_div";
+                        user_div.textContent = user.name;
+
+                        return user_div;
+                });
+
+                const user_divs = await Promise.all(user_promises);
+                user_divs.forEach(user_div => users_div.appendChild(user_div));
+        } catch(e) {
+                console.log(e)
+        }
+}

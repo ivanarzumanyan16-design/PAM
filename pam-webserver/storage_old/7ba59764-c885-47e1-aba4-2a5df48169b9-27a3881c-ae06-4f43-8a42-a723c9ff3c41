@@ -1,0 +1,128 @@
+async function main() {
+        const p = await mani.metax.get(project).then(r => r.json());
+        const tasks = [];
+        const assignees = {};
+        for(let t of p.tasks) {
+                const task = await mani.metax.get(t).then(r => r.json());
+                if(!task.subtasks) {task.subtasks = []}
+                if(task.deadline) {
+                        if(filterTask(task)) {
+                                console.log("Pushing : ", task);
+                                tasks.push(task);
+                        }
+                }
+        }
+        tasks.sort((a, b) => new Date(b.deadline) - new Date(a.deadline));
+        let taskrows = "";
+        for(let st of tasks) {
+                let pr = "-";
+                let assignee = "-";
+                if(st.proirity) {
+                        pr = await mani.metax.get(st.proirity).then(r => r.json())
+                } else { pr = "-" }
+                if(st.assignee) {
+                        assignee = await mani.metax.get(st.assignee).then(r => r.json())
+                        assignee = await mani.getProperty(assignee, "name");
+                } else { assignee = "-" }
+                let colors = getTaskColor(st);
+                let color = colors.color;
+                let background_color = colors.background_color;
+                const a = assignee.name || assignee;
+                if(!assignees[a]) { assignees[a] = {}; assignees[a]["plan"] = 0; assignees[a]["fact"] = 0;}
+                assignees[a]["plan"] = assignees[a]["plan"] + (+st.estimated_completion_time || 0);
+                assignees[a]["fact"] = assignees[a]["fact"] + (+st.duration_fact || 0);
+                taskrows += `<tr style="color:${color};background-color:${background_color};">
+                        <td><b>${await mani.getProperty(st, "name")}</b><br><i>${st.description ? await mani.getProperty(st, "description").then(r => r.substring(0, 100)) + "..." : "-"}<i></td>
+                        <td>${st.estimated_completion_time || 0}</td>
+                        <td>${st.deadline}</td>
+                        <td>${assignee.name || assignee}</td>
+                </tr>`
+        }
+        let assignees_html = "";
+        for(let as of Object.keys(assignees)) {
+                assignees_html += `<h3>${as} : ${assignees[as]["plan"]} : ${assignees[as]["fact"]}</h3>`
+        }
+        const html = `<html>
+                <head>
+                        <title>${await mani.getProperty(p, "name")} տոմսակների ցուցատախտակ</title>
+                        <meta charset="utf-8">
+                        <style>
+                                body{
+                                        text-align:center;
+                                        line-height: 1.1;
+                                }
+                                table {
+                                        text-align:center;
+                                        border-collapse:collapse;
+                                        width:100%;
+                                }
+                                table,td,th {
+                                        border:1px solid grey;
+                                }
+                        </style>
+                </head>
+                <body>
+                        <table>
+                                <tr>
+                                        <th>Վերնագիր</th>
+                                        <th>Նախատեսուած(ժ)</th>
+                                        <th>Վերջնաժամկետ</th>
+                                        <th>Կատարող</th>
+                                </tr>
+                                ${taskrows}
+                        </table>
+                        ${assignees_html}
+
+                </body>
+        </html>`
+        //alert("Աւարտական աշխատանքի գնահատման յղում՝ " + hu);
+        if(!p.tickets_table) {
+                const hu = await mani.metax.save(html, "text/html");
+                p.tickets_table = hu;
+                await mani.metax.update(p.uuid, JSON.stringify(p));
+                alert("https://"+window.location.host+"/db/get?id=" + hu);
+        } else {
+                const hu = await mani.metax.update(p.tickets_table, html, "text/html");
+                alert("https://"+window.location.host+"/db/get?id=" + p.tickets_table);
+        }
+}
+
+function filterTask(t) {
+        const today = new Date();
+        const given_date = new Date(t.deadline);
+        given_date.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        //if(given_date.getTime() == today.getTime() || (given_date < today && t.status != "38531808-735b-4844-a1c1-7bd2f4ad287e-a95e9792-9709-4164-92bf-a4374ee43ced")) {
+        console.log(t.status);
+        if(t.status != "38531808-735b-4844-a1c1-7bd2f4ad287e-a95e9792-9709-4164-92bf-a4374ee43ced" && t.status != "89c47f6e-a9fc-44ef-9c52-048365c56ffc-54333197-ce18-44be-bf01-a5eba848bbd0") {
+                return true;
+        } else {
+                return false;
+        }
+}
+
+function getTaskColor(st) {
+        let color = "";
+        let background_color = "";
+        const today = new Date();
+        const given_date = new Date(st.deadline);
+        given_date.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        if(given_date < today) {
+                color = "white";
+                background_color = "black";
+        } else if(given_date.getTime() == today.getTime()) {
+                color = "black";
+                background_color = "white";
+        } else {
+                color = "black";
+                background_color = "white";
+        }
+        if(st.status == "e474c9be-497a-437e-8e20-ef968acdab5e") {
+                color = "white";
+                background_color = "green";
+        }
+        return {color:color, background_color:background_color};
+}
+
+main();

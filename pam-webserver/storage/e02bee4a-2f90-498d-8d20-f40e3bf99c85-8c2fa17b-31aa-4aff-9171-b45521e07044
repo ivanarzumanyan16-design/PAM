@@ -1,0 +1,1 @@
+{"type": "f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf", "name": "debian-test", "host": "10.8.8.107", "port": "22", "bastion_user": "bastion", "bootstrapped": "yes", "uuid": "e02bee4a-2f90-498d-8d20-f40e3bf99c85-8c2fa17b-31aa-4aff-9171-b45521e07044", "allow_sudo": "b4598a37-3126-42c1-a7b2-2906b12989f8", "servers_permissions": []}

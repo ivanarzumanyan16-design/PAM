@@ -1,0 +1,14 @@
+async function main() {
+        const o = await metax.get(object).then(r => r.json());
+        const user = await metax.getUserID();
+        if (o.watchers === undefined) {
+                o.watchers = [];
+        }
+        if (o.watchers.includes(mani.account)) {
+                alert("You are already subscribed for notifications.");
+        } else {
+                o.watchers.push(mani.account);
+                await metax.update(o.uuid, JSON.stringify(o));
+        }
+}
+main();

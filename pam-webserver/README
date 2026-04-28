@@ -1,0 +1,33 @@
+This default storage contains mani types, messenger, vostan.
+
+For privacy notices, it is strongly recommended not to use the OpenAI API.
+For privacy reasons, use of the OpenAI API is strictly not permitted.
+
+Certificates:
+	Metax certs you can generate using gen_certs.sh ( FQDN must be localhost ).
+	For greenhosting webserver use Let's Encrypt.
+
+Vostan startpage UUIDs:
+	Read-only: 
+	eff7378c-5c64-4bf8-bc13-a185f649e96e-3005988a-aca6-448e-b26c-66444b4ad17e
+
+	Editable: 
+	da774a74-ad61-40e4-96d9-cc18ce20329b-6f0032ed-7c37-4fec-8642-8c6c669bc4ef
+
+Installing node modules:
+	cd metax_2
+	npm install
+
+	cd greenhosting_webserver_2
+	npm install
+
+Changes and updates by CyberHayq:
+	1) Greenhosting webserver always using certs from cmdline config (npm start), for prevent server private key leak.
+	   Server certificates do not need to be uploaded to metax.
+	2) Smart startup and logging system:
+		2.1) Metax starting by systemd service.
+		2.2) Metax logging by systemd service or bash, with logs rotating.
+	3) Automatic sitemap generation.
+
+
+last change: 30.11.2024 Tigran

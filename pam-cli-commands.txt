@@ -1,0 +1,99 @@
+# PAM Bastion CLI — Шпаргалка (Cheat Sheet)
+
+Все команды выполняются из директории `/opt/PAM/bastion`.
+
+---
+
+## 1. Управление пользователями
+
+### Добавить пользователя
+```bash
+python3 pam_cli.py user add --username alice --key "ssh-ed25519 AAAA..."
+```
+> **ВАЖНО:** После добавления обязательно исправьте shell: `usermod -s /bin/bash alice`
+
+### Список пользователей
+```bash
+python3 pam_cli.py user list
+```
+
+---
+
+## 2. Управление группами
+
+### Создать группу
+```bash
+python3 pam_cli.py group add --name "devops"
+```
+
+### Добавить пользователя в группу
+```bash
+python3 pam_cli.py group add-member --group <GROUP_UUID> --user <USER_UUID>
+```
+
+---
+
+## 3. Управление серверами
+
+### Добавить сервер
+```bash
+python3 pam_cli.py server add --name "web-prod" --host "10.8.8.107" --port 22
+```
+
+### Список серверов
+```bash
+python3 pam_cli.py server list
+```
+
+### Подготовка сервера (Bootstrap)
+Генерирует скрипт настройки для целевого сервера и запускает его:
+```bash
+python3 pam_cli.py bootstrap --server <SERVER_UUID> | ssh root@<SERVER_HOST> bash
+```
+
+---
+
+## 4. Управление правами (ACL)
+
+### Дать доступ группе на сервер
+```bash
+# С правами sudo
+python3 pam_cli.py perm add --group <GROUP_UUID> --server <SERVER_UUID> --sudo
+
+# Без sudo (только вход)
+python3 pam_cli.py perm add --group <GROUP_UUID> --server <SERVER_UUID>
+```
+
+---
+
+## 5. Аудит и сессии
+
+### Список активных и прошедших сессий
+```bash
+python3 pam_cli.py sessions
+```
+
+---
+
+## Полезные советы (Tips)
+
+### Как быстро узнать UUID?
+Используйте `list` команды:
+```bash
+python3 pam_cli.py user list
+python3 pam_cli.py server list
+```
+
+### Как удалить объект?
+`pam_cli.py` пока не поддерживает `delete`, используйте `curl` к Metax2:
+```bash
+curl -sk --http2 "https://localhost:8000/db/delete?id=<UUID>"
+```
+
+### Как проверить права конкретного юзера вручную?
+```bash
+python3 -c "import sys; sys.path.insert(0, '.'); from metax_client import *; \
+u = get_user_by_username('alice'); s = get_server_by_name('10.8.8.107'); \
+print('Permission:', check_permission(u['uuid'], s['uuid']))"
+```
+

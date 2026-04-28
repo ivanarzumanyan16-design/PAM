@@ -1,0 +1,41 @@
+
+> metax@1.0.0 start
+> node src/rest_api.mjs storage=../storage/ port=8000 key=../certs/metax.key cert=../certs/metax.crt
+
+metax configured.
+db initialized
+https server started
+received new request from ::1, request path: /db/get?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+handling db request request path: /db/get?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+received get request with path /db/get?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+finish handling get request for 4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/register_listener?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9&token=4c4656d8-22db-40b7-a81c-275e38ff8453
+handling db request request path: /db/register_listener?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9&token=4c4656d8-22db-40b7-a81c-275e38ff8453
+received register_listener request with path /db/register_listener?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9&token=4c4656d8-22db-40b7-a81c-275e38ff8453
+received new request from ::1, request path: /db/get?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+handling db request request path: /db/get?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+received get request with path /db/get?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+finish handling get request for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/get?id=fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+handling db request request path: /db/get?id=fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+received get request with path /db/get?id=fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+finish handling get request for fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+received new request from ::1, request path: /db/register_listener?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a&token=4c4656d8-22db-40b7-a81c-275e38ff8453
+handling db request request path: /db/register_listener?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a&token=4c4656d8-22db-40b7-a81c-275e38ff8453
+received register_listener request with path /db/register_listener?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a&token=4c4656d8-22db-40b7-a81c-275e38ff8453
+received new request from ::1, request path: /db/get?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+handling db request request path: /db/get?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+received get request with path /db/get?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+finish handling get request for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/register_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=4c4656d8-22db-40b7-a81c-275e38ff8453
+handling db request request path: /db/register_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=4c4656d8-22db-40b7-a81c-275e38ff8453
+received register_listener request with path /db/register_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=4c4656d8-22db-40b7-a81c-275e38ff8453

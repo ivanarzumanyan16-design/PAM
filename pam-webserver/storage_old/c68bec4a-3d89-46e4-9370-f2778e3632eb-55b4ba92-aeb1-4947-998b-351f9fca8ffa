@@ -1,0 +1,25 @@
+async function main() {
+        const t = await metax.get(type).then(r => r.json());
+        t.enable_notifier = "b4598a37-3126-42c1-a7b2-2906b12989f8";
+        if (!t.collections.find(c => c.id === "watchers")) {
+                t.collections.push({
+                        id: "watchers",
+                        name: {
+                                en_US: "Watchers",
+                                hye_AM: "Դիտորդներ",
+                                xcl_AM: "Դիտորդք"
+                        },
+                        description: {
+                                en_US: "Accounts or Users in this collection will receive notification about object's update",
+                                hye_AM: "Այս հաւաքածուի հաշիւները կը ստանան ծանուցում առարկայի թարմացման մասին"
+                        },
+                        element_type: "a480317b-b7fa-4b81-8f19-ccb9224f3604",
+                        kind: "7764d377-e113-434d-a610-8c334a57ed7c"
+                })
+        }
+        if (t.methods.indexOf("d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45") === -1) {
+                t.methods.push("d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45");
+        }
+        metax.update(t.uuid, JSON.stringify(t));
+}
+main();

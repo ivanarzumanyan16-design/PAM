@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+        <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+                <link rel="stylesheet" href="/db/get?id=5fa39ef7-3e23-4f34-a491-f3a8f341c6a4-ebc9f479-6a8c-4a8c-98d5-6f060a92a719">
+                <script src="/db/get?id=590f7c4b-61da-48c6-ab3a-bfb0acf6b91a-2bb87dfb-97d3-494a-a01b-5c790f87d220" type="module" content-type="text/javascript"></script>
+                <link rel="icon" href="/db/get?id=1a5d7abe-9d77-4422-9be4-8a4a1bcad82a-54d91cc8-e0df-4f39-9537-ee072ad8f555" type="image/x-icon">
+                <title>Հաղորդակ</title>
+        </head>
+        <body>
+                <div id="messenger_interface" style="display: flex;">
+                        <div id="messenger_header">
+                        </div>
+                        <div id="messenger_body"></div>
+                        <div id="account_body">
+                                <h5>Էջը Խմբագրման փուլում է</h5>
+                        </div>
+                        <div id="settings_body">
+                                <h5>Էջը խմբագրման փուլում է</h5>
+                        </div>
+                        <div id="messenger_footer">
+                                <img src="/db/get?id=2aec465e-3ea3-4818-bba3-927fa1782f88-bfe162ad-d45e-4f32-9b06-299684ec665b" id="personal" class="footer_icon"/>
+                                <img src="/db/get?id=36c80135-44f7-42dd-82cb-6ee067915e0f-568c8a6c-b3c9-4583-bf3b-262acce589a6" id="chat" class="footer_icon"/>
+                                <img src="/db/get?id=d33d0e32-c8c1-415e-8ac3-d6fec8d4fb87-f34b3639-a251-4263-ac06-4cd56d18f391" id="settings" class="footer_icon"/>
+                        </div>
+                </div>
+                <div id="chat_interface">
+                        <div id="header">
+                                <img src="/db/get?id=23f352c0-e956-4e46-83a2-d28f5c9d0952-c9509fdf-a197-444f-8a71-e86f472f1f59" id="back">
+                                <div id="chat_name_div"></div>
+                                <img src="/db/get?id=fe58bdac-5f45-4df9-8503-1361d77eadf1-c3c1cdcc-9e48-42c7-b805-cf709cf42024" id="burger">
+                        </div>
+                        <div id="body"></div>
+                        <div id="footer">
+                                <div id="footer_div">
+                                        <div id="message_div">
+                                                <textarea id="input_message" placeholder="Գրել հաղորդագրութիւն" maxlength="4096"></textarea>
+                                                <div class="sending_button">
+                                                        <img src="/db/get?id=fd25e184-f5af-4b36-b392-f1d715f0cf8d-34cc474c-359d-411b-8598-8b3d08cfccea" class="submit_message" id="submit_message"/>
+                                                        <img src="/db/get?id=fd25e184-f5af-4b36-b392-f1d715f0cf8d-34cc474c-359d-411b-8598-8b3d08cfccea" class="submit_message" id="edit_message"/>
+                                                        <img src="/db/get?id=665af7c0-80a3-4b14-8d48-62c2636c56ac-16b72529-ae5b-47af-bcd1-08d0c17441d8" id="attach"/>
+                                                </div>
+                                        </div>
+                                </div>
+                                <img src="/db/get?id=954adb9a-047a-4860-8ffa-0338c4b115f2-7425b1c2-2822-4907-ac1a-2265a870ce0c" id="voicemsg_btn"/>
+                        </div>
+                        <div id="voice_footer">
+                                <div id="recording_div">0:00</div>
+                                <p id="cancel_recording">չեղարկել</p>
+                                <img src="/db/get?id=62428d60-5e07-4873-ba4b-ab04d1423a40-eeee0316-3548-4023-aaa8-e4a22f7a0622" id="send_btn"/>
+                        </div>
+                </div>
+        </body>
+</html>

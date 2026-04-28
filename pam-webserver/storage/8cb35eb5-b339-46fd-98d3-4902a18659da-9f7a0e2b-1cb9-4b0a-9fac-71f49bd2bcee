@@ -1,0 +1,18 @@
+async function getJSON(uuid) {
+        return metax.get(uuid).then(r => r.json())
+                .catch(e => alert("getJSON: got an error " + e));
+}
+
+async function updateJSON(uuid, data) {
+        await metax.update(uuid, data, "application/json")
+                .catch(e => alert("updateJSON: got an error " + e));
+};
+
+async function set_property() {
+        const obj = await getJSON(test["uuid"]);
+        obj[Object.keys(arg)[0].toString()] = Object.values(arg).toString();
+        await updateJSON(obj["uuid"], JSON.stringify(obj));
+        return "changed successfully";
+}
+
+return set_property();

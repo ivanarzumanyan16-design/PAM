@@ -1,0 +1,48 @@
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Document</title>
+                <style>
+                        body {
+                                text-align: left;
+                                font-size: 8px;
+                        }
+
+                        table {
+                                font-family: arial, sans-serif;
+                                border-collapse: collapse;
+                                width: 100%;
+                        }
+
+                        td, th {
+                                border: 2px solid black;
+                                text-align: left;
+                                padding: 8px;
+                                font-size: 10px;
+                        }
+
+                        th {
+                                background-color: #dddddd;
+                        }
+                </style>
+                </head>
+                <body>
+                        <h1>Ռազմավարական ծրագիր</h1>
+
+                        <p>Սոյն փաստաթուղթը ներկայացնում է «ՄՈՒՀ֊ի ռազմավարական ծրագիր»֊ը</p>
+
+                        <div>
+                                    <h1>Ռազմավարական ուղղութիւններ</h1>
+                                    <p>Տուեալ գլխում յարկաւոր է ներկայացնել ՄՈՒՀ֊ի Ռազմավարական ծրագրի «Ռազմավարական ուղղութիւններ» բովանդակութիւնը։</p>
+                                </div><div>
+                                    <h1>Ժամանակացոյց</h1>
+                                    <p>Տուեալ գլխում յարկաւոր է ներկայացնել ՄՈՒՀ֊ի Ռազմավարական ծրագրի «Ժամանակացոյց» բովանդակութիւնը։</p>
+                                </div><div>
+                                    <h1>Ռազմավարական նպատակներ</h1>
+                                    <p>Տուեալ գլխում յարկաւոր է ներկայացնել ՄՈՒՀ֊ի Ռազմավարական ծրագրի  «Ռազմավարական նպատակներ» բովանդակութիւնը։</p>
+                                </div>
+                </body>
+                </html>

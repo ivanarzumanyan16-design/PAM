@@ -1,0 +1,1458 @@
+/*
+vim: tabstop=8:shiftwidth=8:expandtab:fo=croq:syntax=javascript:smartindent
+
+revision: {
+
+        name: metax.mjs
+
+        repo path: https://yerevan.leviathan.am:7071
+
+        version: ca784ae0-0ed8-44bd-9148-622ceec623f2
+
+        previous_version: 1e291f24-5ece-4d01-9807-cbb5e3872f7
+
+        metax.min.mjs: 059e4122-24a3-45a2-8953-7c650f675607
+
+        authors: tatevik_d, hayk_b, tatevik_d, anna_a, anna_a,
+                tatevik_d
+
+        date: Չրք Փտր 12 10:21:04 +04 2020
+
+
+        comment: 1. Added new APIs get_metax_info, set_metax_info
+                 2. Added register and unregister listener on metax sync finish
+                 3. Implemented get user keys api
+                 4. Added handling of the generic reciver of sendto metax web api
+                 5. Added implementation of the sendto_by_key
+                 6. Added implementation of the get_online_peers functionality
+                 7. Added implementation of the keys transfer
+                 8. Added implementation of the regenerate_user_keys functionality
+                 9. Added flag for not sending my device registered notifications
+                 10. Done fix connected with metax sync message structrue changes
+                 11. Added registerMetaxEvents listeners for registering callback
+                           when metax event is received to websocket. No tests added
+                                (Tests were written for unit metax.To test this,
+                                        need to run at least one peer of metax)
+                12. Added integration of the metax_web_api metax access token
+}
+
+*/
+
+/** 
+ * @file metax.mjs 
+ * @author e-Hayq cjsc, Yerevan, Armenia
+ * @copyright e-Hayq cjsc, Yerevan, Armenia
+ * @license MIT opensource license
+ */
+
+/** @private */
+const notDefinedYet = 0;
+
+/** The Metax singleton object */
+let metax = notDefinedYet;
+
+/** 
+ * @summary The Metax singleton class: wrapper over metax_web_api REST API 
+ *
+ * @todo Add methods to manage metax_web_api process: start/restart/stop
+ *
+ * @todo Add methods to modify config-file of the metax_web_api (e.g. change
+ *       port, connect to peer, manage storage, etc)
+ *
+ */
+class Metax {
+        /**
+         *  @summary Creates/initializes the singleton instance.
+         *
+         *  @description Note that the API is not connected. To fully
+         *      initialize still need to call {@link connect}.
+         *  
+         *  @todo: derive this from Singleton class to avoid 
+         *         messy code everywhere
+         */
+        constructor() { 
+                console.assert( metax === notDefinedYet,
+                        'Trying to create second instance of class Metax');
+                this.mHost = notDefinedYet;
+                this.mPort = notDefinedYet;
+                this.mAccessToken = notDefinedYet;
+                this.mListeners = {};
+                this.mEvents = [];
+                this.mPublicKeyEvent = [];
+                this.mOpenChannelEvent = [];
+                this.mGenericProtocolListeners = [];
+                this.mProtocol = notDefinedYet;
+                this.mGetRequest = notDefinedYet;
+                this.mCopyRequest = notDefinedYet;
+                this.mRegisterListenerRequest = notDefinedYet;
+                this.mSavePathRequest = notDefinedYet;
+                this.mSaveAnyDataRequest = notDefinedYet;
+                this.mDeleteRequest = notDefinedYet;
+                this.mSaveRequest = notDefinedYet;
+                this.mShareRequest = notDefinedYet;
+                this.mSendToRequest = notDefinedYet;
+                this.mGetOnlinePeersRequest = notDefinedYet;
+                this.mSendEmailRequest = notDefinedYet;
+                this.mServicePath = notDefinedYet;
+                this.mUnregisterListenerRequest = notDefinedYet;
+                this.mGetMetaxInfoRequest = notDefinedYet;
+                this.mSetMetaxInfoRequest = notDefinedYet;
+                this.mWebsocket = notDefinedYet;
+                this.mWebsocketPath = notDefinedYet;
+                this.mWebsocketProtocol = notDefinedYet;
+                this.mGetUserKeysRequest = notDefinedYet;
+                this.mGetUserPublicKeyRequest = notDefinedYet;
+                this.mStartPairing = notDefinedYet;
+                this.mStartChannelPairing = notDefinedYet;
+                this.mCancelPairing = notDefinedYet;
+                this.mGetPairingPeers = notDefinedYet;
+                this.mRequestKeysRequest = notDefinedYet;
+                this.mRequestPublicKeyRequest = notDefinedYet;
+                this.mOpenChannelRequest = notDefinedYet;
+                this.mRegenerateUserKeysRequest = notDefinedYet;
+                this.mRequestKeysRequestSecondParameter = notDefinedYet;
+                this.mListenerToken = notDefinedYet;
+                this.mGetPropertyRequest = notDefinedYet;
+                this.mGetCollectionRequest = notDefinedYet;
+                this.mSetPropertyRequest = notDefinedYet;
+                this.mAddElementToCollectionRequest = notDefinedYet;
+                this.mCreateElementInCollectionRequest = notDefinedYet;
+                this.mDeleteElementFromCollectionRequest = notDefinedYet;
+                this.mWrapRequest = notDefinedYet;
+                this.mGetPropertyInEmbeddedObjectRequest = notDefinedYet;
+                this.mSetPropertyInEmbeddedObjectRequest = notDefinedYet;
+                this.mCreateElementInEmbeddedCollectionRequest = notDefinedYet;
+                this.mDeleteElementFromEmbeddedCollectionRequest = notDefinedYet;
+                this.mCreateElementInEmbeddedObjectsCollectionRequest = notDefinedYet;
+                this.mDeleteElementFromEmbeddedObjectsCollectionRequest = notDefinedYet;
+                this.mWrapEmbeddedObjectRequest = notDefinedYet;
+                this.mGetUserIDRequest = notDefinedYet;
+                this.mNotifyRequest = notDefinedYet;
+                this.mtranslateRequest = notDefinedYet;
+        }
+
+        /**
+         *  @summary Connects with metax server
+         *  @param {String} h is the DNS or IP of host running metax_web_api
+         *  @param {Number} p is the metax_web_api server port name on host
+         *  @param {Boolean} e if true then will use GPG/AES encryption,
+         *                   otherwise will store data in Metax unencrypted
+         *  @param {Boolean} s if true, then will use https, otherwise
+         *                   will use http to connect with metax_web_api
+         *  @todo Add public/private key management & user-info management.
+         *  @todo Decide on using http vs https (e.g. check if local fails
+         *        with http because of lack of certificate...)
+         *
+         *  Implementation Note: Have to pass on methods bound with this,
+         *  because inside the handlers it's lost, e.g. inside
+         *  websocket.onmessage the variable 'this' is set to websocket.
+         */
+        async connect(h='localhost',p=8001,e=true,s=false,t="") {
+                console.assert(metax === this, 'metax must be a singleton');
+                this.setupConnectionParameters(h,p,e,t,s);
+                this.createWebsocket().catch(e => {
+                        console.error("failed to connect websocket", e);
+                })
+        }
+
+        /**
+         *  @summary Disonnects from metax server
+         */
+        async disconnect() {
+                this.mWebsocket.onclose = () => {};
+                await this.mWebsocket.close();
+                return 'success';
+        }
+
+        /** 
+         * @summary Check if the given string is a valid UUID-4 format.
+         * @param uuid - input string to check
+         * @todo find out if we should support UUID-5 or stick with 4
+         * @todo: derive this from UUID class, 
+         *         where other functions should be put
+         */
+ isValidUUID(u) {
+                return /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i.test(u) ||
+                        /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}-[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i.test(u);
+        }
+        /**
+         * @summary Save given data with given mime-type and return uuid
+         * @param data - any data (blob/json/etc) to be sent to Metax
+         * @param mime - MIME type of the object to be served back in get()
+         * @param enc - Encryption level of file to save( default is the enc defined on connect )
+         */
+        async save(data, mime='application/javascript', onProgress, enc = metax.mEncryption) {
+                const r = await this.HTTPPost(this.mSaveRequest + enc, data, mime,
+                                this.mAccessToken, onProgress, data.length);
+                console.assert(
+                        this.isValidUUID(r.uuid), 
+                        `response to metax.save(${data},${mime}) ` + 
+                        `returned an invalid uuid=${r.uuid}`
+                );
+                return r.uuid;
+        }
+         
+        /** @summary Save given data with given mime-type and return uuid
+         * @param data - any data (blob/json/etc) to be sent to Metax
+         * @param mime - MIME type of the object to be served back in get()
+         * @param enc - Encryption level of file to save( default is the enc defined on connect )
+         */
+        async saveData(data, mime = "application/javascript", onProgress, enc = metax.mEncryption, ) {
+                let size = 0;
+                try {
+                        size = data.get("size")
+                } catch { }
+                const s = await this.HTTPPost(this.mSaveAnyDataRequest + enc, data, mime,
+                                this.mAccessToken, onProgress, size);
+                console.assert(
+                        this.isValidUUID(s.uuid), 
+                        `response to metax.saveData(${data},${mime}) ` + 
+                        `returned an invalid uuid=${s.uuid}`
+                );
+                return s.uuid;
+        }
+
+        /**
+         * @summary Ask local metax to take data from the given file
+         * @param data - any data (blob/json/etc) to be sent to Metax
+         * @param mime - MIME type of the object to be served back in get()
+         */
+        async takeFile(path, mime) {
+                const r = await this.HTTPPost(this.mSavePathRequest,path,mime,
+                                this.mAccessToken);
+                console.assert(
+                        this.isValidUUID(r.uuid), 
+                        `response to metax.takeFile(${path},${mime}) ` + 
+                        `returned an invalid uuid=${r.uuid}`
+                );
+                return r.uuid;
+        }
+
+        /**
+         * @summary Function save data instead of node option
+         * TODO: this is draft version of this function, we need to add generic
+         * implementation
+         * TODO: need to make test for this function
+         */
+        async takeFileFromUrl(e, s, enc = 0) {
+                const p = `${this.mProtocol}://${this.mHost}:${this.mPort}`;
+                const r = `${p}/db/save/data?enc=${enc}`;
+                return fetch(r, {
+                                 method: 'post',
+                                 headers: { 'Content-Type': s },
+                                 body: e
+                                 })
+                .catch( e => {
+                        throw Error(`fetch(${url}) resulted in error:\n ${e}`);
+                });
+        }
+
+        /**
+         * @summary Update data at given uuid and mime-type.
+         * @param uuid - must be a valid uuid of existing object in Metax
+         * @param data - is the new value to be saved for the object
+         * @param mime - must be the same as when used to create the object.
+         * @todo Metax - must be modified to not require MIME upon update.
+         */
+        async update(uuid,data,mime='application/json', enc =  metax.mEncryption) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.update() is passed an invalid uuid=${uuid}`
+                );
+                const r = await this.HTTPPost(
+                        this.mSaveRequest + `${enc}&id=${uuid}`,
+                        data, mime, this.mAccessToken
+                );
+                console.assert(
+                        r.uuid === uuid, 
+                        `metax.update(${uuid}...) returned a `+
+                        `different uuid=${uuid}`
+                );
+                return 'success';
+        }
+
+        /**
+         * @summary Copy data at given uuid
+         * @param uuid - must be a valid uuid of existing object in Metax
+         */
+        async copy(uuid) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        'metax.copy() is passed an invalid uuid =',
+                        uuid
+                );
+                const r = await this.HTTPGet(this.mCopyRequest + uuid,
+                                this.mAccessToken);
+                console.assert(r, 'response to metax.copy() is not ok');
+                return r;
+        }
+
+        /**
+         * @summary Share specified data for the given url
+         * @param uuid - must be a valid uuid of existing object in Metax
+         * @param public_key - user public key
+         * todo: need to add test
+         * todo: need to add accept share
+         */
+        async share(uuid, public_key, mime) {
+                console.assert(
+                        this.isValidUUID(uuid),
+                        `metax.share() is passed an invalid uuid=${uuid}`
+                );
+                const r = await this.HTTPPost(
+                        this.mShareRequest + `&id=${uuid}key=${public_key}`,
+                        `key=${public_key}`, mime, this.mAccessToken)
+                .catch( e => {
+                        throw Error(`share(${uuid}) resulted` +
+                               `in error:\n ${e}`);
+                });
+                console.assert(
+                                r.share_uuid === uuid,
+                                `metax.share(${uuid}...) returned a `+
+                                `different uuid=${uuid}`
+                              );
+                return r;
+        }
+
+        /**
+         * @summary Accept share for specified uuid
+         * @param uuid - must be a valid uuid of existing object in Metax
+         * @param public_key - encripted key
+         * @param iv - initialization vector
+         */
+        async accept_share(uuid, public_key, iv,  mime) {
+                console.assert( this.isValidUUID(uuid), `metax.accept_share() +
+                                is passed an invalid uuid=${uuid}`);
+                const p = `key=${public_key}&iv=${iv}`
+                const r = await this.HTTPPost(
+                        this.mAcceptShareRequest + `&id=${uuid}`, p, mime,
+                        this.mAccessToken)
+                .catch( e => {
+                        throw Error(`accept_share(${uuid}) resulted` +
+                                `in error:\n ${e}`);
+                });
+                console.assert(
+                                r.share === "accepted",
+                                `metax.accept_share is not accepted`
+                              );
+                return 'success';
+        }
+
+        /**
+         * @summary Send email
+         * @param to - must be a valid email address of the recipent
+         * @param cc - valid email address for cc
+         * @param bcc - valid email address for bcc
+         * @param from - valid address of sender, or name(adn/or lastname)
+         * followed by email address in <> parenthesis
+         * @param subject - subject of the email
+         * @param message - content of the email
+         * @param mime - mime type for sending request
+	 * @param server - server of sending email
+	 * @param port - port of sending email
+         */
+        async send_email(to, cc, bcc, from, subject, message, mime, server, port = 587, password = '') {
+                const password_url = password == '' ?
+                        '' : `&password=${password}`;
+                const p = `to=${to}&cc=${cc}&bcc=${bcc}&from=${from}\
+                          &subject=${subject}&message=${message}\
+                          &server=${server}&port=${port}${password_url}`;
+                const r = await this.HTTPPost(
+                                this.mSendEmailRequest + p, p, mime,
+                                this.mAccessToken)
+                .catch( e => {
+                        throw Error(`send_email(${to}) resulted in` +
+                                `error:\n ${e}`);
+                });
+                console.assert(
+                                r.success === 1,
+                                `metax.send_email function isfailed`
+                              );
+                return 'success';
+        }
+
+        /**
+         * @summary Sendto request by key
+         * @param data - any data which need to be send to peer
+         * @param public_key - receiver's pulic key
+         */
+        async sendto_by_key(public_key, data, mime='application/json') {
+                const k = encodeURIComponent(public_key);
+                const d = encodeURIComponent(data);
+                const r = await this.HTTPPost(this.mSendToRequest,
+                    `key=${k}&data=${d}`, mime, this.mAccessToken)
+                .catch( e => {
+                        throw Error(`sendto_by_key(${data}) resulted in` +
+                                `error:\n ${e}`);
+                });
+                return r;
+        }
+
+        /**
+         * @brief Get Metax online peer list: address, device_id,
+         *      user_public_key
+         * @throws Error if the request to Metax server failed.
+         */
+        async get_online_peers() {
+                const r = await this.HTTPGet(this.mGetOnlinePeersRequest,
+                                this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${this.mGetOnlinePeersRequest})`+
+                                ` resulted in error:\n ${e}`);
+                });
+                const l = await r.json();
+                return l;
+        }
+
+        /**
+         * @summary Delete data at given uuid 
+         * @param uui - must be a valid uuid of the existing object in Metax
+         */
+        async delete_from_db(uuid) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.delete_from_db() is passed an invalid +
+                        uuid=${uuid}`);
+                await this.HTTPGet( this.mDeleteRequest + `id=${uuid}`,
+                                this.mAccessToken)
+                .then( async r => {
+                                const q = await r.json();
+                                console.assert( q.uuid === uuid, 
+                                        `metax.delete_from_db(${uuid}...)` +
+                                        `returned a `+ `different uuid=${uuid}`
+                                );
+                })
+                .catch( e => {
+                        throw Error(`delete_from_db(${uuid}) resulted in` +
+                                `error:\n ${e}`);
+                });
+                return 'success';
+        }
+
+        /**
+         *  @sumary Fetches and returns data at given uuid
+         *  @param uuid must e a valid UUID of existing data in Metax
+         *  @throws Error if network error occured or if UUID is not found.
+         *  @todo Throw different errors for each case: NetworkError and 
+         *        UUIDIsNotFound error, and UUIDAccessDenied error, etc.
+         *  @todo Maybe we don't want to differentiate between Not-Found
+         *        and permisison-denied for security reasons. 
+         */
+        async get(uuid) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.get() is passed an invalid uuid = ${uuid}`
+                );
+                const r = await this.HTTPGet(this.mGetRequest + uuid,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.get() is not ok');
+                return r;
+        }
+
+        /**
+         * @sumary Register generic protocol function callback
+         * @param {MetaxListenerCallback} cb is the callback to be
+         */
+        async registerGenericProtocol(cb) {
+                try {
+                        this.mGenericProtocolListeners.push(cb);
+                } catch (e) {
+                        console.error(`Unable to add Callback: ${e}`);
+                }
+        }
+
+        /**
+         * @sumary Unregister generic protocol
+         * @param {MetaxListenerCallback} cb is the callback to be
+         */
+        async unregisterGenericProtocol(cb) {
+                console.assert(this.mGenericProtocolListeners);
+                const i = this.GenericProtocolCallBack.indexOf(cb);
+                if (-1 != i) {
+                        this.GenericProtocolCallBack.splice(i, 1);
+                }
+        }
+
+        /**
+         * @sumary Register callback to public key events
+         * @param {MetaxEventsCallback} cb is the callback to be
+         */
+        async registerPublicKeyEvent(cb) {
+                try {
+                         console.assert(this.mPublicKeyEvent);
+                         this.mPublicKeyEvent.push(cb);
+                } catch (e) {
+                        console.error(`Unable to add Callback: ${e}`);
+                }
+        }
+        
+        /**
+         * @sumary Unregister callback to metax events
+         * @param {MetaxEventsCallback} cb is the callback to be
+         */
+        async unregisterOpenChannelEvent(cb) {
+                console.assert(this.mOpenChannelEvent);
+                const i = this.mOpenChannelEvent.indexOf(cb);
+                if (-1 != i) {
+                        this.mOpenChannelEvent.splice(i, 1);
+                }
+        }
+        
+        /**
+         * @sumary Register callback to public key events
+         * @param {OpenChannelEvent} cb is the callback to be
+         */
+        async registerOpenChannelEvent(cb) {
+                try {
+                        console.assert(this.mOpenChannelEvent);
+                        this.mOpenChannelEvent.push(cb);
+                } catch (e) {
+                        console.error(`Unable to add Callback: ${e}`);
+                }
+        }
+        
+        /**
+         * @sumary Register callback to public key events
+         * @param {MetaxEventsCallback} cb is the callback to be
+         */
+        async registerPublicKeyEvent(cb) {
+                try {
+                         console.assert(this.mPublicKeyEvent);
+                         this.mPublicKeyEvent.push(cb);
+                } catch (e) {
+                        console.error(`Unable to add Callback: ${e}`);
+                }
+        }
+        
+        /**
+         * @sumary Unregister callback to metax events
+         * @param {MetaxEventsCallback} cb is the callback to be
+         */
+        async unregisterPublicKeyEvent(cb) {
+                console.assert(this.mPublicKeyEvent);
+                const i = this.mPublicKeyEvent.indexOf(cb);
+                if (-1 != i) {
+                        this.mPublicKeyEvent.splice(i, 1);
+                }
+        }
+        
+        /**
+         * @sumary Register callback to metax events
+         * @param {MetaxEventsCallback} cb is the callback to be
+         */
+        async registerMetaxEvents(cb) {
+                try {
+                         console.assert(this.mEvents);
+                         this.mEvents.push(cb);
+                } catch (e) {
+                        console.error(`Unable to add Callback: ${e}`);
+                }
+        }
+        
+        /**
+         * @sumary Unregister callback to metax events
+         * @param {MetaxEventsCallback} cb is the callback to be
+         */
+        async unregisterMetaxEvents(cb) {
+                console.assert(this.mEvents);
+                const i = this.mEvents.indexOf(cb);
+                if (-1 != i) {
+                        this.mEvents.splice(i, 1);
+                }
+        }
+
+        /**
+         * @callback MetaxListenerCallback 
+         * @brief Callbacs listening to changes in Metax
+         * @see {@link registerListener} and {@link unregisterListener} 
+         *      which use this callback
+         */
+
+        /**
+         * @brief Register callback as listener to changes to data at uuid
+         * @param {UUID} uuid is the data-id being monitored
+         * @param {MetaxListenerCallback} cb is the callback to be 
+         * @throws Error if the request to Metax server failed.
+         * @todo Differentiate errors (e.g. no-permission, uuid not found,
+         *      network-error, etc).
+         */
+        async registerListener(uuid, cb, b) { 
+                console.assert(this.mListeners);
+                let callbacks = this.mListeners[uuid];
+                if (! callbacks) {
+                        let token = this.mListenerToken !== notDefinedYet ?
+                            `&token=${this.mListenerToken}` : "";
+                        const url = this.mRegisterListenerRequest + uuid + token;
+                        await this.HTTPGet(url, this.mAccessToken)
+                        .catch(e => { 
+                                throw Error(`metax.HTTPGet(${url}) `+
+                                        `resulted in error:\n ${e}`); 
+                        });
+                        callbacks = this.mListeners[uuid] = [];
+                }
+                console.assert(callbacks.indexOf(cb) === -1, 
+                        `the uuid ${uuid} already has ` +
+                        `a registered callback ${cb}`);
+                callbacks.push({"call" : cb, "not_send_me" : b});
+        }
+
+        /**
+         *  @todo break into unregisterTheLastListener and 
+         *        removeListenerFromArray or something like that
+         *
+         *  Note: we want to delete the last callback (listener) only if the 
+         *        unregisterListener callback has succeded. If it fails - the 
+         *        anomaly should not be hidden by just unregistering the CB.
+         */
+        async unregisterListener(uuid,cb) {
+                console.assert(this.isValidUUID(uuid), 'unregisterListener ' +
+                        `is called with an invalid uuid=${uuid}`);
+                const callbacks = this.mListeners[uuid];
+                console.assert(callbacks, 
+                        'there is no listener registered ' + `for ${uuid}`);
+                console.assert(callbacks.length > 0
+                        , `listeners list for ${uuid} found but is empty`);
+                if (callbacks.length === 1) { 
+                        console.assert(cb === callbacks[0].call, 
+                                `the only registered callback for ${uuid}`+
+                                ` is not ${cb}`);
+                        let token = this.mListenerToken !== notDefinedYet ?
+                            `&token=${this.mListenerToken}` : "";
+                        const url = this.mUnregisterListenerRequest+ uuid + token;
+                        await this.HTTPGet(url, this.mAccessToken) 
+                        .catch( e => { 
+                                throw Error(`metax.HTTPGet(${url})`+
+                                            ` resulted in error:\n ${e}`); 
+                        });
+                        delete this.mListeners[uuid]; 
+                } else {
+                        let p = false;
+                        for(let j in callbacks) {
+                                if(cb == callbacks[j].call) {
+                                        callbacks.splice(j,1);
+                                        p = true;
+                                        break;
+                                }
+                        }
+                        console.assert(p !== 0, `the listeners for ${uuid} ` +
+                                `do not contain the callback ${cb}`);
+                }
+        }
+
+        /**
+         * @brief Get info about Metax: user public key, device public key,
+         *        user info uuid, device info uuid
+         * @throws Error if the request to Metax server failed.
+         */
+        async getMetaxInfo() {
+                const r = await this.HTTPGet(this.mGetMetaxInfoRequest,
+                                this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${this.mGetMetaxInfoRequest})`+
+                                ` resulted in error:\n ${e}`);
+                });
+                const i = await r.json();
+                console.assert(
+                        "user_public_key" in i &&
+                        "user_info_uuid" in i &&
+                        "device_public_key" in i &&
+                        "device_info_uuid" in i,
+                        `error in getting metax info`
+                      );
+                return i;
+        }
+
+        /**
+         * @brief Set info about Metax, which then can be retreived with
+         * getMetaxInfo request.
+         * @param {UUID} uuid of metax user info
+         * @throws Error if the request to Metax server failed.
+         * Note: only setting user info uuid is supported
+         * TODO: add setting of device ino uuid after Metax supports it
+         */
+        async setMetaxInfo(uuid) {
+                const url = this.mSetMetaxInfoRequest + uuid;
+                await this.HTTPGet(url, this.mAccessToken)
+                        .catch(e => {
+                                throw Error(`metax.HTTPGet(${url}) `+
+                                        `resulted in error:\n ${e}`);
+                });
+        }
+
+        /**
+         * @private
+         * setup member-variables for connection paramters and paths
+         */
+        setupConnectionParameters(h,p,e,t,s) {
+                console.assert(metax === this, 'metax must be a singleton');
+                metax.mAccessToken = t;
+                metax.mHost = h;
+                metax.mPort = p;
+                metax.mEncryption = e ? 1 : 0;
+                metax.mProtocol = s ? 'https' : 'http';
+                metax.mWebsocketProtocol = s ? 'wss' : 'ws';
+                metax.mWebsocketPath = 
+                        `${metax.mWebsocketProtocol}://${h}:${p}`;
+                metax.mServicePath = `${metax.mProtocol}://${h}:${p}/`;
+                metax.mSaveRequest = 
+                        metax.mServicePath + 
+                        `db/save/node?enc=`;
+                metax.mShareRequest = 
+                        metax.mServicePath + `db/share?`;
+                metax.mSendToRequest = 
+                        metax.mServicePath + `db/sendto`;
+                metax.mGetOnlinePeersRequest =
+                        metax.mServicePath + `config/get_online_peers`;
+                metax.mSendEmailRequest = 
+                        metax.mServicePath + `sendemail?`;
+                metax.mAcceptShareRequest =
+                        metax.mServicePath + `db/accept_share?`;
+                metax.mSaveAnyDataRequest =
+                        metax.mServicePath + 
+                        `db/save/data?enc=`;
+                metax.mSavePathRequest = 
+                        metax.mServicePath + 
+                        `db/save/path?enc=${metax.mEncryption}`;
+                metax.mGetUserPublicKeyRequest =
+                        metax.mServicePath + `config/get_user_public_key`;
+                metax.mGetUserKeysRequest =
+                        metax.mServicePath + `config/get_user_keys`;
+                metax.mDeleteRequest = 
+                        metax.mServicePath + `db/delete?`;
+                metax.mSaveDataRequest = 
+                        metax.mServicePath + `db/save/data?`;
+                metax.mRegisterListenerRequest =
+                        metax.mServicePath + `db/register_listener?id=`;
+                metax.mUnregisterListenerRequest =
+                        metax.mServicePath + `db/unregister_listener?id=`;
+                metax.mGetRequest = metax.mServicePath + `db/get?id=`;
+                metax.mCopyRequest = metax.mServicePath + `db/copy?id=`;
+                metax.mGetMetaxInfoRequest =
+                        metax.mServicePath + `config/get_metax_info`;
+                metax.mSetMetaxInfoRequest =
+                        metax.mServicePath +
+                        `config/set_metax_info?metax_user_uuid=`;
+                metax.mListeners = {};
+                metax.mStartPairing =
+                        metax.mServicePath + `config/start_pairing?timeout=`;
+                metax.mStartChannelPairing =
+                        metax.mServicePath + `config/start_channel_pairing?timeout=`;
+                metax.mCancelPairing =
+                        metax.mServicePath + `config/cancel_pairing`;
+                metax.mGetPairingPeers =
+                        metax.mServicePath + `config/get_pairing_peers`;
+                metax.mRequestKeysRequest =
+                        metax.mServicePath + `config/request_keys?ip=`;
+                metax.mRequestPublicKeyRequest =
+                        metax.mServicePath + `config/request_public_key?ip=`;
+                metax.mOpenChannelRequest =
+                        metax.mServicePath + `config/open_channel?ip=`;
+                metax.mRegenerateUserKeysRequest =
+                        metax.mServicePath + `config/regenerate_user_keys`;
+                metax.mRequestKeysRequestSecondParameter = `&code=`;
+                metax.mGetPropertyRequest = `/oo/get_property?id=`;
+                metax.mGetCollectionRequest = `/oo/get_collection?id=`;
+                metax.mSetPropertyRequest = `/oo/set_property?id=`;
+                metax.mAddElementToCollectionRequest = `/oo/add_element_to_collection?id=`;
+                metax.mCreateElementInCollectionRequest = `/oo/create_element_in_collection?id=`;
+                metax.mDeleteElementFromCollectionRequest = `/oo/delete_element_from_collection?id=`;
+                metax.mWrapRequest = `/oo/wrap?id=`;
+                metax.mGetPropertyInEmbeddedObjectRequest = `/oo/get_property/embedded?id=`;
+                metax.mSetPropertyInEmbeddedObjectRequest = `/oo/set_property/embedded?id=`;
+                metax.mCreateElementInEmbeddedCollectionRequest = `/oo/create_element_in_embedded_collection?id=`;
+                metax.mDeleteElementFromEmbeddedCollectionRequest = `/oo/delete_element_from_embedded_collection?id=`;
+                metax.mCreateElementInEmbeddedObjectsCollectionRequest = `/oo/create_element_in_collection/embedded?id=`;
+                metax.mDeleteElementFromEmbeddedObjectsCollectionRequest = `/oo/delete_element_from_collection/embedded?id=`;
+                metax.mWrapEmbeddedObjectRequest = `/oo/wrap/embedded?id=`;
+                metax.mGetUserIDRequest = `/config/get_user_id`;
+                metax.mNotifyRequest = `/notify?id=`;
+                metax.mtranslateRequest = `/translate_property?id=`;
+        }
+
+        /**
+         * @private
+         *
+         */
+        async createWebsocket() {
+                return new Promise((resolve,reject)  => {
+                        metax.mWebsocket = new WebSocket(metax.mWebsocketPath +
+                                "?token=" + this.mAccessToken);
+                        metax.mWebsocket.onerror = e => reject(e);
+                        metax.mWebsocket.onclose = e => reject(e);
+                        metax.mWebsocket.onopen = e => { 
+                                metax.mWebsocket.onmessage = 
+                                        e => metax.dispatchWebSocketMessage(e, resolve);
+                                metax.mWebsocket.onerror = 
+                                        e => metax.handleWebSocketError(e);
+                                metax.mWebsocket.onclose = 
+                                        e => metax.handleWebSocketClose(e);  
+                        };
+                });
+        }
+
+        /** 
+         * @private 
+         * parse web-socket event data
+         */
+        parseWebSocketEvent(e) {
+                try {
+                        return JSON.parse(e.data);
+                } catch (e) {
+                        console.assert(false,
+                                `failed to parse data field of the ` + 
+                                `Metax on-update event: ${JSON.stringify(e)}`);
+                        throw e;
+                }
+        }
+
+        /**@private */
+        handleMetaxEvents(e, msg) {
+                const ev = msg['event'];
+                const callbacks = this.mEvents;
+                for ( let cb in callbacks ) {
+                        try {
+                                if(! callbacks[cb].not_send_me) {
+                                        callbacks[cb].call(ev);
+                                }
+                        } catch (e) {
+                                console.error(`Metax events ` +
+                                                `threw ` +
+                                                `an assertion: ` +
+                                                `${JSON.stringify(e)}`);
+                        }
+                }
+        }
+
+        handleGenericProtocol(e) {
+                const callbacks = this.mGenericProtocolListeners;
+                console.assert(callbacks);
+                for ( let cb in callbacks ) {
+                        try {
+                                callbacks[cb].call(e);
+                        } catch (e) {
+                                console.error(`Metax sync ` +
+                                                `listener threw ` +
+                                                `an assertion: ` +
+                                                `${JSON.stringify(e)}`);
+                        }
+                }
+        }
+        
+        /*private*/
+        handleConnectionMessage(e, msg, resolve) {
+                console.log(msg)
+                if(msg.event === "connected") {
+                        this.mListenerToken = msg.token;
+                        resolve('websocket connected'); 
+                }
+        }
+
+        /**
+         *  @private
+         */
+        dispatchWebSocketMessage(e, resolve) {
+            try {
+                let msg = this.parseWebSocketEvent(e);
+                if("event" in msg && "uuid" in msg) {
+                        this.handleDBWebSocketMessage(e, msg);
+                        return;
+                } else if("event" in msg && "token" in msg) {
+                        this.handleConnectionMessage(e, msg, resolve);
+                } else if("event" in msg) {
+                        this.handleMetaxEvents(e, msg);
+                        return;
+                } else if("KeyTransfer" in msg && "public_key" in msg) {
+                        this.handlePublicKeyEvent(e, msg);
+                        return;
+                } else if("open_channel" in msg) {
+                        this.handleOpenChannelEvent(e, msg);
+                        return;
+                }
+            } catch (er) {
+                console.log `Parse failed err=${er}`;
+            }
+            // TODO need to add sentto and test for it
+            this.handleGenericProtocol(e.data)
+        }
+        
+        /**@private */
+        handleOpenChannelEvent(e, msg) {
+                const callbacks = this.mOpenChannelEvent;
+                for ( let cb in callbacks ) {
+                        try {
+                                callbacks[cb].call(msg);
+                        } catch (e) {
+                                console.error(`Open channel Event ` +
+                                                `threw ` +
+                                                `an assertion: ` +
+                                                `${JSON.stringify(e)}`);
+                        }
+                }
+        }
+
+        /**@private */
+        handlePublicKeyEvent(e, msg) {
+                const callbacks = this.mPublicKeyEvent;
+                for ( let cb in callbacks ) {
+                        try {
+                                callbacks[cb].call(msg);
+                        } catch (e) {
+                                console.error(`Public Key Event ` +
+                                                `threw ` +
+                                                `an assertion: ` +
+                                                `${JSON.stringify(e)}`);
+                        }
+                }
+        }
+
+        /**
+         * @private
+         *  @todo: include Protocol.json (have C++ code include the same json, 
+         *         and have same code-name for keys across C++ and JS),
+         *         e.g. here the 'event' and 'uuid' fields are just a nuance
+         */
+        handleDBWebSocketMessage(e, msg) {
+                console.assert('event' in msg, 'on-update message ' +
+                               'from Metax should have "event" field');
+                console.assert('uuid' in msg, 'on-update message ' +
+                               'from Metax should have "uuid" field');
+                const uuid = msg['uuid'];
+                const ev = msg['event'];
+                console.assert(this.isValidUUID(uuid),
+                        `received on-update event with invalid uuid=${uuid}`);
+                const callbacks = this.mListeners[uuid];
+                if( !callbacks || callbacks.length < 1) { return; }
+                for (let j in callbacks) {
+                        try {
+                                if(! callbacks[j].not_send_me) {
+                                        callbacks[j].call(uuid,ev);
+                                }
+                        } catch (e) {
+                                console.error('metax on-update handler threw' +
+                                        ` an assertion: ${JSON.stringify(e)}`);
+                                throw e;
+                        }
+                }
+        }
+
+        /**
+         *  @private
+         *  @todo: process error-code and turn into human-readable msg &
+         *        links to documentation explaining details of error.
+         */
+        handleWebSocketClose(e) { 
+                console.log('Metax websocket connection is closed with '+
+                        `code: ${e.code} and reason: ${e.reason}`); 
+                this.scheduleReconnect();
+        }
+
+
+        /**
+         *  @private
+         *  @todo: may have to look at error types and reconnect only on some,
+         *        while for the others 
+         *  @todo: it's not good to reconnect both during error and close
+         */
+        handleWebSocketError(e) {
+                console.error(`Error in websocket: ${JSON.stringify(e)}`);
+                console.dir(e);
+                this.scheduleReconnect();
+        }
+
+        /**
+         * @private
+         * Schedule a reconnect during websocket drop
+         * @todo need to do more diagnostics before just reconnecting
+         */
+        scheduleReconnect() {
+                const seconds = 3000;
+                console.log(`scheduling a reconnect in ${seconds} seconds`);
+                setTimeout( () => {
+                        this.createWebsocket()
+                        .catch(e => {
+                                console.error("couldn't reconnect:",e)
+                                this.scheduleReconnect();
+                        })
+                }, seconds);
+                console.log('scheduling:done');
+        }
+
+        /**
+         *  @private
+         *  @todo find a way to make all these methods private
+         *         and thus also safely minimize/uglify them 
+         *  @todo find out how Content-Type is set by the fetch() and 
+         *        to which extent is it inferred correctly
+         */
+        async HTTPGet(url, token) {
+                return fetch(url, {
+                                method: 'GET',
+                                headers: {
+                                'Authorization' : "Metax-Auth " + token 
+                                },
+                        }).then( async r => {
+                                if (!r.ok) {
+                                        throw await r.text();
+                                }
+                                return r;
+                        }).catch( e => {
+                                let msg = ''
+                                try { 
+                                        const r = JSON.parse(e);
+                                        msg = r.error;
+                                } catch{
+                                        msg = `fetch(${url}) resulted in error:\n ${e}`;
+                                }
+                                throw new Error(msg);
+                        });
+        }
+
+        /**
+         *  @private
+         */
+        async HTTPPost(url,data,mime,token,onProgress, size=0) {
+                return new Promise((res, rej) => {
+                        const request = new XMLHttpRequest();
+                        
+                        request.upload.addEventListener('progress', function (e) {
+                                if (!onProgress) return
+                                if (e.loaded <= size) {
+                                        var percent = Math.round(e.loaded / size * 100);
+                                        try {
+                                                onProgress(percent)
+                                        } catch(e) {
+                                                console.error("Error in onProgress callback", e);
+                                        }
+                                } 
+                        });   
+
+                        request.onreadystatechange = function() {
+                                if (request.readyState == XMLHttpRequest.DONE) {
+                                        if (request.status === 200) {
+                                                const response = JSON.parse(request.responseText);
+                                                res(response);
+                                                return
+                                        }
+                                        let msg;
+                                        try { 
+                                                const r = JSON.parse(request.responseText);
+                                                msg = r;
+                                        } catch {
+                                                msg = `fetch(${url}) resulted in error:\n ${request.responseText}`;
+                                        }
+                                        rej(request.responseText);
+                                }
+                        }
+                        request.open('post', url);
+                        request.setRequestHeader("Content-Type", mime);
+                        request.setRequestHeader("Authorization", "Metax-Auth " + token);
+                        request.send(data);
+                })
+        }
+        
+        /**
+         * @summary Returns user public key
+         * @throws Error if the request to Metax server failed.
+         */
+        async getUserPublicKey() {
+                const r = await this.HTTPGet(this.mGetUserPublicKeyRequest,
+                               this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${this.mGetUserPublicKeyRequest})`
+                                + ` resulted in error:\n ${e}`);
+                });
+                const i = await r.json();
+                return i;
+        }
+
+        /**
+         * @summary Returns user keys: user public key, user private key,
+         * user json key
+         * @throws Error if the request to Metax server failed.
+         */
+        async get_user_keys() {
+                const r = await this.HTTPGet(this.mGetUserKeysRequest,
+                               this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${this.mGetUserKeysRequest})`
+                                + ` resulted in error:\n ${e}`);
+                });
+                const i = await r.json();
+                console.assert(
+                        "user_public_key" in i &&
+                        "user_private_key" in i &&
+                        "user_json_key" in i ,
+                        `Error in getting metax user keys`
+                      );
+                return i;
+        }
+
+        /**
+         * @summary Starts pairing mode
+         * @throws Error if the request to Metax server failed.
+         */
+        async startPairing(timeout) {
+                const url = this.mStartPairing + timeout;
+                const r = await this.HTTPGet(url, this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${url})`
+                                + ` resulted in error:\n ${e}`);
+                });
+                const i = await r.json();
+                return i;
+        }
+        
+        /**
+         * @summary Starts channel pairing mode
+         * @throws Error if the request to Metax server failed.
+         */
+        async startChannelPairing(timeout, public_key) {
+                const url = this.mStartChannelPairing + timeout;
+                const r = await this.HTTPPost(url, `key=${public_key}`,
+                        "application/json", this.mAccessToken)
+                .catch( e => {
+                        throw Error(`Start channel pairing resulted` +
+                               `in error:\n ${e}`);
+                });
+                return r;
+        }
+        
+        /**
+         * @summary Open Channel request 
+         * @throws Error if the request to Metax server failed.
+         * @param {ip} ip of peer machine to open channel with.
+         * @param {public_key} public_key of peer machine to open channel with
+         */
+        async openChannel(ip, public_key) {
+                const url = this.mOpenChannelRequest + ip;
+                const r = await this.HTTPPost(url, `key=${public_key}`, "application/json",
+                        this.mAccessToken)
+                .catch( e => {
+                        throw Error(`open channel resulted` +
+                               `in error:\n ${e}`);
+                });
+                return r;
+        }
+
+
+        /**
+         * @summary Cancels pairing mode
+         * @throws Error if the request to Metax server failed.
+         */
+        async cancelPairing() {
+                await this.HTTPGet(this.mCancelPairing, this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${this.mCancelPairing})`
+                                + ` resulted in error:\n ${e}`);
+                });
+        }
+
+        /**
+         * @summary Returns peers that are in the same subnet and are in
+         * pairing state.
+         * @throws Error if the request to Metax server failed.
+         */
+        async getPairingPeers() {
+                const r = await this.HTTPGet(this.mGetPairingPeers,
+                                this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${this.mGetPairingPeers})`
+                                + ` resulted in error:\n ${e}`);
+                });
+                const i = await r.json();
+                return i;
+        }
+        
+        /**
+         * @summary Requests public key exchange with peer's ip.
+         * @param {IP} ip of the server
+         * @param {CODE} code for verification
+         * @throws Error if the request to Metax server failed.
+         */
+        async requestPublicKey(ip, code) {
+                const url = this.mRequestPublicKeyRequest + ip +
+                        this.mRequestKeysRequestSecondParameter + code;
+                const r = await this.HTTPGet(url, this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${url})`
+                                + ` resulted in error:\n ${e}`);
+                });
+                const i = await r.json();
+                return i;
+        }
+
+        /**
+         * @summary Connect to server for key transfer.
+         * @param {IP} ip of the server
+         * @param {CODE} code for verification
+         * @throws Error if the request to Metax server failed.
+         */
+        async requestKeys(ip, code) {
+                const url = this.mRequestKeysRequest + ip +
+                        this.mRequestKeysRequestSecondParameter + code;
+                const r = await this.HTTPGet(url, this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${url})`
+                                + ` resulted in error:\n ${e}`);
+                });
+                const i = await r.text();
+                return i;
+        }
+
+        /**
+         * @brief Regenerate new user keys (user public/private keys, user json encryption key). 
+         * After new key generation the user and device json objects permanently are encrypted with new key and saved in corresponding files
+         * @throws Error if the request to Metax server failed.
+         */
+        async regenerate_user_keys() {
+                const r = await this.HTTPGet(this.mRegenerateUserKeysRequest,
+                                this.mAccessToken)
+                .catch( e => {
+                        throw Error(`metax.HTTPGet(${this.mRegenerateUserKeysRequest})`+
+                                ` resulted in error:\n ${e}`);
+                });
+                const l = await r.json();
+                return l;
+        }
+        
+        /**
+         * TODO
+         */
+        async getCollection(uuid, pid, cid, locale) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.getCollection() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mGetCollectionRequest}${uuid}&property=${pid}&collection=${cid}${locale ? '&locale='+ locale : ''}`;
+                let r = await this.HTTPGet(url,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.getCollection() is not ok');
+                return await r.json();
+        }
+
+        /**
+         * TODO
+         */
+        async getProperty(uuid, pid, locale) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.getProperty() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mGetPropertyRequest}${uuid}&property=${pid}${locale ? '&locale='+ locale : ''}`;
+                let r = await this.HTTPGet(url,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.getProperty() is not ok');
+                r = await r.json();
+                return r.value;
+        }
+        /**
+         * TODO
+         */
+        async getPropertyInEmbeddedObject(uuid, pid, child, locale) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.getProperty() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mGetPropertyInEmbeddedObjectRequest}${uuid}&property=${pid}${locale ? '&locale='+ locale : ''}`;
+                const r = await this.HTTPPost(url,
+                                JSON.stringify(child),
+                                "application/json",
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.getProperty() is not ok');
+                return r;
+        }
+        /**
+         * TODO
+         */
+        async setProperty(uuid, pid, value, locale) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.setProperty() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mSetPropertyRequest}${uuid}&property=${pid}${locale ? '&locale='+ locale : ''}`;
+                const r = await this.HTTPPost(url,
+                                value,
+                                "text/plain", this.mAccessToken)
+                return r.value;
+        }
+        /**
+         * TODO
+         */
+        async setPropertyInEmbeddedObject(uuid, pid, value, child, locale) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.setProperty() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mSetPropertyInEmbeddedObjectRequest}${uuid}&property=${pid}${locale ? '&locale='+ locale : ''}`;
+                const body = {
+                        value: value,
+                        child: child
+                }
+                const r = await this.HTTPPost(url,
+                                JSON.stringify(body),
+                                JSON.stringify(child),
+                                this.mAccessToken);
+                return r.value;
+        }
+        /**
+         * TODO
+         */
+        async addElementToCollection(uuid, cid, el) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.addElementToCollection() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mAddElementToCollectionRequest}${uuid}&collection=${cid}&element=${el}`;
+                const r = await this.HTTPGet(url,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.addElementToCollection() is not ok');
+                return r;
+        }
+        /**
+         * TODO
+         */
+        async createElementInCollection(uuid, cid) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.createElementToCollection() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mCreateElementInCollectionRequest}${uuid}&collection=${cid}`;
+                let r = await this.HTTPGet(url,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.createElementInCollection() is not ok');
+                r = await r.json();
+                return r.uuid;
+        }
+        /**
+         * TODO
+         */
+        async createElementInEmbeddedCollection(uuid, cid) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.createElementInEmbeddedCollection() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mCreateElementInEmbeddedCollectionRequest}${uuid}&collection=${cid}`;
+                let r = await this.HTTPGet(url,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.createElementInEmbeddedCollection() is not ok');
+                r = await r.json();
+                return r;
+        }
+        /**
+         * TODO
+         */
+        async deleteElementFromCollection(uuid, cid, el) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.deleteElementFromCollection() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mDeleteElementFromCollectionRequest}${uuid}&collection=${cid}&element=${el}`;
+                const r = await this.HTTPGet(url,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.deleteElementFromCollection() is not ok');
+                return r;
+        }
+        /**
+         * TODO
+         */
+        async deleteElementFromEmbeddedCollection(uuid, cid, index) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.deleteElementFromEmbeddedCollection() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mDeleteElementFromEmbeddedCollectionRequest}${uuid}&collection=${cid}&index=${index}`;
+                const r = await this.HTTPGet(url,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.deleteElementFromEmbeddedCollection() is not ok');
+                return r;
+        }
+        /**
+         * TODO
+         */
+        async wrap(uuid, locale) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.wrap() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mWrapRequest}${uuid}${locale ? '&locale='+ locale : ''}`;
+                const r = await this.HTTPGet(url,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.wrap() is not ok');
+                const o = await r.json();
+                return o;
+        }
+        /**
+         * TODO
+         */
+        async createElementInEmbeddedObjectsCollection(uuid, cid, child) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.createElementInEmbeddedObjectsCollection() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mCreateElementInEmbeddedObjectsCollectionRequest}${uuid}&collection=${cid}`;
+                const r = await this.HTTPPost(url,
+                                JSON.stringify(child),
+                                "application/json",
+                                this.mAccessToken);
+                return r;
+        }
+        /**
+         * TODO
+         */
+        async deleteElementFromEmbeddedObjectsCollection(uuid, cid, index, child) {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.deleteElementFromObjectsCollection() is passed an invalid uuid = ${uuid}`
+                );
+                const url = `${this.mDeleteElementFromEmbeddedObjectsCollectionRequest}${uuid}&collection=${cid}&index=${index}`;
+                const r = await this.HTTPPost(url,
+                                JSON.stringify(child),
+                                "application/json",
+                                this.mAccessToken);
+                return r;
+        }
+        
+        async getUserID() {
+                let r = await this.HTTPGet(this.mGetUserIDRequest,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.getUserID() is not ok');
+                r = await r.json();
+                return r.user_id;
+        }
+        
+        /**
+         * @summary Notify watchers about given uuid update. 
+         * @param uuid - must be a valid uuid of existing object in Metax
+         * @param type - the type of update, can be 
+                   property (for property change), 
+                   collection_add(for add element in collection),
+                   collection_delete(for delete element from collection)
+         * @param id - the id of changed property or collection
+         * @param locale - locale in which change was done
+         * @param old - the old value of property if there is 
+         */
+        async notify(uuid, type="property", id, locale, old) {
+                const body = { type, id, locale, old }
+                const r = await this.HTTPPost(this.mNotifyRequest + uuid, JSON.stringify(body), "application/json",
+                                this.mAccessToken);
+                return r.status
+        }
+        
+        /**
+         * @summary translates property value to given locale. 
+         * @param uuid - uuid of object which property we need to translate
+         * @param property - if of property which will be translated
+         * @param locale - locale to which property will be translated
+         */
+        async translateProperty(uuid, property, locale) {
+                let r = await this.HTTPGet(`${this.mtranslateRequest}${uuid}&property=${property}&locale=${locale}`,
+                                this.mAccessToken);
+                console.assert(r && r.ok, 'response to metax.translateProperty() is not ok');
+                r = await r.json();
+                return r.value;
+        }
+};
+
+metax = new Metax();
+
+export default metax;

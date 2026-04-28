@@ -1,0 +1,15 @@
+{
+  "name": "metax",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/rest_api.mjs",
+    "test": "node tests/test_functionality.mjs"
+  },
+  "author": "Raffi Knyazyan",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.12.1"
+  }
+}

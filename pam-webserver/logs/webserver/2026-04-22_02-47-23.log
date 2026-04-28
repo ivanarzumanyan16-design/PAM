@@ -1,0 +1,4 @@
+
+> greenhosting_webserver@1.0.0 start
+> node src/webserver.mjs host_metax=localhost:8000 key=../certs/metax.key cert=../certs/metax.crt sitemap_uuid=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1 read_server_port=8001 write_server_port=8002
+

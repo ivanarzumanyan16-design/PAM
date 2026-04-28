@@ -1,0 +1,979 @@
+/*
+ * Vostan CMS
+ * Copyright (c) 2005-2015 Instigate CJSC
+ * E-mail: info@instigatedesign.com
+ * 58/1 Karapet Ulnetsi St.,
+ * Yerevan, 0069, Armenia
+ * Tel:  +1-408-625-7509
+ * +49-893-8157-1771
+ * +374-60-464700
+ * +374-10-248411
+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/*
+
+@font-face {
+    font-family: VostanGrapalat;
+    src: url('assets/fonts/GHEAGrapalat-Italic.eot');
+    src: url('assets/fonts/GHEAGrapalat-Italic.eot?iefix') format('eot'), url('assets/fonts/GHEAGrapalat-Italic.woff') format('woff'), url('assets/fonts/GHEAGrapalat-Italic.ttf') format('truetype'), url('assets/fonts/GHEAGrapalat-Italic.svg#webfont') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: VostanGrapalat;
+    src: url('assets/fonts/GHEAGrapalat-Bold.eot');
+    src: url('assets/fonts/GHEAGrapalat-Bold.eot?iefix') format('eot'), url('assets/fonts/GHEAGrapalat-Bold.woff') format('woff'), url('assets/fonts/GHEAGrapalat-Bold.ttf') format('truetype'), url('assets/fonts/GHEAGrapalat-Bold.svg#webfont') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: VostanGrapalat;
+    src: url('assets/fonts/GHEAGrapalat-BoldItalic.eot');
+    src: url('assets/fonts/GHEAGrapalat-BoldItalic.eot?iefix') format('eot'), url('assets/fonts/GHEAGrapalat-BoldItalic.woff') format('woff'), url('assets/fonts/GHEAGrapalat-BoldItalic.ttf') format('truetype'), url('assets/fonts/GHEAGrapalat-BoldItalic.svg#webfont') format('svg');
+    font-weight: bold;
+    font-style: italic;
+}
+*/
+@font-face {
+    font-family: VostanSans;
+    src: url('/db/get?id=7b8ff899-1052-48f0-bde8-c41417d831f9');
+    src: url('/db/get?id=7b8ff899-1052-48f0-bde8-c41417d831f9') format('eot'), url('/db/get?id=cda5bb42-19b7-4272-8677-82a397d5043e') format('woff'), url('/db/get?id=d1ba59ac-a2ea-41e2-bf8b-c46ec8c42550') format('truetype'), url('/db/get?id=11cead7a-cc37-4dc6-94b6-6c1aec402805#webfont') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: VostanCantarell;
+    src: url(/db/get?id=a0beb3f8-7dd4-4daf-8ed2-3fba0a5d462c');
+    src: url('/db/get?id=a0beb3f8-7dd4-4daf-8ed2-3fba0a5d462c') format('eot'), url('/db/get?id=c977d710-5d02-4276-b10f-d1a7c0755eab') format('woff'), url('/db/get?id=6fd1fc0e-e1fe-47dc-820b-148328950525') format('truetype'), url('/db/get?id=962d1ada-7a6f-4082-9d88-144587aeada3#webfont') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: VostanCantarell;
+    src: url('/db/get?id=5af2c142-1048-4463-b46e-32d1d13b30e1');
+    src: url('/db/get?id=5af2c142-1048-4463-b46e-32d1d13b30e1') format('eot'), url('/db/get?id=447662b4-3e3c-4f82-9f6b-39e2c933f90a') format('woff'), url('/db/get?id=8a7bf57a-e880-4a32-a700-be7d501f0b19') format('truetype'), url('/db/get?id=f5520077-649c-427d-b619-b4c387e7930b#webfont') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: VostanCantarell;
+    src: url('/db/get?id=a99cbfd5-9f43-45ea-b160-ab8c36d9d199');
+    src: url('/db/get?id=a99cbfd5-9f43-45ea-b160-ab8c36d9d199') format('eot'), url('/db/get?id=10aca918-4f74-400e-89d8-b562fbd64e39') format('woff'), url('/db/get?id=d6380858-67af-4e69-a771-029572a2946c') format('truetype'), url('/db/get?id=ec16045e-5aaa-432b-b68c-6fb4e8739429#webfont') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: VostanCantarell;
+    src: url('/db/get?id=d6b5003b-4d65-4839-bd99-f6bf74ec63af');
+    src: url('/db/get?id=d6b5003b-4d65-4839-bd99-f6bf74ec63af') format('eot'), url('/db/get?id=a0f6e62c-985a-4b64-b8e2-d0baf48fe190') format('woff'), url('/db/get?id=7304cbd4-1e07-4c24-b4bc-518bb8f2421f') format('truetype'), url('/db/get?id=40af10aa-1785-42b2-ac0a-6f9f22764a49#webfont') format('svg');
+    font-weight: bold;
+    font-style: italic;
+}
+@font-face {
+    font-family: VostanGrapalat;
+    src: url('/db/get?id=4c648981-a088-4eed-9302-1f1269fba0a8') format('truetype');
+    src: url('/db/get?id=4c648981-a088-4eed-9302-1f1269fba0a8') format('eot'), url('/db/get?id=7d85ba0a-1706-4ba7-92f4-50445744399d') format('woff'), url('/db/get?id=edd4cea1-0854-4a5d-a5b1-db041ddace4a') format('truetype'), url('/db/get?id=ecfc6709-34e0-47fc-8550-b6891d4be407#webfont') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: VostanGrapalat;
+    src: url('/db/get?id=9e939c84-11a2-4957-b411-c0f6b3d74c8a') format('truetype');
+    src: url('/db/get?id=9e939c84-11a2-4957-b411-c0f6b3d74c8a') format('eot'), url('/db/get?id=36c14b59-1c2c-4dbb-b661-8a638f795668') format('woff'), url('/db/get?id=95699915-4f5c-4e89-b5d0-5ef223872d8b') format('truetype'), url('/db/get?id=e730aa8c-35e1-4ac2-8cc7-fa99a57011aa#webfont') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: VostanGrapalat;
+    src: url('/db/8ed75e5c-226e-437c-be0a-63d80eade7dd') format('truetype');
+    src: url('/db/8ed75e5c-226e-437c-be0a-63d80eade7dd') format('eot'), url('/db/get?id=12a3e6c6-8d19-4ed6-9f22-5c680d4404cb') format('woff'), url('/db/get?id=c54023d8-658e-48e5-ab45-2b42ebb4abb5') format('truetype'), url('/db/get?id=dcf377a0-913d-4ab4-bc13-df41ae2b54a1#webfont') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: VostanGrapalat;
+    src: url('/db/get?id=6bc45394-a980-46eb-9350-1d5908bd6d5f') format('truetype');
+    src: url('/db/get?id=6bc45394-a980-46eb-9350-1d5908bd6d5f') format('eot'), url('/db/get?id=d158d6a0-388a-4364-8335-80a447406838') format('woff'), url('/db/get?id=b48d1ae9-1a3f-4dbb-b241-669a7591043e') format('truetype'), url('/db/get?id=938a0e4b-441d-4648-ae16-2156f26275ff#webfont') format('svg');
+    font-weight: bold;
+    font-style: italic;
+}
+
+/**********************************/
+
+body, h1, h2, h3, h4, h5, h6 {
+        font-family: VostanGrapalat !important;
+}
+
+html, body {
+    color: #333;
+    font-family: VostanSans, VostanCantarell, VostanGrapalat, "Arian AMU", "Arial AMU", "GHEA Grapalat", Sylfaen, sans-serif !important;
+    font-size: 13px !important;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+body.wait, body.wait node {
+    cursor: wait !important;
+}
+
+body.connect, body.connect node {
+    cursor: alias !important;
+}
+
+.h-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1;
+    border-top: 1px #CC3333 solid;
+}
+
+.v-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1;
+    bottom: 0;
+    border-left: 1px #CC3333 solid;
+}
+
+node {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+    background-color: #fff;
+    border: 1px #666666 solid;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar
+{
+    width: 3px;
+    height: 3px;
+    background-color: #000;
+}
+
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 3px rgba(f,f,f,0.3);
+    background-color: #fff;
+}
+
+::-webkit-scrollbar-thumb
+{
+    background-color: #000;
+}
+
+node.node-root, node.leaf {
+    cursor: auto;
+}
+
+node.node-root .info, node.node-root .par, node.leaf .info, node.leaf .par {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -o-user-select: text;
+    user-select: text;
+    cursor: text;
+}
+
+div.query-nodes node .info,
+div.query-nodes node .img,
+div#carousel-items node .info,
+div#carousel-items node .img {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+node.node-root .img, node.leaf .img {
+    cursor: text;
+}
+
+#vostanApp  node.active {
+    border-color: #666;
+    background-color: #F5B571;
+}
+
+#viewTab {
+    height: 100%;
+    overflow-y: auto;
+}
+
+#vostanContainer {
+}
+
+#viewTab.editMode {
+    background-color: #fff;
+}
+
+#vostanApp {
+    border: 1px solid #46804D;
+    padding: 0;
+    width: 1024px;
+    height: 768px;
+    position: relative;
+}
+
+#vostanApp.presentation, #vostanApp.presentation #vostanAppSmall, #vostanApp.presentation #vostanAppMiddle {
+    border: none;
+}
+
+#vostanApp.presentation #vostanAppSize, #vostanApp.presentation #vostanAppSmallSize,  #vostanApp.presentation #vostanAppMiddleSize, #vostanMain {
+    display: none;
+}
+
+#vostanAppSmall {
+    border: 1px solid #46804D;
+    margin: 0;
+    padding: 0;
+    width: 800px;
+    height: 600px;
+    position: absolute;
+}
+
+#vostanAppMiddle {
+    border: 1px solid #46804D;
+    margin: 0;
+    padding: 0;
+    width: 1024px;
+    height: 768px;
+    position: absolute;
+}
+
+#vostanAppSize {
+    color: #999900;
+    font-size: 11px;
+    position: absolute;
+    left: 5px;
+    bottom: 0;
+}
+
+#vostanAppMiddleSize, #vostanAppSmallSize {
+    color: #46804D;
+    font-size: 11px;
+    position: absolute;
+    left: 5px;
+    bottom: 0;
+}
+
+#vostanStage {
+    position: absolute;
+    color: #666;
+    line-height: 1px;
+}
+
+#vostanMap, #vostanEditStage, #vostanContainer {
+    position: relative;
+}
+
+#vostanStage, #vostanMap, #vostanEditStage {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#vostanControls img {
+    cursor: pointer;
+}
+
+#vostanApp node {
+    padding: 0;
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    border: 1px #666 solid;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+#vostanApp node.node-proot,
+#vostanApp node.node-root {
+}
+
+#vostanApp node .view {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#vostanApp node.node-t .view .img, #vostanApp node.node-t .view .info, #vostanApp node.node-nt .view .img, #vostanApp node.node-n .view .img, #vostanApp node.node-n .view .par, #vostanApp node.node-ni .view .par, #vostanApp node.node-i .view .info, #vostanApp node.node-i .view .par, #vostanApp node.node-it .view .info {
+    display: none;
+}
+
+#vostanApp node .view .img {
+    position: absolute;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+#vostanApp node .view .img img {
+    width: 100%;
+}
+
+#vostanApp node .view .info {
+    font-family: VostanSans, VostanGrapalat;
+    min-height: 30px;
+    min-width: 22px;
+    overflow: hidden;
+    position: absolute;
+    color: #369;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.2em;
+}
+
+#vostanApp node .view .info .resizable-element {
+    height: inherit;
+    width: inherit;
+}
+
+#vostanApp node .view .title-box {
+    height: inherit;
+    width: inherit;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: left;
+}
+
+#vostanApp node.node-nt .query-node .view .img {
+    display: block;
+    top: 10px;
+    left: 10px; 
+    width: 40px;
+    height: 40px;
+}
+
+#vostanApp .query-node {
+    margin-right: 3px;
+}
+
+#vostanApp .query-node .view img.query {
+    width: 100%;
+}
+
+#vostanApp node.node .query-node .view .info {
+    min-height: 40px;
+    min-width: 22px;
+    top: 11px;
+    left: 60px;
+    right: 5px;
+    bottom: 8px;
+}
+
+#vostanApp node .query-node .view .info_query {
+    vertical-align: middle;
+    top: 10px;
+    height: 40px;
+    left: 10px;
+    right: 10px;
+}
+
+#vostanApp node .query-node .view .info_qi {
+    left: 30%;
+}
+
+#vostanApp node .view .par .wrap {
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+#vostanApp node .view .par {
+    font-family: VostanCantarell, VostanGrapalat;
+    position: absolute;
+    font-size: 13px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+#vostanApp node .view .par pre {
+    overflow: auto; 
+}
+/*Edit Mode*/
+
+#vostanApp textarea {
+    border: 1px solid #999999;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2) inset;
+    font-family: inherit;
+    font-size: 24px;
+    line-height: 1.4em;
+    outline: medium none;
+    padding: 6px;
+    width: 400px;
+}
+
+#vostanApp input[type="text"] {
+    border: 1px solid #999999;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2) inset;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.4em;
+    outline: medium none;
+    padding: 3px;
+    background-color: #fff;
+    color: #000;
+}
+
+#vostanAccoutControls {
+    width: 60px;
+    right: 0;
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+}
+
+#vostanControls {
+    right: 350px;
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+    display: none;
+}
+
+#vostanNodeSearch {
+    width: 100px;
+    display: none;
+}
+
+.ui-autocomplete {
+    z-index: 3000;
+    padding: 5px;
+    max-width: 250px;
+    max-height: 300px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.ui-autocomplete li {
+    background-color: #fff;
+    border: 1px #666 solid;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#editControls {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    width: 460px;
+    display: none;
+    z-index: 2000;
+    background-color: #fff;
+    border: 1px gray solid;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#editControls a.clear {
+    clear: both;
+    width: 100%;
+    border: none;
+    margin-bottom: 1px;
+    padding: 0;
+}
+
+#editControls a {
+    font-family: VostanSans, VostanGrapalat;
+    margin-left: 10px;
+    margin-top: 10px;
+    padding: 5px;
+    background-color: #fff;
+    color: #369;
+    border: 1px #666 solid;
+    border-radius: 5px;
+    float: left;
+    cursor: pointer;
+    z-index: 34000;
+}
+
+#editControls.node-root a.destroy, #editControls.node a.add {
+    display: none;
+}
+
+#vostanApp node.edits {
+    overflow-y: auto;
+    z-index: 3000;
+}
+
+#vostanApp node.link-edits, #vostanApp node .edits {
+    padding: 10px;
+}
+
+#vostanApp node .edits input[type="text"], #vostanApp node .edits textarea {
+    width: 90%;
+    font-size: 14px;
+}
+
+#vostanApp node .view .params, node .params {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #000; 
+    display: none;
+    font-weight: 400; 
+    font-size: 9pt;
+    line-height: 10px;
+    background-color: #FFF; 
+    font-family: Lucida Grande;
+    z-index: 10000;
+}
+
+#uplContainer {
+    display: none;
+    border: 1px solid #ababab;
+    background-color: #C0C0C0;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+    position: absolute;
+    width: 600px;
+    height: 250px;
+    z-index: 3000;
+    overflow: auto;
+}
+
+#uplContainer ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin: 20px;
+}
+
+#uplContainer li {
+    margin: 10px;
+    float: left;
+}
+
+#uplContainer img.uploads {
+    width: 75px;
+    height: 75px;
+    border: 1px solid #FFF;
+}
+
+#uplContainer img.uploads:hover {
+    border: 1px solid #FF0;
+}
+
+#uplDialog {
+    display: none;
+    position: absolute;
+    padding: 5px;
+    z-index: 3000;
+    width: 380px;
+    height: 25px;
+}
+
+.ui-resizable-handle {
+    background-position: 0 0; 
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 25px;
+    height: 25px;
+    z-index: 1000 !important;
+}
+
+.ui-resizable-se {
+    background-image: url("/db/get?id=f7f36187-fd64-4816-a7c8-f64e20417f9e");
+    right: -13px;
+    bottom: -13px;
+}
+
+.ui-resizable-sw {
+    background-image: url("/db/get?id=f7f36187-fd64-4816-a7c8-f64e20417f9e");
+    left: -13px;
+    bottom: -13px;
+}
+
+.ui-resizable-ne {
+    background-image: url("/db/get?id=f7f36187-fd64-4816-a7c8-f64e20417f9e");
+    right: -13px;
+    top: -13px;
+}
+
+.ui-resizable-nw {
+    background-image: url("/db/get?id=f7f36187-fd64-4816-a7c8-f64e20417f9e");
+    left: -13px;
+    top: -13px;
+}
+
+.ui-resizable-w, .ui-resizable-e {
+    right: -13px;
+    top: 50%;
+    -moz-transform: translate(0px,-13px);
+    -webkit-transform: translate(0px,-13px);
+    -ms-transform: translate(0px,-13px);
+    -o-transform: translate(0px,-13px);
+}
+
+.ui-resizable-n, .ui-resizable-s {
+    bottom: -13px;
+    left: 50%;
+    -moz-transform: translate(-13px,0px);
+    -webkit-transform: translate(-13px,0px);
+    -ms-transform: translate(-13px,0px);
+    -o-transform: translate(-13px,0px);
+}
+
+.ui-resizable-e {
+    background-image: url("/db/get?id=f7f36187-fd64-4816-a7c8-f64e20417f9e");
+    right: -13px;
+}
+
+.ui-resizable-w {
+    background-image: url("/db/get?id=f7f36187-fd64-4816-a7c8-f64e20417f9e");
+    left: -13px;
+}
+
+.ui-resizable-s {
+    background-image: url("/db/get?id=f7f36187-fd64-4816-a7c8-f64e20417f9e");
+    bottom: -13px;
+}
+
+.ui-resizable-n {
+    background-image: url("/db/get?id=f7f36187-fd64-4816-a7c8-f64e20417f9e");
+    top: -13px;
+}
+
+.ui-resizable {
+    overflow: visible !important;
+}
+
+.resizable-node, .resizable-element {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+#vostanApp .edits .singleFieldTags, #vostanApp .edits .singleFieldUsers, #vostanApp .edits .singleFieldViewers {
+    border: 1px solid #C6C6C6;
+    padding: 1px 5px;
+    float: left;
+    width: 99%;
+    margin: 1px 0;
+}
+
+#vostanApp .link-edits .singleFieldTags {
+    border: 1px solid #C6C6C6;
+    padding: 1px 5px;
+    float: left;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#vostanApp .link-edits #inputSingleField {
+    width: 60px;
+    font-size: 14px;
+}
+
+#vostanApp .singleFieldTags li, #vostanApp .singleFieldUsers li, #vostanApp .singleFieldViewers li {
+    display: block;
+    float: left;
+    margin: 2px 5px 2px 0;
+    list-style: none;
+}
+
+#vostanApp .singleFieldTags .tagit-choice, #vostanApp .singleFieldUsers .users-choice, #vostanApp .singleFieldViewers .viewers-choice {
+    background: none repeat scroll 0 0 #DEE7F8;
+    border: 1px #CAD8F3 solid;
+    border-radius: 6px;
+    font-weight: 400;
+    padding: .3em 6px .4em .5em;
+}
+
+#vostanApp .singleFieldTags .tagit-choice .tagit-close, #vostanApp .singleFieldUsers .users-choice .users-close, #vostanApp .singleFieldViewers .viewers-choice .viewers-close {
+    margin-left: 5px;
+}
+
+#vostanApp .singleFieldTags .tagit-choice .text-icon, #vostanApp .singleFieldUsers .users-choice .text-icon, #vostanApp .singleFieldViewers .viewers-choice .text-icon {
+    color: #777;
+    display: inline;
+    font-size: 16px;
+}
+
+#vostanApp .singleFieldTags .tagit-new {
+    width: 100%;
+}
+
+#vostanApp .singleFieldTags .tagit-new, #vostanApp .singleFieldUsers .users-new, #vostanApp .singleFieldViewers .viewers-new {
+    padding: 0 4px 0 0;
+}
+
+#vostanApp .singleFieldTags .tagit-new #inputSingleField, #vostanApp .singleFieldUsers .users-new #inputSingleFieldUsers, #vostanApp .singleFieldViewers .viewers-new #inputSingleFieldViewers {
+    border: medium none;
+    box-shadow: none;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+
+#vostanApp .edits .singleFieldTags.ui-sortable.tag-drag {
+    border: 2px solid #09f;
+}
+
+#vostanApp node div.tags {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    left: 2px;
+    font-size: 9px;
+}
+
+#vostanApp node .queryView div.tags {
+    z-index: 2000;
+}
+
+#vostanApp node div.count {
+    position: absolute;
+    bottom: 2px;
+    left: 5px;
+    font-size: 8px;
+    z-index: inherit;
+}
+
+#vostanApp node div.tags span {
+    height: 16px;
+    display: block;
+    float: right;
+}
+
+#vostanApp node div.resizable-node div.tags a span.tag-icon {
+    display: block;
+    width: 16px;
+    margin-left: 5px;
+    background: url(/db/get?id=7a157ddd-118a-4687-83fc-b01f734a0ee9&fn=filter.svg) no-repeat top left;
+    background-size: contain;
+}
+
+#vostanApp node div.resizable-node div.tags a:hover span.tag-info {
+    display: block;
+    width: 90%;
+    min-height: 40px;
+    word-break: break-word;
+    background-color: #fff;
+}
+
+#vostanApp node div.tags a span.tag-icon,
+#vostanApp node div.tags a span.tag-info,
+#vostanApp node div.resizable-node div.tags a span.tag-view {
+    display: none;
+}
+
+#vostanApp node div.exp, #vostanApp node div.query-nodes node.query-node div.exp {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 15px;
+    height: 15px;
+    background: url(/db/get?id=40cd124d-a7ed-4c0a-a224-5b16bbef6c05&fn=dots.svg) no-repeat scroll bottom;
+    background-size: 12px 12px;
+}
+
+#vostanApp node div.file {
+    position: absolute;
+    bottom: 2px;
+    left: 4px;
+    font-size: 14px;
+}
+
+#vostanApp node div.file a {
+    width: 32px;
+    height: 32px;
+    display: block;
+    background-image: url(/db/get?id=2a4abbe0-d750-4b95-9eec-3ea9695241e3&fn=download.svg);
+}
+
+#vostanApp node.leaf, #vostanApp node.node-root {
+    cursor: auto;
+}
+
+#vostanApp node.node-proot div.exp {
+    background-image: url(/db/get?id=aa268db0-c3fb-433e-aebe-ff6dc73e7cd3&fn=back.svg);
+}
+
+#vostanApp node.node-nroot div.exp {
+    background-image: url(/db/get?id=aa268db0-c3fb-433e-aebe-ff6dc73e7cd3&fn=back.svg);
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+#vostanApp node.node-url div.exp {
+    background-image: url(/db/get?id=ef8a0153-6f39-43d8-847c-631ed238367d&fn=link.svg);
+}
+
+#vostanApp node.node-root div.exp {
+    background-image: url(/db/get?id=cd4e7fff-508d-4df8-805a-02d25b9b648f&fn=target.svg);
+}
+
+#vostanApp node.leaf div.exp {
+    display: none;
+}
+
+#vostanApp node.node-load {
+    background: url(/db/get?id=21f14571-b071-4994-bec2-63782cab4964) no-repeat scroll 45% 40%;
+}
+
+#vostanApp node.node-error {
+    cursor: auto;
+    border: 1px solid #ff0000;
+}
+
+#vostanApp node.node-error .exp, #vostanApp node.node-error .img, #vostanApp node.node-error .par {
+    display: none;
+}
+
+#vostanApp node.node-error .info {
+    font-size: 12px;
+}
+
+#vostanAccountControls {
+    float: right;
+}
+
+#vostanAccountControls node {
+    background-color: #fff;
+    min-height: 18px;
+    display: inline-block;
+    position: inherit;
+    margin: 2px;
+    padding: 5px;
+    opacity: 0.9;
+    font-size: 12px;
+    min-width: 20px;
+}
+
+#vostanAccountControls node.lang {
+    cursor: pointer;
+    color: #333;
+    opacity: .5;
+}
+
+#vostanAccountControls node.active-lang {
+    cursor: auto;
+    font-weight: bold;
+    opacity: .9;
+}
+
+#toggleNode {
+    background: url(/db/get?id=1a52ef35-39a9-4811-845b-19a146d86e3c&fn=search.svg) no-repeat 5px;
+    background-size: 12px 12px;
+}
+
+#vostanNodeToggle{
+    font-size: 10px;
+    width: 150px;
+    padding: 3px;
+    margin-left: 16px;
+    border: 1px hidden #333;
+}
+
+#vostanApp #shareNode, #vostanApp #share_clone {
+    background: url(/db/get?id=094b8b25-e1a9-4ef1-a036-85068990aad5&fn=share.svg) no-repeat 5px;
+    background-size: 16px 16px;
+    background-position: 5px 5px;
+    background-color: #fff;
+    float: left;
+}
+
+#vostanApp #share_clone {
+    position: absolute;
+    padding: 24px 7px 7px 7px;
+}
+
+#vostanApp #share {
+    font-size: 10px;
+    width: 200px;
+}
+
+.query-nodes, #carousel-items {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 7px;
+    border: 1px #aaa solid;
+    background-color: #f1f1f1;  
+}
+
+#carousel-items node, .query-nodes node {
+    margin: 10px auto; 
+}
+
+.carousel {
+    min-height: 200px;
+}
+
+.imagetooltip {
+    font-size: 9px;
+}
+
+.btn-edit {
+    background-size: 30px 30px;
+    background-position: 5px 5px;
+    background-color: #fff;
+    background-repeat: no-repeat;
+}
+
+.btn-edit-wait {
+    background-image: url(/db/get?id=21f14571-b071-4994-bec2-63782cab4964?fn=ajax-loader-white.gif) !important;
+}
+
+#edit-cancel {
+    background-image: url(/db/get?id=6117f784-a599-4b59-89c5-c912566ddfc2&fn=cancel.svg);
+}
+
+#edit-save {
+    background-image: url(/db/get?id=ca67af6f-0406-4db9-afe6-1131cec41d03&fn=save.svg);
+}
+
+#choose-file {
+    background-image: url(/db/get?id=61e9f11e-a975-492c-b2ed-da5c51e71d70&fn=uploadFile.svg);
+}
+
+#edit-img-list {
+    background-image: url(/db/get?id=7a5f52be-0335-4ea8-9601-b35fe21aa827&fn=selectImg.svg);
+}
+
+#edit-img-url {
+    background-image: url(/db/get?id=0c771265-a129-4f79-bcc5-9d5c30f9cdd5&fn=uploadFromFile.svg);
+}

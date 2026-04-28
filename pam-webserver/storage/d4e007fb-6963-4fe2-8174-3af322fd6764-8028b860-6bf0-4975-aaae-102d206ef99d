@@ -1,0 +1,30 @@
+{
+	"name": {
+		"hy_AM": "PAM types"
+	},
+	"id": "pam-types",
+	"description": "",
+	"root": "",
+	"home_page": "ea1ae792-bd0d-43eb-9c1a-77515f447f55-8e3e9d31-aed0-417d-ac7a-c7b4bfaa9b16",
+	"type": "2da70db5-c04a-43a5-94e0-3e7304879599",
+	"uuid": "d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d",
+	"created": "2026-04-07",
+	"types": [
+		"2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f",
+		"9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36",
+		"f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf",
+		"ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612",
+		"5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9",
+		"0a4d2835-8099-4d6e-91d9-39c8aa81ba8e-89bbac2d-5f04-472b-8637-06fdcbd03757",
+		"44936aab-25f9-4891-921e-b420363c7cdc"
+	],
+	"functions": [],
+	"referenced_apps": [],
+	"documents": [],
+	"authors": [],
+	"sources": [],
+	"locales": [],
+	"translation_table": [],
+	"sessions": [],
+	"watchers": []
+}

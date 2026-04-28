@@ -1,0 +1,86 @@
+async function main() {
+    let hu = "756c18ab-9a65-4298-81e1-546b6f3908ef-e31b1da5-f985-4758-a6fe-b0a24ef6237e";
+    console.log(hu);
+    let temp = await metax.get(template).then(r => r.json());
+
+    let subheadings = "";
+
+    let template_name = temp.name.hye_AM;
+    let template_desc = temp.description;
+
+    console.log("Template name:", template_name);
+    console.log("Template description:", template_desc);
+    console.log("Subheads:", temp.subheads);
+
+    for (let h of temp.subheads) {
+        let heading = await mani.metax.get(h).then(r => r.json());
+        console.log("Heading:", heading);
+
+        if (!heading.subheadings) {
+              subheadings += `<div>
+                                    <h1>${heading.name.hye_AM}</h1>
+                                </div>`;
+                continue;
+        } else {
+            for (let subheadingId of heading.subheadings) {
+                let sub = await mani.metax.get(subheadingId).then(r => r.json());
+                console.log("Subheading:", sub);
+
+                subheadings += `<div>
+                                    <h1>${heading.name.hye_AM}</h1>
+                                    <p>${sub.name.hye_AM}</p>
+                                </div>`;
+            }
+        }
+    }
+
+    console.log("Accumulated subheadings HTML:", subheadings);
+
+
+        
+        var html = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Document</title>
+                <style>
+                        body {
+                                text-align: left;
+                                font-size: 8px;
+                        }
+
+                        table {
+                                font-family: arial, sans-serif;
+                                border-collapse: collapse;
+                                width: 100%;
+                        }
+
+                        td, th {
+                                border: 2px solid black;
+                                text-align: left;
+                                padding: 8px;
+                                font-size: 10px;
+                        }
+
+                        th {
+                                background-color: #dddddd;
+                        }
+                </style>
+                </head>
+                <body>
+                        <h1>${template_name}</h1>
+
+                        <p>${template_desc}</p>
+
+                        ${subheadings}
+                </body>
+                </html>
+`
+
+        await mani.metax.update(hu, html, "text/html");
+        const link = window.location.origin + "/db/get?id=" + hu;
+        alert("Open this url in new tab : " + link);
+}
+main()

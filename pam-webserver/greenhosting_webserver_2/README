@@ -1,0 +1,30 @@
+TODO write in-depth README with api and setup info
+
+For running metax please run:
+	1. $ npm install
+	2. npm start host_metax=[metax_host:metax_port] key=[ssl_private_key_path] cert=[ssl_certificate_path] sitemap_uuid=[valid_uuid_of_sitemap] write_server_port=[http2_server_port_with_write_permissions] readonly_server_port=[http2_server_port_readonly]
+	example:
+		$ npm start host_metax=herbals.am:8001 key=./keys/privkey.pem cert=./keys/fullchain.pem sitemap_uuid=7756c569-a625-40d9-ae20-4a6c27d04024 read_server_port=7000 write_server_port=7001
+
+For running test please run:
+	$ npm start
+	$ npm run test
+
+NOTE: currently, logger logs only in console, for logging also in a file, please modify src/webserver.mjs' logger_options to:
+{
+	file_channel: {
+		usage: true,
+		rotation: 10,
+		path: "PATH_TO_LOG_FILE"
+	},
+	console_channel: { usage: true },
+	pattern: "%p %Y-%m-%d %H:%M:%S.%i %s: %t"
+}
+
+
+TODO:
+	0. add register_listener on websites [ for auto-adding new paths, client certificates ]
+		add register_listener on sitemap
+	1. add script that auto-generates new sitemap root uuid.
+	2. research "CONNECT" method in http/2 which acts as proxy.
+	3. debug issue 

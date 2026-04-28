@@ -1,0 +1,283 @@
+Trace 2026-4-22 10:43:28.238 webserver: logger configured.
+Trace 2026-4-22 10:43:28.239 webserver: configure_webserver
+Trace 2026-4-22 10:43:28.239 webserver: END configure_webserver
+Trace 2026-4-22 10:43:28.239 webserver: connecting to host metax.
+Error 2026-4-22 10:43:28.251 webserver: failed to connect to host metax: Error: self-signed certificate; if the root CA is installed locally, try running Node.js with --use-system-ca
+Trace 2026-4-22 10:44:41.945 webserver: logger configured.
+Trace 2026-4-22 10:44:41.945 webserver: configure_webserver
+Trace 2026-4-22 10:44:41.945 webserver: END configure_webserver
+Trace 2026-4-22 10:44:41.945 webserver: connecting to host metax.
+Trace 2026-4-22 10:44:41.958 webserver: successfully connected to host metax.
+Trace 2026-4-22 10:44:41.969 webserver: connected to metax websocket.
+Error 2026-4-22 10:44:41.979 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 10:44:41.980 webserver: starting read-only server
+Trace 2026-4-22 10:44:41.982 webserver: starting write server
+Trace 2026-4-22 10:44:41.983 webserver: read-only server running on port: 8001
+Trace 2026-4-22 10:44:41.983 webserver: write server running on port: 8002
+Trace 2026-4-22 10:45:13.531 webserver: logger configured.
+Trace 2026-4-22 10:45:13.532 webserver: configure_webserver
+Trace 2026-4-22 10:45:13.532 webserver: END configure_webserver
+Trace 2026-4-22 10:45:13.532 webserver: connecting to host metax.
+Trace 2026-4-22 10:45:13.546 webserver: successfully connected to host metax.
+Trace 2026-4-22 10:45:13.558 webserver: connected to metax websocket.
+Error 2026-4-22 10:45:13.569 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 10:45:13.571 webserver: starting read-only server
+Trace 2026-4-22 10:45:13.574 webserver: starting write server
+Trace 2026-4-22 10:45:13.575 webserver: read-only server running on port: 8001
+Trace 2026-4-22 10:45:13.575 webserver: write server running on port: 8002
+Trace 2026-4-22 11:4:17.682 router: new session with id: 1  , fingerprint: undefined
+Trace 2026-4-22 11:4:17.684 router: received new stream from 1, path: /db/get
+Trace 2026-4-22 11:4:17.684 router: processing /db/get for 9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+Trace 2026-4-22 11:4:17.689 router: finished /db/get for 9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+Trace 2026-4-22 11:4:17.740 router: new session with id: 2  , fingerprint: undefined
+Trace 2026-4-22 11:4:17.742 router: received new stream from 2, path: /favicon.ico
+Trace 2026-4-22 11:4:17.742 router: received default request from localhost:8001 with path /favicon.ico
+Trace 2026-4-22 11:4:17.742 router: skipping default request with path /favicon.ico
+Trace 2026-4-22 2:39:44.993 webserver: logger configured.
+Trace 2026-4-22 2:39:44.993 webserver: configure_webserver
+Trace 2026-4-22 2:39:44.993 webserver: END configure_webserver
+Trace 2026-4-22 2:39:44.993 webserver: connecting to host metax.
+Trace 2026-4-22 2:39:45.14 webserver: successfully connected to host metax.
+Trace 2026-4-22 2:39:45.27 webserver: connected to metax websocket.
+Error 2026-4-22 2:39:45.39 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 2:39:45.41 webserver: starting read-only server
+Trace 2026-4-22 2:39:45.44 webserver: starting write server
+Trace 2026-4-22 2:39:45.44 webserver: read-only server running on port: 8001
+Trace 2026-4-22 2:39:45.45 webserver: write server running on port: 8002
+Trace 2026-4-22 2:39:57.741 webserver: logger configured.
+Trace 2026-4-22 2:39:57.741 webserver: configure_webserver
+Trace 2026-4-22 2:39:57.742 webserver: END configure_webserver
+Trace 2026-4-22 2:39:57.742 webserver: connecting to host metax.
+Trace 2026-4-22 2:39:57.766 webserver: successfully connected to host metax.
+Trace 2026-4-22 2:39:57.778 webserver: connected to metax websocket.
+Error 2026-4-22 2:39:57.789 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 2:39:57.791 webserver: starting read-only server
+Trace 2026-4-22 2:39:57.794 webserver: starting write server
+Trace 2026-4-22 2:39:57.795 webserver: read-only server running on port: 8001
+Trace 2026-4-22 2:39:57.795 webserver: write server running on port: 8002
+Trace 2026-4-22 2:44:16.328 webserver: host metax connection closed
+Trace 2026-4-22 2:44:17.330 webserver: connecting to host metax.
+Error 2026-4-22 2:44:17.332 webserver: failed to connect to host metax: AggregateError
+Trace 2026-4-22 2:47:25.685 webserver: logger configured.
+Trace 2026-4-22 2:47:25.685 webserver: configure_webserver
+Trace 2026-4-22 2:47:25.685 webserver: END configure_webserver
+Trace 2026-4-22 2:47:25.685 webserver: connecting to host metax.
+Trace 2026-4-22 2:47:25.707 webserver: successfully connected to host metax.
+Trace 2026-4-22 2:47:25.720 webserver: connected to metax websocket.
+Error 2026-4-22 2:47:25.729 webserver: unable to get sitemap uuid: {"error":"Error: 9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1.contract not found."}
+Trace 2026-4-22 3:1:1.659 webserver: logger configured.
+Trace 2026-4-22 3:1:1.659 webserver: configure_webserver
+Trace 2026-4-22 3:1:1.659 webserver: END configure_webserver
+Trace 2026-4-22 3:1:1.660 webserver: connecting to host metax.
+Trace 2026-4-22 3:1:1.680 webserver: successfully connected to host metax.
+Trace 2026-4-22 3:1:1.689 webserver: connected to metax websocket.
+Error 2026-4-22 3:1:1.700 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 3:1:1.701 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-4-22 3:1:1.703 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-4-22 3:1:1.705 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-4-22 3:1:1.706 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-4-22 3:1:1.708 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-4-22 3:1:1.709 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-4-22 3:1:1.709 notifier: construct_transporter_package
+Trace 2026-4-22 3:1:1.709 notifier: END construct_transporter_package
+Trace 2026-4-22 3:1:1.709 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-4-22 3:1:1.709 notifier: construct_transporter_package
+Trace 2026-4-22 3:1:1.709 notifier: END construct_transporter_package
+Trace 2026-4-22 3:1:1.709 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-4-22 3:1:1.709 webserver: starting read-only server
+Trace 2026-4-22 3:1:1.712 webserver: starting write server
+Trace 2026-4-22 3:1:1.713 webserver: read-only server running on port: 8001
+Trace 2026-4-22 3:1:1.713 webserver: write server running on port: 8002
+Trace 2026-4-22 3:1:39.573 webserver: host metax connection closed
+Trace 2026-4-22 3:1:40.576 webserver: connecting to host metax.
+Error 2026-4-22 3:1:40.578 webserver: failed to connect to host metax: AggregateError
+Trace 2026-4-22 3:4:5.549 webserver: logger configured.
+Trace 2026-4-22 3:4:5.549 webserver: configure_webserver
+Trace 2026-4-22 3:4:5.549 webserver: END configure_webserver
+Trace 2026-4-22 3:4:5.549 webserver: connecting to host metax.
+Trace 2026-4-22 3:4:5.569 webserver: successfully connected to host metax.
+Trace 2026-4-22 3:4:5.578 webserver: connected to metax websocket.
+Error 2026-4-22 3:4:5.590 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 3:4:5.591 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-4-22 3:4:5.593 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-4-22 3:4:5.595 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-4-22 3:4:5.595 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-4-22 3:4:5.597 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-4-22 3:4:5.598 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-4-22 3:4:5.598 notifier: construct_transporter_package
+Trace 2026-4-22 3:4:5.598 notifier: END construct_transporter_package
+Trace 2026-4-22 3:4:5.598 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-4-22 3:4:5.598 notifier: construct_transporter_package
+Trace 2026-4-22 3:4:5.598 notifier: END construct_transporter_package
+Trace 2026-4-22 3:4:5.598 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-4-22 3:4:5.598 webserver: starting read-only server
+Trace 2026-4-22 3:4:5.601 webserver: starting write server
+Trace 2026-4-22 3:4:5.602 webserver: read-only server running on port: 8001
+Trace 2026-4-22 3:4:5.602 webserver: write server running on port: 8002
+Trace 2026-4-22 3:6:47.121 webserver: host metax connection closed
+Trace 2026-4-22 3:6:48.121 webserver: connecting to host metax.
+Error 2026-4-22 3:6:48.124 webserver: failed to connect to host metax: AggregateError
+Trace 2026-4-22 3:7:3.197 webserver: logger configured.
+Trace 2026-4-22 3:7:3.197 webserver: configure_webserver
+Trace 2026-4-22 3:7:3.197 webserver: END configure_webserver
+Trace 2026-4-22 3:7:3.197 webserver: connecting to host metax.
+Trace 2026-4-22 3:7:3.219 webserver: successfully connected to host metax.
+Trace 2026-4-22 3:7:3.227 webserver: connected to metax websocket.
+Error 2026-4-22 3:7:3.238 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 3:7:3.240 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-4-22 3:7:3.242 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-4-22 3:7:3.244 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-4-22 3:7:3.244 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-4-22 3:7:3.246 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-4-22 3:7:3.247 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-4-22 3:7:3.247 notifier: construct_transporter_package
+Trace 2026-4-22 3:7:3.247 notifier: END construct_transporter_package
+Trace 2026-4-22 3:7:3.247 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-4-22 3:7:3.247 notifier: construct_transporter_package
+Trace 2026-4-22 3:7:3.247 notifier: END construct_transporter_package
+Trace 2026-4-22 3:7:3.247 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-4-22 3:7:3.247 webserver: starting read-only server
+Trace 2026-4-22 3:7:3.250 webserver: starting write server
+Trace 2026-4-22 3:7:3.251 webserver: read-only server running on port: 8001
+Trace 2026-4-22 3:7:3.251 webserver: write server running on port: 8002
+Trace 2026-4-22 3:14:32.117 webserver: host metax connection closed
+Trace 2026-4-22 3:14:33.117 webserver: connecting to host metax.
+Error 2026-4-22 3:14:33.120 webserver: failed to connect to host metax: AggregateError
+Trace 2026-4-22 3:16:11.317 webserver: logger configured.
+Trace 2026-4-22 3:16:11.317 webserver: configure_webserver
+Trace 2026-4-22 3:16:11.317 webserver: END configure_webserver
+Trace 2026-4-22 3:16:11.317 webserver: connecting to host metax.
+Trace 2026-4-22 3:16:11.336 webserver: successfully connected to host metax.
+Trace 2026-4-22 3:16:11.345 webserver: connected to metax websocket.
+Error 2026-4-22 3:16:11.350 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 3:16:11.351 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-4-22 3:16:11.352 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-4-22 3:16:11.354 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-4-22 3:16:11.354 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-4-22 3:16:11.356 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-4-22 3:16:11.357 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-4-22 3:16:11.357 notifier: construct_transporter_package
+Trace 2026-4-22 3:16:11.357 notifier: END construct_transporter_package
+Trace 2026-4-22 3:16:11.357 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-4-22 3:16:11.357 notifier: construct_transporter_package
+Trace 2026-4-22 3:16:11.357 notifier: END construct_transporter_package
+Trace 2026-4-22 3:16:11.357 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-4-22 3:16:11.357 webserver: starting read-only server
+Trace 2026-4-22 3:16:11.360 webserver: starting write server
+Trace 2026-4-22 3:16:11.361 webserver: read-only server running on port: 8001
+Trace 2026-4-22 3:16:11.361 webserver: write server running on port: 8002
+Trace 2026-4-22 5:7:43.681 webserver: logger configured.
+Trace 2026-4-22 5:7:43.681 webserver: configure_webserver
+Trace 2026-4-22 5:7:43.681 webserver: END configure_webserver
+Trace 2026-4-22 5:7:43.681 webserver: connecting to host metax.
+Trace 2026-4-22 5:7:43.700 webserver: successfully connected to host metax.
+Trace 2026-4-22 5:7:43.708 webserver: connected to metax websocket.
+Error 2026-4-22 5:7:43.714 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 5:7:43.715 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-4-22 5:7:43.717 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-4-22 5:7:43.719 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-4-22 5:7:43.719 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-4-22 5:7:43.721 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-4-22 5:7:43.722 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-4-22 5:7:43.722 notifier: construct_transporter_package
+Trace 2026-4-22 5:7:43.722 notifier: END construct_transporter_package
+Trace 2026-4-22 5:7:43.722 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-4-22 5:7:43.722 notifier: construct_transporter_package
+Trace 2026-4-22 5:7:43.722 notifier: END construct_transporter_package
+Trace 2026-4-22 5:7:43.722 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-4-22 5:7:43.722 webserver: starting read-only server
+Trace 2026-4-22 5:7:43.725 webserver: starting write server
+Trace 2026-4-22 5:7:43.726 webserver: read-only server running on port: 8001
+Trace 2026-4-22 5:7:43.726 webserver: write server running on port: 8002
+Trace 2026-4-22 7:5:26.191 webserver: logger configured.
+Trace 2026-4-22 7:5:26.191 webserver: configure_webserver
+Trace 2026-4-22 7:5:26.191 webserver: END configure_webserver
+Trace 2026-4-22 7:5:26.191 webserver: connecting to host metax.
+Trace 2026-4-22 7:5:26.210 webserver: successfully connected to host metax.
+Trace 2026-4-22 7:5:26.225 webserver: connected to metax websocket.
+Error 2026-4-22 7:5:26.237 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-22 7:5:26.239 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-4-22 7:5:26.242 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-4-22 7:5:26.245 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-4-22 7:5:26.245 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-4-22 7:5:26.248 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-4-22 7:5:26.249 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-4-22 7:5:26.249 notifier: construct_transporter_package
+Trace 2026-4-22 7:5:26.249 notifier: END construct_transporter_package
+Trace 2026-4-22 7:5:26.249 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-4-22 7:5:26.249 notifier: construct_transporter_package
+Trace 2026-4-22 7:5:26.249 notifier: END construct_transporter_package
+Trace 2026-4-22 7:5:26.249 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-4-22 7:5:26.249 webserver: starting read-only server
+Trace 2026-4-22 7:5:26.252 webserver: starting write server
+Trace 2026-4-22 7:5:26.253 webserver: read-only server running on port: 8001
+Trace 2026-4-22 7:5:26.253 webserver: write server running on port: 8002
+Trace 2026-4-23 0:29:52.135 webserver: logger configured.
+Trace 2026-4-23 0:29:52.135 webserver: configure_webserver
+Trace 2026-4-23 0:29:52.135 webserver: END configure_webserver
+Trace 2026-4-23 0:29:52.135 webserver: connecting to host metax.
+Trace 2026-4-23 0:29:52.156 webserver: successfully connected to host metax.
+Trace 2026-4-23 0:29:52.168 webserver: connected to metax websocket.
+Error 2026-4-23 0:29:52.183 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-23 0:29:52.185 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-4-23 0:29:52.188 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-4-23 0:29:52.191 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-4-23 0:29:52.191 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-4-23 0:29:52.194 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-4-23 0:29:52.195 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-4-23 0:29:52.195 notifier: construct_transporter_package
+Trace 2026-4-23 0:29:52.195 notifier: END construct_transporter_package
+Trace 2026-4-23 0:29:52.195 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-4-23 0:29:52.195 notifier: construct_transporter_package
+Trace 2026-4-23 0:29:52.195 notifier: END construct_transporter_package
+Trace 2026-4-23 0:29:52.195 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-4-23 0:29:52.195 webserver: starting read-only server
+Trace 2026-4-23 0:29:52.198 webserver: starting write server
+Trace 2026-4-23 0:29:52.199 webserver: read-only server running on port: 8001
+Trace 2026-4-23 0:29:52.199 webserver: write server running on port: 8002
+Trace 2026-4-23 0:37:8.950 webserver: logger configured.
+Trace 2026-4-23 0:37:8.950 webserver: configure_webserver
+Trace 2026-4-23 0:37:8.950 webserver: END configure_webserver
+Trace 2026-4-23 0:37:8.951 webserver: connecting to host metax.
+Trace 2026-4-23 0:37:8.970 webserver: successfully connected to host metax.
+Trace 2026-4-23 0:37:8.979 webserver: connected to metax websocket.
+Error 2026-4-23 0:37:8.992 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-23 0:37:8.993 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-4-23 0:37:8.996 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-4-23 0:37:8.999 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-4-23 0:37:8.999 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-4-23 0:37:9.2 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-4-23 0:37:9.3 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-4-23 0:37:9.3 notifier: construct_transporter_package
+Trace 2026-4-23 0:37:9.3 notifier: END construct_transporter_package
+Trace 2026-4-23 0:37:9.3 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-4-23 0:37:9.3 notifier: construct_transporter_package
+Trace 2026-4-23 0:37:9.3 notifier: END construct_transporter_package
+Trace 2026-4-23 0:37:9.3 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-4-23 0:37:9.3 webserver: starting read-only server
+Trace 2026-4-23 0:37:9.7 webserver: starting write server
+Trace 2026-4-23 0:37:9.7 webserver: read-only server running on port: 8001
+Trace 2026-4-23 0:37:9.7 webserver: write server running on port: 8002
+Trace 2026-4-28 2:53:2.7 webserver: logger configured.
+Trace 2026-4-28 2:53:2.8 webserver: configure_webserver
+Trace 2026-4-28 2:53:2.8 webserver: END configure_webserver
+Trace 2026-4-28 2:53:2.8 webserver: connecting to host metax.
+Trace 2026-4-28 2:53:2.27 webserver: successfully connected to host metax.
+Trace 2026-4-28 2:53:2.37 webserver: connected to metax websocket.
+Error 2026-4-28 2:53:2.46 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-4-28 2:53:2.47 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-4-28 2:53:2.50 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-4-28 2:53:2.53 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-4-28 2:53:2.53 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-4-28 2:53:2.56 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-4-28 2:53:2.57 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-4-28 2:53:2.57 notifier: construct_transporter_package
+Trace 2026-4-28 2:53:2.57 notifier: END construct_transporter_package
+Trace 2026-4-28 2:53:2.57 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-4-28 2:53:2.57 notifier: construct_transporter_package
+Trace 2026-4-28 2:53:2.57 notifier: END construct_transporter_package
+Trace 2026-4-28 2:53:2.57 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-4-28 2:53:2.57 webserver: starting read-only server
+Trace 2026-4-28 2:53:2.60 webserver: starting write server
+Trace 2026-4-28 2:53:2.61 webserver: read-only server running on port: 8001
+Trace 2026-4-28 2:53:2.61 webserver: write server running on port: 8002

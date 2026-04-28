@@ -1,0 +1,474 @@
+/*
+vim: tabstop=8:shiftwidth=8:expandtab:fo=croq:syntax=javascript:smartindent
+
+revision: {
+
+        name: metax.mjs
+
+        version: 0358caf6-cc44-4012-8256-330ac0bb24df
+
+        previous_version: f7d4e754-1a41-49bd-86fd-9d131d5b9523
+
+        metax.min.mjs: 59c89b17-86fd-4ec1-bf71-d220b9e92501
+
+        authors: vahagn
+
+        date: Ã•â€¡Ã•Â¢Ã•Â© Ã•â€ Ã•Â´Ã•Â¢  3 18:44:11 +04 2018
+
+        comment: Parameterized HOST:PORT for connect() method.
+}
+
+*/
+
+/** 
+ * @file metax.mjs 
+ * @author e-Hayq cjsc, Yerevan, Armenian
+ * @copyright e-Hayq cjsc, Yerevan, Armenia
+ * @license MIT opensource license
+ */
+
+/** @private */
+const notDefinedYet = 0;
+
+/** The Metax singleton object */
+let metax = notDefinedYet;
+
+/** 
+ * @summary The Metax singleton class: wrapper over metax_web_api REST API 
+ *
+ * @todo Add methods to manage metax_web_api process: start/restart/stop
+ *
+ * @todo Add methods to modify config-file of the metax_web_api (e.g. change
+ *       port, connect to peer, manage storage, etc)
+ *
+ */
+class Metax {
+        /**
+         *  @summary Creates/initializes the singleton instance.
+         *
+         *  @description Note that the API is not connected. To fully
+         *      initialize still need to call {@link connect}.
+         *  
+         *  @todo: derive this from Singleton class to avoid 
+         *         messy code everywhere
+         */
+        constructor() { 
+                console.assert( metax === notDefinedYet,
+                        'Trying to create second instance of class Metax');
+                this.mHost = 'localhost';
+                this.mPort = -1;
+                this.mWebsocketPath = 'NOT SET';
+                this.mServicePath = 'NOT SET';
+                this.mGetMetaxInfo = 'NOT SET';
+                this.mWebsocket = {};
+                this.mListeners = {};
+        }
+
+        /**
+         *  @summary Connects with metax server 
+         *  @param {String} h is the DNS or IP of host running metax_web_api
+         *  @param {Number} p is the metax_web_api server port name on host
+         *  @param {Boolean} e if true then will use GPG/AES encryption,
+         *                   otherwise will store data in Metax unencrypted
+         *  @param {Boolean} s if true, then will use https, otherwise
+         *                   will use http to connect with metax_web_api
+         *  @todo Add public/private key management & user-info management.
+         *  @todo Decide on using http vs https (e.g. check if local fails
+         *        with http because of lack of certificate...)
+         *
+         *  Implementation Note: Have to pass on methods bound with this,
+         *  because inside the handlers it's lost, e.g. inside
+         *  websocket.onmessage the variable 'this' is set to websocket.
+         */
+        async connect(h='localhost',p=8001,e=true,s=false) {
+                console.assert(metax === this);
+                this.setupConnectionParameters(h,p,e,s);
+                return new Promise((resolve,reject)  => {
+                        metax.mWebsocket = new WebSocket(metax.mWebsocketPath);
+                        metax.mWebsocket.onerror = (e) => { reject(e); };
+                        metax.mWebsocket.onclose = (e) => { reject(e); };
+                        metax.mWebsocket.onmessage = 
+                                (e) => metax.dispatchWebSocketMessage(e);
+                        metax.mWebsocket.onopen = (e) => { 
+                                metax.mWebsocket.onerror = 
+                                        e => metax.handleWebSocketError(e);
+                                metax.mWebsocket.onclose = 
+                                        e => metax.handleWebSocketClose(e);  
+                                resolve('websocket connected'); 
+                        };
+                });
+        }
+
+        /**
+         *  @summary Disonnects from metax server
+         */
+        async disconnect() {
+                this.mWebsocket.onclose = () => {};
+                await this.mWebsocket.close();
+                return 'success';
+        }
+
+        /** 
+         * @summary Check if the given string is a valid UUID-4 format.
+         * @param uuid - input string to check
+         * @todo find out if we should support UUID-5 or stick with 4
+         * @todo: derive this from UUID class, 
+         *         where other functions should be put
+         */
+        isValidUUID(uuid) {
+                return /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i.test(uuid);
+        }
+
+        /**
+         * @summary Save given data with given mime-type and return uuid
+         * @param data - any data (blob/json/etc) to be sent to Metax
+         * @param mime - MIME type of the object to be served back in get()
+         */
+        async save(data, mime='application/javascript') {
+                const r = await this.HTTPPost(this.mSaveRequest, data, mime);
+                console.assert(
+                        this.isValidUUID(r.uuid), 
+                        `response to metax.save(${data},${mime}) ` + 
+                        `returned an invalid uuid=${r.uuid}`
+                );
+                return r.uuid;
+        }
+
+        /**
+         * @summary Save given data with given mime-type and return uuid
+         * @param data - any data (blob/json/etc) to be sent to Metax
+         * @param mime - MIME type of the object to be served back in get()
+         */
+        async saveData(data, mime='application/javascript') {
+                const r = await this.HTTPPost(this.mSaveDataRequest, data, mime);
+                console.assert(
+                        this.isValidUUID(r.uuid), 
+                        `response to metax.save(${data},${mime}) ` + 
+                        `returned an invalid uuid=${r.uuid}`
+                );
+                return r.uuid;
+        }
+
+        /**
+         * @summary Ask local metax to take data from the given file
+         * @param data - any data (blob/json/etc) to be sent to Metax
+         * @param mime - MIME type of the object to be served back in get()
+         */
+        async takeFile(path, mime) {
+                const r = await this.HTTPPost(this.mSavePathRequest,path,mime);
+                console.assert(
+                        this.isValidUUID(r.uuid), 
+                        `response to metax.takeFile(${path},${mime}) ` + 
+                        `returned an invalid uuid=${r.uuid}`
+                );
+                return r.uuid;
+        }
+
+        /**
+         * @summary Update data at given uuid and mime-type.
+         * @param uuid must be a valid uuid of existing object in Metax
+         * @param data is the new value to be saved for the object
+         * @param mime must be the same as when used to create the object.
+         * @todo Metax must be modified to not require MIME upon update.
+         */
+        async update(uuid,data,mime='application/json') {
+                console.assert(
+                        this.isValidUUID(uuid), 
+                        `metax.update() is passed an invalid uuid=${uuid}`
+                );
+                const r = await this.HTTPPost(
+                        this.mSaveRequest + `&id=${uuid}`,
+                        data,
+                        mime
+                );
+                console.assert(
+                        r.uuid === uuid, 
+                        `metax.update(${uuid}...) returned a `+
+                        `different uuid=${uuid}`
+                );
+                return 'success';
+        }
+
+        /**
+         *  @sumary Fetches and returns data at given uuid
+         *  @param uuid must e a valid UUID of existing data in Metax
+         *  @throws Error if network error occured or if UUID is not found.
+         *  @todo Throw different errors for each case: NetworkError and 
+         *        UUIDIsNotFound error, and UUIDAccessDenied error, etc.
+         *  @todo Maybe we don't want to differentiate between Not-Found
+         *        and permisison-denied for security reasons. 
+         */
+        async get(uuid) {
+                console.assert(this.isValidUUID(uuid), 
+                        'metax.get() is passed an invalid uuid =',
+                        uuid
+                );
+                const r = await this.HTTPGet(this.mGetRequest + uuid);
+                console.assert(r && r.ok, 'response to metax.get() is not ok');
+                return r;
+        }
+        
+        /**
+         * @callback MetaxListenerCallback 
+         * @brief Callbacs listening to changes in Metax
+         * @see {@link registerListener} and {@link unregisterListener} 
+         *      which use this callback
+         */
+
+        /**
+         * @brief Register callback as listener to changes to data at uuid
+         * @param {UUID} uuid is the data-id being monitored
+         * @param {MetaxListenerCallback} cb is the callback to be 
+         * @throws Error if the request to Metax server failed.
+         * @todo Differentiate errors (e.g. no-permission, uuid not found,
+         *      network-error, etc).
+         */
+        
+        async getMetaxInfo() {
+                const r = await this.HTTPPost(
+                                this.mGetMetaxInfo)
+                .catch( e => {
+                        throw Error(`get_metax_info resulted in` +
+                                `error:\n ${e}`);
+                });
+                return r;
+        }
+        
+        async registerListener(uuid, cb) { 
+                let callbacks = this.mListeners[uuid];
+                if (! callbacks) {
+                        const url = this.mRegisterListenerRequest + uuid;
+                        await this.HTTPGet(url)
+                        .catch( e => { 
+                                throw Error(`metax.HTTPGet(${url}) `+
+                                        `resulted in error:\n ${e}`); 
+                        });
+                        callbacks = this.mListeners[uuid] = [];
+                }
+                console.assert(callbacks.indexOf(cb) === -1, 
+                        `the uuid ${uuid} already has ` +
+                        `a registered callback ${cb}`);
+                callbacks.push(cb);
+        }
+
+        /**
+         *  @todo: unregisterListener command is not yet supported by Metax
+         *
+         *  @todo break into unregisterTheLastListener and 
+         *        removeListenerFromArray or something like that
+         *
+         *  Note: we want to delete the last callback (listener) only if the 
+         *        unregisterListener callback has succeded. If it fails - the 
+         *        anomaly should not be hidden by just unregistering the CB.
+         */
+        async unregisterListener(uuid,cb) {
+                console.assert(this.isValidUUID(uuid), 'unregisterListener ' +
+                        `is called with an invalid uuid=${uuid}`);
+                const callbacks = this.mListeners[uuid];
+                console.assert(callbacks, 
+                        'there is no listener registered ' + `for ${uuid}`);
+                console.assert(callbacks.length > 0
+                        , `listeners list for ${uuid} found but is empty`);
+                if (callbacks.length === 1) { 
+                        console.assert(cb === callbacks[0], 
+                                `the only registered callback for ${uuid}`+
+                                ` is not ${cb}`);
+                        const url = this.mUnregisterListenerRequest+ uuid;
+                        await this.HTTPGet(url) 
+                        .catch( e => { 
+                                throw Error(`metax.HTTPGet(${url})`+
+                                            ` resulted in error:\n ${e}`); 
+                        });
+                        delete this.mListeners[uuid]; 
+                } else {
+                        const i = callbacks.indexOf(cb);
+                        console.assert(i !== -1, `the listeners for ${uuid} ` +
+                                `do not contain the callback ${cb}`);
+                        callbacks.splice(i,1);
+                        console.assert(callbacks.indexOf(cb) === -1, 
+                                'found more than one instance of listeners ' + 
+                                `for ${uuid} with the same callback ${cb}`);
+                }
+        }
+
+        /**
+         * @private
+         * setup member-variables for connection paramters and paths
+         */
+        setupConnectionParameters(h,p,e,s) {
+                console.assert(metax === this);
+                metax.mHost = h;
+                metax.mPort = p;
+                metax.mEncryption = '0' ;
+                metax.mProtocol = s ? 'https' : 'http';
+                metax.mWebsocketProtocol = s ? 'wss' : 'ws';
+                metax.mWebsocketPath = 
+                        `${metax.mWebsocketProtocol}://${h}:${p}`;
+                metax.mServicePath = `${metax.mProtocol}://${h}:${p}/`;
+                metax.mSaveRequest = 
+                        metax.mServicePath + 
+                        `db/save/node?enc=${metax.mEncryption}`;
+                metax.mSaveDataRequest = 
+                        metax.mServicePath + 
+                        `db/save/data?enc=${metax.mEncryption}`;
+                metax.mSavePathRequest = 
+                        metax.mServicePath + 
+                        `db/save/path?enc=${metax.mEncryption}`;
+                metax.mRegisterListenerRequest =
+                        metax.mServicePath + 'db/register_listener?id=';
+                metax.mUnregisterListenerRequest =
+                        metax.mServicePath + 'db/unregister_listener?id=';
+                metax.mGetRequest = metax.mServicePath + `db/get?id=`;
+                metax.mGetMetaxInfo = 
+                        metax.mServicePath + `config/get_metax_info`;
+        }
+
+        /** 
+         * @private 
+         * parse web-socket event data
+         */
+        parseWebSocketEvent(e) {
+                try {
+                        return JSON.parse(e.data);
+                } catch (e) {
+                        console.assert(false,
+                                `failed to parse data field of the ` + 
+                                `Metax on-update event: ${JSON.stringify(e)}`);
+                        throw e;
+                }
+        }
+
+        /**
+         *  @private
+         *  @todo: include Protocol.json (have C++ code include the same json, 
+         *         and have same code-name for keys across C++ and JS),
+         *         e.g. here the 'uuid updated' field is just a nuance which is
+         *         btw quite uggly and needs to be fixed asap.
+         */
+        dispatchWebSocketMessage(e) {
+                const msg = this.parseWebSocketEvent(e);
+                console.assert('uuid updated' in msg, 'on-update message ' + 
+                               'from Metax should have "uuid updated" field');
+                const uuid = msg['uuid updated'];
+                console.assert(this.isValidUUID(uuid), 
+                        `received on-update event with invalid uuid=${uuid}`);
+
+                //==========================================================
+                // TODO: remove this block once the unregisterListener works
+                if (!this.mListeners || !this.mListeners[uuid]) {
+                        console.warn("workaround metax.unregisterListener bug");
+                        return;
+                }
+                //==========================================================
+                
+                console.assert( this.mListeners && this.mListeners[uuid],
+                        `received on update for ${uuid} ` + 
+                        'but the listeners are missing for it');
+                const callbacks = this.mListeners[uuid];
+                console.assert(callbacks, `received on-update for ${uuid} ` +
+                        'but the listner is not found');
+                console.assert(callbacks.length > 0, 
+                        `listeners list for ${uuid} found but is empty`);
+                for (let cb in callbacks) {
+                        try {
+                                callbacks[cb](uuid);
+                        } catch (e) {
+                                console.error('metax on-update handler threw' +
+                                        ` an assertion: ${JSON.stringify(e)}`);
+                                throw e;
+                        }
+                }
+        }
+
+        /**
+         *  @private
+         *  @todo: process error-code and turn into human-readable msg &
+         *        links to documentation explaining details of error.
+         */
+        handleWebSocketClose(e) { 
+                console.log('Metax websocket connection is closed with '+
+                        `code: ${e.code} and reason: ${e.reason}`); 
+                this.scheduleReconnect();
+        }
+
+
+        /**
+         *  @private
+         *  @todo: may have to look at error types and reconnect only on some,
+         *        while for the others 
+         *  @todo: it's not good to reconnect both during error and close
+         */
+        handleWebSocketError(e) {
+                console.error(`Error in websocket: ${JSON.stringify(e)}`);
+                console.dir(e);
+                this.scheduleReconnect();
+        }
+
+        /**
+         * @private
+         * Schedule a reconnect during websocket drop
+         * @todo need to do more diagnostics before just reconnecting
+         */
+        scheduleReconnect() {
+                const s = 1000;
+                console.log(`scheduling a reconnect in ${s/1000} seconds`);
+                console.assert(this.mEncryption);
+                console.assert(['0','1'].indexOf(this.mEncryption) != -1);
+                console.assert(this.mProtocol);
+                console.assert(['http','https'].indexOf(this.mProtocol) != -1);
+                setTimeout( () => {
+                        this.connect(this.mHost, 
+                                     this.mPort,
+                                     this.mEncryption === '1',
+                                     this.mProtocol === 'https')
+                        .catch(e => console.error("couldn't reconnect:",e)),
+                        s;
+                });
+                console.log('scheduling:done');
+        }
+
+        /**
+         *  @private
+         *  @todo find a way to make all these methods private
+         *         and thus also safely minimize/uglify them 
+         *  @todo find out how Content-Type is set by the fetch() and 
+         *        to which extent is it inferred correctly
+         */
+        async HTTPGet(url) {
+                return fetch(url)
+                        .then( async r => {
+                                if (!r.ok) {
+                                        throw 'response is not ok;\n json:' +
+                                              JSON.stringify(await r.json());
+                                }
+                                return r;
+                        }).catch( e => {
+                                throw Error( `fetch(${url}) resulted in ` +
+                                             `error:\n ${e}` );
+                        });
+        }
+
+        /**
+         *  @private
+         */
+        async HTTPPost(url,data,mime) {
+                return fetch(url, {
+                        method: 'POST',
+                        headers: { 'Metax-Content-Type': mime },
+                        body: data
+                })
+                .then( async r => {
+                        if (r.status < 200 || r.status >= 300) {
+                                throw await r.text();
+                        }
+                        return r.json();
+                })
+                .catch( e => {
+                        throw Error(`fetch(${url}) resulted in error:\n ${e}`);
+                });
+        }
+};
+
+metax = new Metax();
+
+export default metax;

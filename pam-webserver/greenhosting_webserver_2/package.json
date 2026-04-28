@@ -1,0 +1,16 @@
+{
+  "name": "greenhosting_webserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/webserver.mjs",
+    "test": "node tests/test_functionality.mjs"
+  },
+  "author": "Raffi Knyazyan",
+  "license": "ISC",
+  "dependencies": {
+    "nodemailer": "^6.9.9",
+    "ws": "^8.12.1"
+  }
+}

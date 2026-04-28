@@ -1,0 +1,997 @@
+
+> metax@1.0.0 start
+> node src/rest_api.mjs storage=../storage/ port=8000 key=../certs/metax.key cert=../certs/metax.crt
+
+metax configured.
+db initialized
+https server started
+received new request from ::1, request path: /db/get?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+handling db request request path: /db/get?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+received get request with path /db/get?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+finish handling get request for 4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/register_listener?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9&token=30737f26-63a1-442a-a8b3-9564b0d40b90
+handling db request request path: /db/register_listener?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9&token=30737f26-63a1-442a-a8b3-9564b0d40b90
+received register_listener request with path /db/register_listener?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9&token=30737f26-63a1-442a-a8b3-9564b0d40b90
+received new request from ::1, request path: /db/get?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+handling db request request path: /db/get?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+received get request with path /db/get?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+finish handling get request for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/get?id=fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+handling db request request path: /db/get?id=fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+received get request with path /db/get?id=fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+finish handling get request for fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+received new request from ::1, request path: /db/register_listener?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a&token=30737f26-63a1-442a-a8b3-9564b0d40b90
+handling db request request path: /db/register_listener?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a&token=30737f26-63a1-442a-a8b3-9564b0d40b90
+received register_listener request with path /db/register_listener?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a&token=30737f26-63a1-442a-a8b3-9564b0d40b90
+received new request from ::1, request path: /db/get?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+handling db request request path: /db/get?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+received get request with path /db/get?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+finish handling get request for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/register_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=30737f26-63a1-442a-a8b3-9564b0d40b90
+handling db request request path: /db/register_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=30737f26-63a1-442a-a8b3-9564b0d40b90
+received register_listener request with path /db/register_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=30737f26-63a1-442a-a8b3-9564b0d40b90
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+handling db request request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received get request with path /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+finish handling get request for 636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca2640ac-809d-42de-a44f-ae50a994aebc
+handling db request request path: /db/get?id=ca2640ac-809d-42de-a44f-ae50a994aebc
+received get request with path /db/get?id=ca2640ac-809d-42de-a44f-ae50a994aebc
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for ca2640ac-809d-42de-a44f-ae50a994aebc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+handling db request request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received get request with path /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+finish handling get request for 636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+handling db request request path: /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+received get request with path /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5a6010e0-f920-4755-bba3-b78f90941701
+handling db request request path: /db/get?id=5a6010e0-f920-4755-bba3-b78f90941701
+received get request with path /db/get?id=5a6010e0-f920-4755-bba3-b78f90941701
+finish handling get request for 8e749ec3-afca-46b4-a40d-ae4ba57739b5
+finish handling get request for 5a6010e0-f920-4755-bba3-b78f90941701
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+handling db request request path: /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+received get request with path /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+finish handling get request for 8e749ec3-afca-46b4-a40d-ae4ba57739b5
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+handling db request request path: /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+received get request with path /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+handling db request request path: /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+received get request with path /db/get?id=8e749ec3-afca-46b4-a40d-ae4ba57739b5
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 8e749ec3-afca-46b4-a40d-ae4ba57739b5
+finish handling get request for 8e749ec3-afca-46b4-a40d-ae4ba57739b5
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2fafc918-a3b1-41aa-b9f8-f0920108afdb
+handling db request request path: /db/get?id=2fafc918-a3b1-41aa-b9f8-f0920108afdb
+received get request with path /db/get?id=2fafc918-a3b1-41aa-b9f8-f0920108afdb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=8c6966c8-6e1c-4c03-8c74-16e56d70946c
+handling db request request path: /db/get?id=8c6966c8-6e1c-4c03-8c74-16e56d70946c
+received get request with path /db/get?id=8c6966c8-6e1c-4c03-8c74-16e56d70946c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=18d42e53-57f5-4a09-92a3-974559847d92
+handling db request request path: /db/get?id=18d42e53-57f5-4a09-92a3-974559847d92
+received get request with path /db/get?id=18d42e53-57f5-4a09-92a3-974559847d92
+finish handling get request for 2fafc918-a3b1-41aa-b9f8-f0920108afdb
+finish handling get request for 8c6966c8-6e1c-4c03-8c74-16e56d70946c
+finish handling get request for 18d42e53-57f5-4a09-92a3-974559847d92
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=0d71b3a2-c167-449c-877b-5a3eb0e42089
+handling db request request path: /db/get?id=0d71b3a2-c167-449c-877b-5a3eb0e42089
+received get request with path /db/get?id=0d71b3a2-c167-449c-877b-5a3eb0e42089
+finish handling get request for 0d71b3a2-c167-449c-877b-5a3eb0e42089
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=0d71b3a2-c167-449c-877b-5a3eb0e42089
+handling db request request path: /db/get?id=0d71b3a2-c167-449c-877b-5a3eb0e42089
+received get request with path /db/get?id=0d71b3a2-c167-449c-877b-5a3eb0e42089
+finish handling get request for 0d71b3a2-c167-449c-877b-5a3eb0e42089
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=0d71b3a2-c167-449c-877b-5a3eb0e42089
+handling db request request path: /db/get?id=0d71b3a2-c167-449c-877b-5a3eb0e42089
+received get request with path /db/get?id=0d71b3a2-c167-449c-877b-5a3eb0e42089
+finish handling get request for 0d71b3a2-c167-449c-877b-5a3eb0e42089
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=509465e1-0499-4d83-904b-3f16683ee917
+handling db request request path: /db/get?id=509465e1-0499-4d83-904b-3f16683ee917
+received get request with path /db/get?id=509465e1-0499-4d83-904b-3f16683ee917
+finish handling get request for 509465e1-0499-4d83-904b-3f16683ee917
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=509465e1-0499-4d83-904b-3f16683ee917
+handling db request request path: /db/get?id=509465e1-0499-4d83-904b-3f16683ee917
+received get request with path /db/get?id=509465e1-0499-4d83-904b-3f16683ee917
+finish handling get request for 509465e1-0499-4d83-904b-3f16683ee917
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=4bb9d27d-b0c5-4cf3-91d4-8022e0b65d18
+handling db request request path: /db/get?id=4bb9d27d-b0c5-4cf3-91d4-8022e0b65d18
+received get request with path /db/get?id=4bb9d27d-b0c5-4cf3-91d4-8022e0b65d18
+finish handling get request for 4bb9d27d-b0c5-4cf3-91d4-8022e0b65d18
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=509465e1-0499-4d83-904b-3f16683ee917
+handling db request request path: /db/get?id=509465e1-0499-4d83-904b-3f16683ee917
+received get request with path /db/get?id=509465e1-0499-4d83-904b-3f16683ee917
+finish handling get request for 509465e1-0499-4d83-904b-3f16683ee917
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+handling db request request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received get request with path /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+finish handling get request for 9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received get request with path /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+handling db request request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received get request with path /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+handling db request request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received get request with path /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received get request with path /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+finish handling get request for ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+finish handling get request for f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+finish handling get request for 5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+handling db request request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received get request with path /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+finish handling get request for 9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received get request with path /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+handling db request request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received get request with path /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+handling db request request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received get request with path /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received get request with path /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+finish handling get request for ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+finish handling get request for f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+finish handling get request for 5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=149427cb-c492-4782-93f4-99f012a1ef81
+handling db request request path: /db/get?id=149427cb-c492-4782-93f4-99f012a1ef81
+received get request with path /db/get?id=149427cb-c492-4782-93f4-99f012a1ef81
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for 149427cb-c492-4782-93f4-99f012a1ef81
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received get request with path /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+finish handling get request for ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=da952a26-e63c-49e0-a79e-c86852522ecd
+handling db request request path: /db/get?id=da952a26-e63c-49e0-a79e-c86852522ecd
+received get request with path /db/get?id=da952a26-e63c-49e0-a79e-c86852522ecd
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=7764d377-e113-434d-a610-8c334a57ed7c
+handling db request request path: /db/get?id=7764d377-e113-434d-a610-8c334a57ed7c
+received get request with path /db/get?id=7764d377-e113-434d-a610-8c334a57ed7c
+finish handling get request for da952a26-e63c-49e0-a79e-c86852522ecd
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for 7764d377-e113-434d-a610-8c334a57ed7c
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+handling db request request path: /db/get?id=61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+received get request with path /db/get?id=61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=4f6620a8-8550-497c-9f9e-05c8b332c08c
+handling db request request path: /db/get?id=4f6620a8-8550-497c-9f9e-05c8b332c08c
+received get request with path /db/get?id=4f6620a8-8550-497c-9f9e-05c8b332c08c
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+finish handling get request for 4f6620a8-8550-497c-9f9e-05c8b332c08c
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received get request with path /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=da952a26-e63c-49e0-a79e-c86852522ecd
+handling db request request path: /db/get?id=da952a26-e63c-49e0-a79e-c86852522ecd
+received get request with path /db/get?id=da952a26-e63c-49e0-a79e-c86852522ecd
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=7764d377-e113-434d-a610-8c334a57ed7c
+handling db request request path: /db/get?id=7764d377-e113-434d-a610-8c334a57ed7c
+received get request with path /db/get?id=7764d377-e113-434d-a610-8c334a57ed7c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+handling db request request path: /db/get?id=61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+received get request with path /db/get?id=61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=4f6620a8-8550-497c-9f9e-05c8b332c08c
+handling db request request path: /db/get?id=4f6620a8-8550-497c-9f9e-05c8b332c08c
+received get request with path /db/get?id=4f6620a8-8550-497c-9f9e-05c8b332c08c
+finish handling get request for ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+finish handling get request for da952a26-e63c-49e0-a79e-c86852522ecd
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for 7764d377-e113-434d-a610-8c334a57ed7c
+finish handling get request for 61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+finish handling get request for 4f6620a8-8550-497c-9f9e-05c8b332c08c
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+handling db request request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received get request with path /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received get request with path /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+handling db request request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received get request with path /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+handling db request request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received get request with path /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received get request with path /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+finish handling get request for 9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+finish handling get request for ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+finish handling get request for f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+finish handling get request for 5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+handling db request request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received get request with path /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received get request with path /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+handling db request request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received get request with path /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+handling db request request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received get request with path /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+finish handling get request for 9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+finish handling get request for ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+finish handling get request for f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received get request with path /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+finish handling get request for 5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+handling db request request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received get request with path /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=da952a26-e63c-49e0-a79e-c86852522ecd
+handling db request request path: /db/get?id=da952a26-e63c-49e0-a79e-c86852522ecd
+received get request with path /db/get?id=da952a26-e63c-49e0-a79e-c86852522ecd
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+handling db request request path: /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received get request with path /db/get?id=e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=7764d377-e113-434d-a610-8c334a57ed7c
+handling db request request path: /db/get?id=7764d377-e113-434d-a610-8c334a57ed7c
+received get request with path /db/get?id=7764d377-e113-434d-a610-8c334a57ed7c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+handling db request request path: /db/get?id=61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+received get request with path /db/get?id=61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=4f6620a8-8550-497c-9f9e-05c8b332c08c
+handling db request request path: /db/get?id=4f6620a8-8550-497c-9f9e-05c8b332c08c
+received get request with path /db/get?id=4f6620a8-8550-497c-9f9e-05c8b332c08c
+finish handling get request for 9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+finish handling get request for da952a26-e63c-49e0-a79e-c86852522ecd
+finish handling get request for e1b550e2-47c3-4529-b9f5-4b6b0f8ada9f
+finish handling get request for 7764d377-e113-434d-a610-8c334a57ed7c
+finish handling get request for 61d68b09-2514-4d2b-baf6-ef8dcc5ce99e
+finish handling get request for 4f6620a8-8550-497c-9f9e-05c8b332c08c
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+handling db request request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received get request with path /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+finish handling get request for 636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2da70db5-c04a-43a5-94e0-3e7304879599
+handling db request request path: /db/get?id=2da70db5-c04a-43a5-94e0-3e7304879599
+received get request with path /db/get?id=2da70db5-c04a-43a5-94e0-3e7304879599
+finish handling get request for 2da70db5-c04a-43a5-94e0-3e7304879599
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2da70db5-c04a-43a5-94e0-3e7304879599
+handling db request request path: /db/get?id=2da70db5-c04a-43a5-94e0-3e7304879599
+received get request with path /db/get?id=2da70db5-c04a-43a5-94e0-3e7304879599
+finish handling get request for 2da70db5-c04a-43a5-94e0-3e7304879599
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+handling db request request path: /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+received get request with path /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+finish handling get request for d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2da70db5-c04a-43a5-94e0-3e7304879599
+handling db request request path: /db/get?id=2da70db5-c04a-43a5-94e0-3e7304879599
+received get request with path /db/get?id=2da70db5-c04a-43a5-94e0-3e7304879599
+finish handling get request for 2da70db5-c04a-43a5-94e0-3e7304879599
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+handling db request request path: /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+received get request with path /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+finish handling get request for d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+handling db request request path: /db/get?id=e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+received get request with path /db/get?id=e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+finish handling get request for e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3e76b8ff-9063-4052-b67a-ecd43302d269
+handling db request request path: /db/get?id=3e76b8ff-9063-4052-b67a-ecd43302d269
+received get request with path /db/get?id=3e76b8ff-9063-4052-b67a-ecd43302d269
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for 3e76b8ff-9063-4052-b67a-ecd43302d269
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+handling db request request path: /db/get?id=533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+received get request with path /db/get?id=533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+finish handling get request for 533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=4a1f8afd-1b9d-4f33-b707-49875520090a
+handling db request request path: /db/get?id=4a1f8afd-1b9d-4f33-b707-49875520090a
+received get request with path /db/get?id=4a1f8afd-1b9d-4f33-b707-49875520090a
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=0a5d3b5e-85ba-4809-a6bc-de66ae6deef1
+handling db request request path: /db/get?id=0a5d3b5e-85ba-4809-a6bc-de66ae6deef1
+received get request with path /db/get?id=0a5d3b5e-85ba-4809-a6bc-de66ae6deef1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ea1ae792-bd0d-43eb-9c1a-77515f447f55-8e3e9d31-aed0-417d-ac7a-c7b4bfaa9b16
+handling db request request path: /db/get?id=ea1ae792-bd0d-43eb-9c1a-77515f447f55-8e3e9d31-aed0-417d-ac7a-c7b4bfaa9b16
+received get request with path /db/get?id=ea1ae792-bd0d-43eb-9c1a-77515f447f55-8e3e9d31-aed0-417d-ac7a-c7b4bfaa9b16
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 4a1f8afd-1b9d-4f33-b707-49875520090a
+finish handling get request for 0a5d3b5e-85ba-4809-a6bc-de66ae6deef1
+finish handling get request for ea1ae792-bd0d-43eb-9c1a-77515f447f55-8e3e9d31-aed0-417d-ac7a-c7b4bfaa9b16
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=232ad657-ebc0-4622-9fbb-0870e2af6ceb
+handling db request request path: /db/get?id=232ad657-ebc0-4622-9fbb-0870e2af6ceb
+received get request with path /db/get?id=232ad657-ebc0-4622-9fbb-0870e2af6ceb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=1aab3a8a-2a3a-4734-8b75-b200c1512fe4
+handling db request request path: /db/get?id=1aab3a8a-2a3a-4734-8b75-b200c1512fe4
+received get request with path /db/get?id=1aab3a8a-2a3a-4734-8b75-b200c1512fe4
+finish handling get request for 232ad657-ebc0-4622-9fbb-0870e2af6ceb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e7e069b3-1653-4176-904e-6a60e5151590
+handling db request request path: /db/get?id=e7e069b3-1653-4176-904e-6a60e5151590
+received get request with path /db/get?id=e7e069b3-1653-4176-904e-6a60e5151590
+finish handling get request for 1aab3a8a-2a3a-4734-8b75-b200c1512fe4
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=68a876c6-8c35-46a1-84e7-32b38ec95414
+handling db request request path: /db/get?id=68a876c6-8c35-46a1-84e7-32b38ec95414
+received get request with path /db/get?id=68a876c6-8c35-46a1-84e7-32b38ec95414
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=dd278502-c541-417c-a238-b22870ac0994
+handling db request request path: /db/get?id=dd278502-c541-417c-a238-b22870ac0994
+received get request with path /db/get?id=dd278502-c541-417c-a238-b22870ac0994
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=8c59819f-ca80-497a-95eb-71711972ef7a
+handling db request request path: /db/get?id=8c59819f-ca80-497a-95eb-71711972ef7a
+received get request with path /db/get?id=8c59819f-ca80-497a-95eb-71711972ef7a
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=4dd0dce2-56a2-4398-be61-07a399180dee
+handling db request request path: /db/get?id=4dd0dce2-56a2-4398-be61-07a399180dee
+received get request with path /db/get?id=4dd0dce2-56a2-4398-be61-07a399180dee
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=084845f8-c7ad-4b96-8e25-ffba54fb82d7-72331c86-fc80-481e-9ed3-69bc9cc2b76c
+handling db request request path: /db/get?id=084845f8-c7ad-4b96-8e25-ffba54fb82d7-72331c86-fc80-481e-9ed3-69bc9cc2b76c
+received get request with path /db/get?id=084845f8-c7ad-4b96-8e25-ffba54fb82d7-72331c86-fc80-481e-9ed3-69bc9cc2b76c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=831da2ce-aaec-4333-a607-b7dce3812ead-9e5b715b-972a-4339-a2e6-875f304d2d6a
+handling db request request path: /db/get?id=831da2ce-aaec-4333-a607-b7dce3812ead-9e5b715b-972a-4339-a2e6-875f304d2d6a
+received get request with path /db/get?id=831da2ce-aaec-4333-a607-b7dce3812ead-9e5b715b-972a-4339-a2e6-875f304d2d6a
+finish handling get request for e7e069b3-1653-4176-904e-6a60e5151590
+finish handling get request for 68a876c6-8c35-46a1-84e7-32b38ec95414
+finish handling get request for dd278502-c541-417c-a238-b22870ac0994
+finish handling get request for 8c59819f-ca80-497a-95eb-71711972ef7a
+finish handling get request for 4dd0dce2-56a2-4398-be61-07a399180dee
+finish handling get request for 084845f8-c7ad-4b96-8e25-ffba54fb82d7-72331c86-fc80-481e-9ed3-69bc9cc2b76c
+finish handling get request for 831da2ce-aaec-4333-a607-b7dce3812ead-9e5b715b-972a-4339-a2e6-875f304d2d6a
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received get request with path /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+handling db request request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received get request with path /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+handling db request request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received get request with path /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+handling db request request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received get request with path /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received get request with path /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+finish handling get request for 9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+finish handling get request for f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+finish handling get request for ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+finish handling get request for 5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+handling db request request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received get request with path /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+finish handling get request for f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+handling db request request path: /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+received get request with path /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+finish handling get request for d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+handling db request request path: /db/get?id=e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+received get request with path /db/get?id=e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received get request with path /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+handling db request request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received get request with path /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+handling db request request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received get request with path /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+handling db request request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received get request with path /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received get request with path /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+finish handling get request for 9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+finish handling get request for f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+finish handling get request for ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+finish handling get request for 5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+handling db request request path: /db/get?id=533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+received get request with path /db/get?id=533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received get request with path /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+finish handling get request for 5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/save/node?enc=0&id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/save/node?enc=0&id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received save request with path /db/save/node?enc=0&id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received get request with path /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /notify?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+finish handling get request for 5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+handling db request request path: /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+received get request with path /db/get?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+finish handling get request for d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+handling db request request path: /db/get?id=e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+received get request with path /db/get?id=e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received get request with path /db/get?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+finish handling get request for e47cfa27-a350-4f20-b3ee-dc954218f8bc-fe7acc20-d8bc-4ab7-be0d-45878e9fe0e4
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+handling db request request path: /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received get request with path /db/get?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+handling db request request path: /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received get request with path /db/get?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+handling db request request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received get request with path /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received get request with path /db/get?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+finish handling get request for 9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+finish handling get request for f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+finish handling get request for ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+finish handling get request for 5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+handling db request request path: /db/get?id=533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+received get request with path /db/get?id=533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 533cfc01-3a26-4e84-a5f8-e4d96008b9c6
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+handling db request request path: /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received get request with path /db/get?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+finish handling get request for ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=d4e007fb-6963-4fe2-8174-3af322fd6764-8028b860-6bf0-4975-aaae-102d206ef99d&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+handling db request request path: /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received get request with path /db/get?id=b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+handling db request request path: /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received get request with path /db/get?id=f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+handling db request request path: /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received get request with path /db/get?id=d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+finish handling get request for b9205ff9-e4c7-4693-ae08-f1559049bcb7-aec5cb3f-f321-407a-8af6-cae99ab0f6b2
+finish handling get request for f817f370-37d7-4a5d-a956-c07e0bd66074-39e530e9-97ce-4f37-b8fc-f72082f93ace
+finish handling get request for d38c1613-876a-4304-b648-5bca70554321-e7927848-981c-4ea8-9311-ef2773d81f45
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+handling db request request path: /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received get request with path /db/get?id=3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+handling db request request path: /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received get request with path /db/get?id=cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+handling db request request path: /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received get request with path /db/get?id=94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+finish handling get request for 3c1404d9-a3ca-4fbf-9d17-db988dda5aec-eed5469c-b75a-48ba-9b99-38f887562e67
+finish handling get request for cf1b1bb5-50a4-48d4-a041-bba93da90736-4dc28c48-05bb-46a9-ac6e-ced26807909c
+finish handling get request for 94a2e243-83c0-4af4-878b-623c2bd786a5-cc4c0f5d-2ea6-4b2c-b05a-cf20aaf9c3f1
+received new request from ::ffff:10.80.80.100, request path: /db/unregister_listener?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/unregister_listener?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received unregister_listener request with path /db/unregister_listener?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+handling db request request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received get request with path /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+finish handling get request for 636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+handling db request request path: /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received get request with path /db/get?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+finish handling get request for 636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/register_listener?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+handling db request request path: /db/register_listener?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+received register_listener request with path /db/register_listener?id=636b3e36-1a86-4500-8c33-4d1972197819-e39821ee-b002-443f-afaa-4164c53f70dd&token=1ac39dae-117b-4f22-b038-6a213bf5a3cb
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::ffff:10.80.80.100, request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+handling db request request path: /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received get request with path /db/get?id=2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+finish handling get request for 2b46b37b-16cf-4fc6-bd66-14aa84b92b5b-225648b3-4f2f-420f-b2ff-3f93013fa55f
+received new request from ::1, request path: /db/save/node?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+handling db request request path: /db/save/node?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received save request with path /db/save/node?id=ca8838bf-c828-48c8-a188-ed8db8fd4dca-f4f68ae0-f574-4036-9dbf-60182f1fe6bc
+received new request from ::1, request path: /db/save/node?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+handling db request request path: /db/save/node?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received save request with path /db/save/node?id=9f3d43e9-af94-42fb-98ff-d7118c69be6a-d4951da3-dad9-4f45-aa13-f69319522b36
+received new request from ::1, request path: /db/save/node?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+handling db request request path: /db/save/node?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received save request with path /db/save/node?id=f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf
+received new request from ::1, request path: /db/save/node?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+handling db request request path: /db/save/node?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received save request with path /db/save/node?id=5f6e9dfa-7812-4a29-a50c-5324a9f39f07-6684a52c-0d6e-401a-8eca-a7b5d427c5c9
+received new request from ::1, request path: /db/save/node?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+handling db request request path: /db/save/node?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received save request with path /db/save/node?id=ca2ed00f-654e-48aa-919a-d8ea39440a20-6fa929cd-7380-4c08-8e97-4fff2cd86612
+received new request from ::1, request path: /db/save/node?id=44936aab-25f9-4891-921e-b420363c7cdc
+handling db request request path: /db/save/node?id=44936aab-25f9-4891-921e-b420363c7cdc
+received save request with path /db/save/node?id=44936aab-25f9-4891-921e-b420363c7cdc
+Failed to read_file 44936aab-25f9-4891-921e-b420363c7cdc.contract, error code:  ENOENT
+2026-04-22T08:14:32.112Z Uncaught exception Error: 44936aab-25f9-4891-921e-b420363c7cdc.contract not found.
+    at read_file (file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:165:9)
+    at get_contract_file (file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:131:24)
+    at file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:77:21
+    at new Promise (<anonymous>)
+    at save_uuid (file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:75:9)
+    at handle_save_request (file:///opt/PAM/metax_zero_webserver/metax_2/src/db_rest_api.mjs:179:22)
+    at handle_db_request (file:///opt/PAM/metax_zero_webserver/metax_2/src/db_rest_api.mjs:34:4)
+    at Http2SecureServer.route_incoming_request (file:///opt/PAM/metax_zero_webserver/metax_2/src/rest_api.mjs:101:4)
+    at Http2SecureServer.emit (node:events:524:28)
+    at Http2SecureServer.onServerStream (node:internal/http2/compat:974:10) unhandledRejection

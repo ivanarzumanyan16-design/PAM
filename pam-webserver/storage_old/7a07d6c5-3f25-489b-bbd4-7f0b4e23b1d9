@@ -1,0 +1,1 @@
+{"uuid":"7a07d6c5-3f25-489b-bbd4-7f0b4e23b1d9","id":"delete_item","name":"Delete Item","type":"104be51f-4857-4668-b7ce-406d634a1979","description":"This function deletes chosen items.","arguments":[{"name":"item","value":"","id":"New argument"}]}

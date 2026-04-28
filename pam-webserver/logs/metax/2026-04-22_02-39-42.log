@@ -1,0 +1,17 @@
+
+> metax@1.0.0 start
+> node src/rest_api.mjs storage=../storage/ port=8000 key=../certs/metax.key cert=../certs/metax.crt
+
+metax configured.
+db initialized
+https server started
+received new request from ::1, request path: /db/get?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+handling db request request path: /db/get?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+received get request with path /db/get?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+finish handling get request for 9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/register_listener?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1&token=156010c9-2813-4ad3-853b-dae76475ef86
+handling db request request path: /db/register_listener?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1&token=156010c9-2813-4ad3-853b-dae76475ef86
+received register_listener request with path /db/register_listener?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1&token=156010c9-2813-4ad3-853b-dae76475ef86

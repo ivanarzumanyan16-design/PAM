@@ -1,0 +1,9 @@
+{
+"picture": "fc983287-e265-48d2-945e-03887fc72ed3", 
+"charging_status": "11", 
+"wifi_signal": "94%", 
+"battery_status": "100.00%", 
+"date": {"min": "15", "hr": "22", "month": "June", "sec": "24", "yr": "2020", "day": "22"}, 
+"geo": {"lat": "40.2161", "lng": "44.5541"}, 
+"Device_id": "1"
+}

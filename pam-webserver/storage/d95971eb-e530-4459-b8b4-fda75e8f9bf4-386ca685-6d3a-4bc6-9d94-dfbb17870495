@@ -1,0 +1,7 @@
+const index = test[Object.keys(arg)[0].toString()].indexOf(Object.values(arg)[0].toString());
+if (index !== -1) {
+        test[Object.keys(arg)[0]].splice(index, 1);
+} else {
+        console.log("Element not found:")
+}
+return test;

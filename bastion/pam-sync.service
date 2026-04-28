@@ -1,0 +1,22 @@
+[Unit]
+Description=PAM Bastion — Metax2 OS sync daemon
+Documentation=https://github.com/yourorg/pam-bastion
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=python3 /opt/bastion/sync_daemon.py
+WorkingDirectory=/opt/bastion
+Restart=always
+RestartSec=5
+# Needs root for useradd/userdel/groupadd/gpasswd
+User=root
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pam-sync
+# Kill entire process group on stop (no orphan sessions)
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target

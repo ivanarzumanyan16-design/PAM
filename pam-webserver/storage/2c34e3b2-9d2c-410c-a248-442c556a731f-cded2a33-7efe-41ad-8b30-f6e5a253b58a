@@ -1,0 +1,2 @@
+test[Object.keys(arg)[0].toString()].push(Object.values(arg)[0]);
+return test;

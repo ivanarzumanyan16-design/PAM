@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+    <script>
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + "; " + expires + ";secure";
+        }
+        var hash = document.location.hash.substring(1) || "";
+        setCookie("v_root", hash, 365);
+    </script>
+    <head>
+        <META NAME="ROBOTS" CONTENT="INDEX, NOFOLLOW">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta name="keywords" content="ggg, vostan, semantic, web, linked, data" />
+        <title>Instigate Academy</title>
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="stylesheet" href="/db/get?id=6ee9fdd0-927f-44ce-9ef0-c2355eeee9e7" media="screen">
+        <link rel="stylesheet" href="/db/get?id=685eab5f-531a-4b0b-89f5-10f7f9ace5a0">
+        <link rel="stylesheet" href="/db/get?id=f6df4235-c176-4087-8f70-77f16a728dd4&fn=cm.css">
+        <script src="/db/get?id=94bd97d3-6a89-4ab0-8bf5-7659e4d2a36c"></script>
+        <script src="/db/get?id=682921ce-3618-4175-a392-9e5d2e276dd6"></script>
+        <script src="/db/get?id=49581477-0ea0-48bc-8bc6-3ea590fa89e7"></script>
+        <script src="/db/get?id=20523059-2ee4-4c19-82f9-6c5916cc629d"></script>
+        <script src="/db/get?id=b94aa2cf-f620-4621-8e24-9c5195adde9d&fn=cm.js"></script>
+        <script src="/db/get?id=922b59ac-11c5-4e1c-8faa-2677625d87e4&fn=tinymce.js"></script>
+        <script src="/db/get?id=95f3addb-205a-48d6-84f3-084d65bd2dc8&fn=tag-it.js"></script>
+    </head>
+    <body>
+        <script>0</script>
+        <script src="/db/get?id=88a0f118-4f73-4487-beee-b62f8babb355&fn=vostan.js"></script>
+        <script src="/db/get?id=522101fd-8444-407b-8fe4-3c778c2f2d53-33e1aebd-2364-476e-8115-1e7c0fdaf5f0&fn=vostan_admin.js"></script>
+    </body>
+</html>

@@ -1,0 +1,1 @@
+{"name":"debian server","host":"10.8.8.107","type":"f58b0daf-7c96-409c-ac87-237d1786c80c-cf2801b9-5f2a-48e7-93e0-02a6a4f25fdf","uuid":"5c145ffa-a96c-4e07-8291-da9cddea5ff8-4526dd87-390f-465f-8086-c0da45d99c79","created":"2026-04-22","port":"22","bastion_user":"user","bootstrapped":"yes"}

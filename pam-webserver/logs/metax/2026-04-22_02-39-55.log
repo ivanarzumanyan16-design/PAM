@@ -1,0 +1,32 @@
+
+> metax@1.0.0 start
+> node src/rest_api.mjs storage=../storage/ port=8000 key=../certs/metax.key cert=../certs/metax.crt
+
+metax configured.
+db initialized
+https server started
+received new request from ::1, request path: /db/get?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+handling db request request path: /db/get?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+received get request with path /db/get?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+finish handling get request for 9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/register_listener?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1&token=eaffcec7-0a32-48d1-9a16-d4abf1be9cfc
+handling db request request path: /db/register_listener?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1&token=eaffcec7-0a32-48d1-9a16-d4abf1be9cfc
+received register_listener request with path /db/register_listener?id=9a3c1be9-32d7-4025-9f03-04d30ce84065-4daefc9f-4349-48cf-89c9-471f48dfb8f1&token=eaffcec7-0a32-48d1-9a16-d4abf1be9cfc
+received new request from ::1, request path: /db/save/node?id=651eaec1-5313-48a3-a7d9-bac06a704d75
+handling db request request path: /db/save/node?id=651eaec1-5313-48a3-a7d9-bac06a704d75
+received save request with path /db/save/node?id=651eaec1-5313-48a3-a7d9-bac06a704d75
+Failed to read_file 651eaec1-5313-48a3-a7d9-bac06a704d75.contract, error code:  ENOENT
+2026-04-22T07:44:16.320Z Uncaught exception Error: 651eaec1-5313-48a3-a7d9-bac06a704d75.contract not found.
+    at read_file (file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:165:9)
+    at get_contract_file (file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:131:24)
+    at file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:77:21
+    at new Promise (<anonymous>)
+    at save_uuid (file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:75:9)
+    at handle_save_request (file:///opt/PAM/metax_zero_webserver/metax_2/src/db_rest_api.mjs:179:22)
+    at handle_db_request (file:///opt/PAM/metax_zero_webserver/metax_2/src/db_rest_api.mjs:34:4)
+    at Http2SecureServer.route_incoming_request (file:///opt/PAM/metax_zero_webserver/metax_2/src/rest_api.mjs:101:4)
+    at Http2SecureServer.emit (node:events:524:28)
+    at Http2SecureServer.onServerStream (node:internal/http2/compat:974:10) unhandledRejection

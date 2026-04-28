@@ -1,0 +1,385 @@
+
+/*
+vim: tabstop=8:shiftwidth=8:expandtab:fo=croq:syntax=javascript:smartindent
+ */
+
+/** @private */
+const notDefinedYet = 0;
+
+/** The Vostan singleton object */
+let vostan = notDefinedYet;
+
+/**
+ * TODO add this table and remove all constant literals from the code.
+ *
+ * Const literals for future changes in the table of symbols.
+ * E.g. now we assume that Vostan records in Metax always have "uuid" field 
+ * pointing at their UUID, but later we may change this to "UUID" or "ՀՈՒՏՆ"
+ * and that change shuld only be done in this table.
+ */
+const __FieldTag = {
+        uuid: "uuid",
+        type: "type",
+        id: "id",
+        properties: "properties",
+        collections: "collections"
+};
+
+/**
+ * Prototype of vostan class
+ * 
+ * TODO: make this, and Metax a non-singleton, because we want to connect to 
+ *  multiple servers in some cases (e.g. to transfer data from one server to another,
+ *  or to monitor some external servers, but have monitoring software taken from
+ *  an internal server, and to implement cold-backups of customer data with no
+ *  write permission to their servers).
+ */
+class Vostan {
+        
+        constructor() {  
+                console.assert(vostan===notDefinedYet,  'Vostan must be a singleton');
+                this.Type = {};
+                this.status = "uninitialized";
+                this.metax = null;
+                this.cache = null;
+        }
+        
+        async connect(metax, cache, vostanAppUUID = "522d0937-7dfa-4e5f-98c8-87a5168916f0") {
+                console.assert(metax != null);
+                this.status = "connecting";
+                this.metax = metax;
+                this.cache = cache;
+                await this.__bootstrapTypeSystem(vostanAppUUID);
+                this.status = "connected";
+        }
+        
+        async __bootstrapTypeSystem(appUUID) {
+                this.status = "bootstrapping";
+                await this.__loadTypeSpecificationRecordsFromMetax(appUUID);
+                await this.__setCrossReferencesForTypeProperty();
+                await this.__loadMainTypeSystemCollections();
+                await this.__initializeTypeSystemIsLiteralFlags();
+                await this.__recreateTemporaryTypeSystem(appUUID);
+                this.status = "bootstrapped";
+        }
+        
+        async __loadTypeSpecificationRecordsFromMetax(vostanAppUUID) {
+                const vostanAppRecord = await this.__fetchRecord(vostanAppUUID);
+                console.assert("types" in vostanAppRecord);
+                const Types = vostanAppRecord.types;
+                console.assert(Array.isArray(Types));
+                await Promise.all( Types.map( async tUUID => {
+                        const tRecord = await this.__fetchRecord(tUUID);
+                        console.assert("uuid" in tRecord);
+                        console.assert(tUUID === tRecord.uuid);
+                        console.assert("id" in tRecord);
+                        console.assert(typeof(tRecord.id) === "string");
+                        console.assert(!(tRecord.id in this.Type));
+                        this.Type[tRecord.id] = { $record$ : tRecord };
+                        this.cache.put(tUUID, this.Type[tRecord.id]);
+                } ) );
+        }
+        
+        async __setCrossReferencesForTypeProperty() {
+                console.assert(typeof(this.Type)==="object");
+                console.assert(Array.isArray(Object.keys(this.Type)));
+                Object.values(this.Type).forEach(  t => {
+                        this.__initializeNonLiteralProperty(t, "type");
+                } );
+        }
+        
+        async __loadMainTypeSystemCollections() {
+                console.assert(typeof(this.Type)==="object");
+                console.assert(Array.isArray(Object.keys(this.Type)));
+                await Promise.all( Object.values(this.Type).map(  async t => {
+                        console.assert("$record$" in t);
+                        const tRecord = t.$record$;
+                        console.assert(typeof(tRecord) === "object");
+                        if ("properties" in tRecord) {
+                                await this.__loadCollection(t, "properties");
+                        }
+                        if ("collections" in tRecord) {
+                                await this.__loadCollection(t, "collections");
+                        }
+                        if ("values" in tRecord) {
+                                await this.__loadCollection(t, "values");
+                        }
+                } ) );
+        }
+        
+        async __initializeTypeSystemIsLiteralFlags() {
+                console.assert("Type" in this.Type);
+                console.assert("Boolean" in this.Type);
+                console.assert("False" in this.Type.Boolean);
+                console.assert("True" in this.Type.Boolean);
+                Object.values(this.Type).forEach( t => {
+                        console.assert("type" in t);
+                        console.assert(t.type === this.Type.Type);
+                        this.__initializeNonLiteralProperty(t, "literal");
+                        console.assert("literal" in t);
+                        console.assert(-1 !=  [this.Type.Boolean.False, this.Type.Boolean.True]
+                                               .indexOf(t.literal));
+
+                } );
+        }
+        
+        async __recreateTemporaryTypeSystem() {
+                console.assert("Type" in this);
+                console.assert(typeof(this.Type)==="object");
+                const Types = Object.values(this.Type);
+                console.assert(Types.length > 0);
+                await Promise.all( Types.map( this.rewrap ) );
+        }
+        
+        /**
+         * @param o is a half-constructed object
+         * @param p is a string name of o's property
+         * @pre o must have a field $record$ containing the JSON data to be parsed
+         * @pre o.$record$ must contain field with name p
+         * @pre o.$record$.p must be a UUID of some object
+         * @post o will contain a field with name _p 
+         * @post the value of o._p will be a wrapper of o.$record$.p 
+         * @post o.p property getter will returns o._p 
+         * @post o.p property setter will set o._p and also accordingly modif o.$record$.p
+         */
+        __initializeNonLiteralProperty(o, p) {
+                console.assert(typeof(o) === "object", `expecting object, got ${o}`);
+                console.assert(typeof(p) === "string", `expecting string, got ${p}`);
+                console.assert("$record$" in o, `expecting '$record$' field in ${o}`);
+                const r = o["$record$"];
+                console.assert(p in r, `expecting property ${p} in object ${o}`);
+                const vUUID = o.$record$[p];
+                console.assert(this.metax.isValidUUID(vUUID), `${vUUID} is not a valid UUID`);
+                const v = this.cache.get(vUUID);
+                console.log(v);
+                console.assert(v != undefined, `was expecting to find ${vUUID} in cache`);
+                o[p] = v;
+                /* no need for this as we are bootstrapping now, 
+                   will later rewrap and do it right 
+                const Vostan = this;
+                const _p = "_" + p; 
+                Object.defineProperty(o, p, { 
+                        get : () => { 
+                                if (! (_p in o)) {
+                                        const v = Vostan.cache.get(vUUID);
+                                        console.assert(v != undefined);
+                                        o[_p] = v;
+                                }
+                                return o[_p];
+                        },
+                        set : (newV) => { 
+                                o[_p] = newV;
+                                console.assert("uuid" in newV);
+                                o.$record$.p = newV.uuid;
+                        },
+                        enumerable : true,
+                        configurable : true
+                });
+                console.assert(o[p] === o[_p]);
+                //console.assert((o[p] = o[_p]) === o[_p]);
+                */
+        }
+        
+        async __loadCollection(o, c) {
+                console.assert(typeof(o) === "object", `expecting object, got ${o}`);
+                console.assert(typeof(c) === "string", `expecting string, got ${c}`);
+                console.assert("$record$" in o, `expecting '$record$' field in ${o}`);
+                const r = o["$record$"];
+                console.assert(c in r, `expecting property ${c} in $record$ of ${o}`);
+                console.assert(Array.isArray(r[c]), `${c} $record$.${c} must be an array` );
+                o[c] = [];
+                await Promise.all(  r[c].map(async e => {
+                        if(c === "collections") {
+                                const w = { $record$ : e };
+                                this.__initializeNonLiteralProperty(w, "element_type");
+                                o[c].push(w);
+                        } else if(c === "properties") {
+                                const w = { $record$ : e };
+                                this.__initializeNonLiteralProperty(w, "value_type");
+                                o[c].push(w);
+                        } else if (c === "values") {
+                                console.assert(this.metax.isValidUUID(e));
+                                await this.__partiallyLoadObjectEnumValue(o, e);
+                        }
+                } ) );
+        }
+                
+        async __partiallyLoadObjectEnumValue(t, vUUID) {
+                console.assert(this.metax.isValidUUID(vUUID));
+                const vRecord = await this.__fetchRecord(vUUID);
+                console.assert("uuid" in vRecord);
+                console.assert(vUUID === vRecord.uuid);
+                console.assert("type" in vRecord);
+                console.assert(this.metax.isValidUUID(vRecord.type));
+                console.assert(this.cache.get(vRecord.type) === t);
+                console.assert("id" in vRecord);
+                console.assert(typeof(vRecord.id) === "string");
+                console.assert(!(vRecord.id in t));
+                const v = { $record$ : vRecord };
+                t[vRecord.id] = v;
+                this.cache.put(vUUID, v);
+        }
+        
+        __checkObject(o) {
+                console.assert("uuid" in o, `missing uuid ${o}`);
+                console.assert(this.metax.isValidUUID(o.uuid), `invalid uuid in ${r}`);
+                console.assert("type" in o, `missing type ${o}`);
+                console.assert("uuid" in o.type);
+                console.assert(this.metax.isValidUUID(o.type.uuid));
+                return true;
+        }
+        
+        async __fetchRecord(uuid) {
+                console.log(`Vostan: Fetching ${uuid}`);
+                console.assert(this.metax.isValidUUID(uuid), `invalid uuid ${uuid}`);
+                const r = await this.metax.get(uuid)
+                        .then(r => r.json())
+                        .catch(e => { 
+                                console.error(`Failed to get ${uuid} from Metax. Error: ${e}`);
+                                throw "Metax Get Failed " + JSON.stringify(e);
+                        });
+                console.assert(r != null);
+                console.assert("type" in r);
+                console.assert(this.metax.isValidUUID(r.uuid), `invalid uuid ${r.uuid}`);
+                console.assert("uuid" in r);
+                console.assert(r.uuid === uuid, 
+                               `The record at ${uuid} has wrong uuid field: ${r}`);
+                return r;
+        }
+
+        // async registerListener(cb) {
+                // this.callbacks.push(cb);
+        // }
+
+        // async unregisterListener(cb) {
+                // this.callbacks.delete(this.callbacks.indexOf(cb.... ?);
+        // }
+
+        // async registerListener(propSpec, cb);
+        // async unregisterListener(propSpec, cb);
+        
+        /*
+        this.websocket = metax.registerListener(uuid, callBack {
+                                                get
+                                                re-wrap,
+                                                for i in callabacks
+                                                        cb(i)
+        }
+        */
+        
+        async __rewrapLiteralProperty(o,t,p) {
+                Object.defineProperty(o, p.id, {
+                        get() {
+                                console.assert(p.id in o);
+                                return o[p.id];
+                        },
+                        set(newValue) {
+                                o.$record$[p.id] = newValue;
+                        }
+                })
+        }
+        
+        async __rewrapNonLiteralProperty(o,t,p) {
+                console.assert("id" in p);
+                console.assert(typeof(p.id) === "string");
+                console.assert
+                Object.defineProperty(o, p.id, {
+                        get() {
+                                console.assert(p.id in o);
+                                return this.wrap(o[p.id]);
+                        },
+                        set(newValue) {
+                                o[p.id] = newValue;
+                        }
+                });         
+        }
+        
+        async __rewrapProperty(o,t,p) {
+                console.assert("type" in o);
+                console.assert(o.type === t);
+                console.assert("type" in t);
+                console.assert(t.type === this.Type.Type);
+                console.assert("value_type" in p);
+                const pValueType = await this.wrap(p.value_type);
+                console.assert("type" in pValueType);
+                console.assert(pValueType.type === p.Type.Type);
+                console.assert("literal" in pValueType);
+                console.assert("type" in pValueType.literal);
+                console.assert(pValueType.literal.type === this.Type.Boolean);
+                if(pValueType.literal === this.Type.Boolean.False) {
+                        this.__rewrapNonLiteralProperty(o,t,p);
+                } else {
+                        console.assert(pValueType.literal === this.Type.Boolean.True);
+                        this.__rewrapLiteralProperty(o,t,p);
+                }
+        }        
+                
+        async __rewrapCollection(o,t,c) {
+        }
+                
+        async rewrap(o) {
+                console.assert("$record$" in o);
+                const oRecord = o.$record$;
+                for (let i in o) { 
+                        delete o[i];
+                }
+                o.$record$ = oRecord;
+                console.assert("uuid" in oRecord);
+                const oUUID = oRecord.uuid;
+                console.assert(this.metax.isValidUUID(oUUID));
+                console.assert("type" in oRecord); 
+                const tUUID = oRecord.type;
+                console.assert(this.metax.isValidUUID(tUUID));
+                const t = await this.wrap(tUUID);
+                console.assert("properties" in t);
+                await Promise.all(t.properties.map(async p => this.__rewrapProperty(o,t,p)));
+                console.assert("collections" in t);
+                await Promise.all(t.collections.map(async c =>
+                                                        this.__rewrapCollection(o,t,c)));
+        }
+        
+        async wrap(uuid) {
+                console.assert(uuid != null);
+                let o = this.cache.get(uuid);
+                if (o != undefined) {
+                        console.assert(this.status === "bootstrapping" 
+                                       || this.__checkObject(o));
+                        return o;
+                }
+                const r = await this.__fetchRecord(uuid);
+                o = { $record$: r };
+                this.cache.put(uuid, o);
+                this.rewrap(o);
+                return o;
+        }
+        
+        /*
+        for ( p in o.type.propertis ) {
+                if p.name == type
+                
+                        o.__prototype + = _type = {};
+                        o.__prortype += _type_is_load;
+                        o.type +=  get type () {  
+                                if ! o._type_is_loaded {
+                                        o._type = wrap(o.$record$.type);
+                                        o._type_is_loaded = true;
+                                }
+                                return o._type;
+                        }
+                
+                
+                        o.$record$.properties   { name
+                        
+                        o._properties = MyLazyArray  : [ 1, 2, 3 ]
+                                                       [] 
+                                               if isl
+                                
+                                
+                        }
+          
+        */  
+};
+
+vostan = new Vostan(); 
+ 
+export default vostan;

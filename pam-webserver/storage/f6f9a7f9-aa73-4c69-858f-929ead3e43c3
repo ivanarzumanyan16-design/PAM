@@ -1,0 +1,1 @@
+{"uuid":"f6f9a7f9-aa73-4c69-858f-929ead3e43c3","id":"download_document","name":"Download Document","type":"104be51f-4857-4668-b7ce-406d634a1979","description":"This function download uploaded documents.","arguments":[{"name":"document","value":"","id":"New argument"}],"body":"c292c9e2-1594-4310-b305-b533d700bbef"}

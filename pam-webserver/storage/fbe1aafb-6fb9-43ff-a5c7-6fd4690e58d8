@@ -1,0 +1,268 @@
+<!doctype html>
+<html>
+<head>
+        <style>
+               html { overflow-y: scroll; }
+	       #property-editor {
+			width: 95% !important;
+	       }
+	       @media (max-width:768px ) {
+		       #property-editor {
+				width: 100% !important;
+		       }
+	       }
+        </style>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/db/get?id=71cd38b5-a0a9-494c-b82c-b1565d8a36de&fn=dialog.css">
+        <link rel="stylesheet" href="/db/get?id=8c387c93-89fb-482f-9fab-4cfa6291ae33&fn=codemirror.css">
+        <link rel="stylesheet" href="/db/get?id=ccfdc674-e74e-4650-b53c-48a19ecc6fca&fn=codemirror_oceanic_theme.css">
+        <link rel="stylesheet" href="/db/get?id=2dd6c42b-d7ca-4e31-931c-7301c229c05e&fn=docs.css">
+        <link rel="stylesheet" href="/db/get?id=424edc8a-08ed-4ba7-a806-b30c37a2fd48&fn=fullscreen.css">
+	<link rel="stylesheet" href="/db/get?id=1507b837-c085-4238-a5c9-a999d55b2182&fn=leaflet.css">
+        <script src="/db/get?id=4b98df48-81c4-456f-a788-e3496d699475&fn=codemirror.js"></script>
+        <script src="/db/get?id=2a5dcdea-212d-4eea-aa7f-137649640137&fn=dialog.js"></script>
+        <script src="/db/get?id=dcfd3472-3695-4998-9587-a2a523f43624&fn=search.js"></script>
+        <script src="/db/get?id=4604d385-951e-4571-b185-f70b1490cf1d&fn=searchcursor.js"></script>
+        <script src="/db/get?id=07e21faa-16fa-490d-9bb9-c354d9e5945c&fn=matchbrackets.js"></script>
+        <script src="/db/get?id=baf314ba-ad36-4094-b55f-d370140d269c&fn=vim.js"></script>
+        <script src="/db/get?id=7a8e9535-4388-420a-bcd9-3a284f65f184&fn=fullscreen.js"></script>
+        <script src="/db/get?id=8bfd0aba-552f-4783-8262-6f092476c051&fn=xml.js"></script>
+        <script src="/db/get?id=4531ca39-79ad-4baa-8188-4a8b9a5d7152&fn=javascript.js"></script>
+        <script src="/db/get?id=4d86b776-4fc8-469d-893b-2a4ccd40b7f6&fn=css.js"></script>
+        <script src="/db/get?id=f4fb8115-bcc9-43d9-a241-75212827a646&fn=htmlmixed.js"></script>
+        <script src="/db/get?id=f7aea108-c579-4002-8a14-1493e9e30d8b-50de1559-aa3e-4e3c-b552-8075083cdaa7&fn=verilog.js"></script>
+	<script src="/db/get?id=cad8c048-9be7-41f6-a7c6-98d8a4997560&fn=leaflet.js" crossorigin=""></script>
+        
+        <link rel="stylesheet" href="/db/get?id=def2ab9d-4ec4-40fa-b24e-bd364eb154f6-4083bc63-1ce0-41c9-9564-02b3f52284c8&fn=MarkerCluster.css" />
+        <script src="/db/get?id=6d6e6080-539f-4243-b7c0-68d856da6a18-816c1508-4f79-4d02-9e56-6ac0585397ab&fn=leaflet.markercluster.js"></script>
+        <link rel="stylesheet" href="/db/get?id=696cbb28-5107-4bfd-8793-2de22393f456-ada56f7d-7b5d-4387-9537-39e3831899d8&fn=leaflet.draw.css" />
+        <script src="/db/get?id=52c73c88-1448-4be5-b934-9542e89cfe9c-4830d135-ae16-4928-b39e-c4a26551d370&fn=leaflet.draw.js"></script>
+        <link rel="stylesheet" href="/db/get?id=7c78a005-8a0a-411f-a7c9-7f4044302c27-e555fd12-6732-4b17-b92a-39afef352408&fn=marker_cluster.css" />
+            
+        <script type="text/javascript">
+                /*
+        window.addEventListener('beforeunload', function (e) {
+                // Cancel the event
+                e.preventDefault();
+                // Chrome requires returnValue to be set
+                e.returnValue = '';
+        });*/
+        </script>
+            
+        <script type="module" content-type="text/javascript">
+        
+        //import mani from '/db/get?id=54ee0b6b-0774-4feb-ac61-feddf64d9d41&fn=mani.mjs';
+	import mani from '/db/get?id=09431fbd-3295-4805-a888-ac2041b70184';
+	//import mani from '/db/get?id=5c46bfc3-d4ea-4fc4-b443-e04f65032420';
+	//import vostan from '/db/get?id=78ec05cd-a458-465e-84e0-f0aeed245315&fn=vostan.mjs';
+	//import metax from '/db/get?id=c30e6738-c14e-44dd-9a8e-6b49af2106f7';
+	import metax from '/db/get?id=0111ab39-9520-4b6b-9ff0-8d2959079a88';
+                
+                
+        async function getJSON(uuid) {
+                return metax.get(uuid).then(r => r.json())
+                        .catch(e => alert("getJSON: got an error " + e));
+        };
+                        
+        async function saveJSON(data) {
+                return await metax.save(data)
+                        .catch(e => alert("saveJSON: got an error " + e));
+        };
+                        
+        async function updateJSON(uuid, data) {
+                await metax.update(uuid, data, "application/json")
+                        .catch(e => alert("updateJSON: got an error " + e));
+        };
+                
+        window.onload = async () => {
+                const host = window.location.hostname;
+                const port = window.location.port;
+                let secure = false;
+                if(window.location.protocol == "https:") { 
+                        secure = true;
+                };
+                await metax.connect(host, port, false, secure);
+                await mani.connect(metax);
+                setupDocumentHeader();
+                //redrawWindow(); // window.location.hash has valid uuid, so show its props
+                const uuid = window.location.hash.slice(1)
+		console.log(uuid)// hash[1] is #, so we slice it away
+                if (uuid == null || ! metax.isValidUUID(uuid)) { // the very first URL may have no hash
+                       navigateToNode("");
+		       //window.location.hash = "781c48a1-92d1-41a5-8f42-3146dbd2060d";
+                } else {
+                       redrawWindow(); // window.location.hash has valid uuid, so show its props
+                }
+        }
+        
+        window.onpopstate = async () => {
+               const uuid = window.location.hash.slice(1); // hash[1] is #, so we slice it away
+               if (uuid == null || ! metax.isValidUUID(uuid)) { // the very first URL may have no hash
+                      await navigateToNode(uuid);
+               } else {
+                      redrawWindow(); // window.location.hash has valid uuid, so show its props
+               }
+        }
+                
+        // Typically invoked the very first time, when there is no #UUID in URL,
+        // otherwise use redrawWindow() which will use current #UUID hash to get object.
+        // We also call it from ☰ button-press when hash != "", therefore we don't assert.
+	
+        async function navigateToNode(uuid) {
+                const base = window.location.href.split('#')[0]; 
+                console.log(base);
+                console.assert(metax.isValidUUID(uuid));
+                window.history.pushState(null,null,base + '#' + uuid);
+                await redrawWindow();
+        }
+                
+        // TODO: make sure this is SEO friendly, i.e. that robots pick-up the page
+        function setupDocumentHeader() {
+            mani.windowTitle("Է֊Հայք ՅԿՀ");
+            mani.loadCSS("/db/get?id=40bedcf0-bf66-46c5-906f-43a785dcb9cf");  // g3
+            mani.loadCSS("/db/get?id=0b1e4be4-0242-4af9-a8fd-224ae5d26d24");  // g3_colors
+            mani.addMeta("description", "Mani project test page");
+            mani.addMeta("author", "eHayq LLC, Yerevan Armenia, 2019");
+        }
+                
+        function clearDocumentBody() {
+                while (document.body.firstChild) {
+                        document.body.removeChild(document.body.firstChild);
+                }
+        }
+                
+        function createSideBar(rootObject) {
+                let sidebar = mani.sideBarBegin();
+                        if(navigator.userAgent.search("Android") != -1) {
+                                 mani.width("100%");
+                        } else {
+                                mani.width("40%");
+                        }
+                        mani.height("100%")
+                        mani.color("black");
+                        mani.visible("none");
+                        let sidebarFrame = mani.frameBegin();
+                                mani.padding("0");
+                                mani.headerBegin();
+                                        mani.margin("0");
+                                        const closeBtn = mani.buttonBegin();
+                                                closeBtn.style.float = "left";
+                                                mani.margin("12px");
+                                                mani.width("40px");
+                                                mani.middle();
+                                                mani.title("x");
+                                                mani.buttonAction(() => {
+                                                        sidebar.style.display = "none";
+                                                });
+                                        mani.buttonEnd();
+                                        const selectBtn = mani.buttonBegin();
+                                                selectBtn.style.float = "right";
+                                                mani.margin("12px");
+                                                mani.middle();
+                                                mani.title("Select");
+                                                mani.disabled(true);
+                                                mani.buttonAction(() => {
+                                                        sidebar.style.display = "none";
+                                                        const obj = document.selectedObject;
+                                                        console.assert(obj && "uuid" in obj);
+                                                        const uuid = obj.uuid;
+                                                        console.assert(metax.isValidUUID(uuid));
+                                                        navigateToNode(uuid);
+                                                });
+                                        mani.buttonEnd();
+                                mani.headerEnd();
+                                mani.hierarchyViewBegin();
+                                        mani.hierarchyViewObject(rootObject);
+                                        mani.hierarchyViewOnClick((obj) => {
+                                                if (typeof(obj)!="object" || ! ("uuid" in obj)) {
+                                                        selectBtn.disabled = true;
+                                                        selectBtn.style.opacity = 0.3;
+
+                                                } else {
+                                                        document.selectedObject = obj;
+                                                        selectBtn.disabled = false;
+                                                        selectBtn.style.opacity = 1;
+                                                }
+                                        });
+                                mani.hierarchyViewEnd();
+                        mani.frameEnd();
+                mani.sideBarEnd();
+                return sidebar;
+        }
+                
+        // This is re-rendering the property-editor for current location.hash w/o refreshing page
+        async function redrawWindow() {
+                document.body.style.backgroundColor = "#f2f2f2";
+                //mani.colorScheme("black","white","#368BD6","red");
+                //mani.colorScheme("#223f23","white","#005396","rgb(3, 179, 129)", "red");
+                mani.colorScheme("black","white","#018786","#018786","#b71c1c");
+
+                //mani.colorScheme("#223f23","white","#189485","rgb(3, 179, 129)", "red");
+                clearDocumentBody();
+                const uuid = window.location.hash.slice(1); 
+                //const uuid = "781c48a1-92d1-41a5-8f42-3146dbd2060d"; 
+                console.assert(uuid && metax.isValidUUID(uuid));
+                //const object = await getJSON(uuid);
+                let object = {};
+                for(let k = 0; k < 50; k++) {
+                        object = await getJSON(uuid);
+                        if(object != "undefined") {
+                                break;
+                        } 
+                }
+                console.assert("type" in object && metax.isValidUUID(object.type));
+                //const objectType = await getJSON(object.type);
+                let objectType = {};
+                for(let l = 0; l < 50; l++) {
+                        objectType = await getJSON(object.type);
+                        if(objectType != "undefined") {
+                                break;
+                        } 
+                }
+                console.assert(objectType);
+                //console.assert("uuid" in objectType);
+                console.assert(objectType.uuid === object.type );
+                if (! ("rootObject" in document)) {
+                        document.rootObject = object;
+                }
+                const rootObject = document.rootObject;
+                console.assert(typeof(rootObject) === "object" && "uuid" in rootObject);
+                console.assert(metax.isValidUUID(rootObject.uuid));
+                const sidebar = createSideBar(rootObject);
+                const header = mani.headerBegin();
+                        mani.buttonBegin();
+                                mani.middle();
+                                mani.title("☰");
+                                mani.margin("12px");
+                                mani.width("40px");
+                                mani.padding("7px");
+                                mani.buttonAction(() => {
+                                        sidebar.style.display = "inline";
+                                });
+                        mani.buttonEnd();
+                        mani.labelBegin(); 
+                                mani.middle();
+                                mani.labelText("«ISRC IMS 2023.1»");
+                        mani.labelEnd();
+                        /*mani.actionBegin();
+                                mani.title("ok");
+                                mani.actionMethod("266f20a1-fae7-4775-bb39-ce5b7227bc6f");
+                        mani.actionEnd();*/
+                mani.headerEnd();
+                const p = mani.propertyEditorBegin();
+                        mani.className("g3-card");
+			mani.id("property-editor");
+                        mani.horizontalMargins("auto");
+                        mani.verticalMargins("12px");
+                        mani.padding("0px 0px 1px");
+                        mani.propertyEditorObject(object,rootObject);
+                mani.propertyEditorEnd();
+        }
+                
+        </script>
+
+</head>
+<body>
+</body>
+</html>

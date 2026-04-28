@@ -1,0 +1,5 @@
+{
+          "type": "group",
+          "name": "db_admins",
+          "allowed_targets": ["*"]
+         }

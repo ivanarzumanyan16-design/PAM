@@ -1,0 +1,59 @@
+
+> metax@1.0.0 start
+> node src/rest_api.mjs storage=../storage/ port=8000 key=../certs/metax.key cert=../certs/metax.crt
+
+metax configured.
+db initialized
+https server started
+received websocket close event for session: 91df123c-a207-434c-9c76-aedf0afcdd80
+received websocket close event for session: e714b0d1-a341-418c-a3e0-0199a982da23
+received websocket close event for session: 54840781-e3e9-4889-9859-b782dc31c5b5
+received new request from ::1, request path: /db/get?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+handling db request request path: /db/get?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+received get request with path /db/get?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+finish handling get request for 4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/register_listener?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9&token=6b26e96f-58dd-4cd5-9cdf-3b88c2bbae0e
+handling db request request path: /db/register_listener?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9&token=6b26e96f-58dd-4cd5-9cdf-3b88c2bbae0e
+received register_listener request with path /db/register_listener?id=4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9&token=6b26e96f-58dd-4cd5-9cdf-3b88c2bbae0e
+received new request from ::1, request path: /db/get?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+handling db request request path: /db/get?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+received get request with path /db/get?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+finish handling get request for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/get?id=fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+handling db request request path: /db/get?id=fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+received get request with path /db/get?id=fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+finish handling get request for fa1e8256-40cb-4c7d-b3e3-50509e356df8-c66a3d69-e9e2-41f9-b889-0f0ae5cb76b0
+received new request from ::1, request path: /db/register_listener?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a&token=6b26e96f-58dd-4cd5-9cdf-3b88c2bbae0e
+handling db request request path: /db/register_listener?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a&token=6b26e96f-58dd-4cd5-9cdf-3b88c2bbae0e
+received register_listener request with path /db/register_listener?id=e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a&token=6b26e96f-58dd-4cd5-9cdf-3b88c2bbae0e
+received new request from ::1, request path: /db/get?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+handling db request request path: /db/get?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+received get request with path /db/get?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+finish handling get request for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+received new request from ::1, request path: /db/get?id=undefined
+handling db request request path: /db/get?id=undefined
+received get request with path /db/get?id=undefined
+received new request from ::1, request path: /db/register_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=6b26e96f-58dd-4cd5-9cdf-3b88c2bbae0e
+handling db request request path: /db/register_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=6b26e96f-58dd-4cd5-9cdf-3b88c2bbae0e
+received register_listener request with path /db/register_listener?id=16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a&token=6b26e96f-58dd-4cd5-9cdf-3b88c2bbae0e
+received new request from ::1, request path: /db/save/node?id=651eaec1-5313-48a3-a7d9-bac06a704d75
+handling db request request path: /db/save/node?id=651eaec1-5313-48a3-a7d9-bac06a704d75
+received save request with path /db/save/node?id=651eaec1-5313-48a3-a7d9-bac06a704d75
+Failed to read_file 651eaec1-5313-48a3-a7d9-bac06a704d75.contract, error code:  ENOENT
+2026-04-22T08:06:47.116Z Uncaught exception Error: 651eaec1-5313-48a3-a7d9-bac06a704d75.contract not found.
+    at read_file (file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:165:9)
+    at get_contract_file (file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:131:24)
+    at file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:77:21
+    at new Promise (<anonymous>)
+    at save_uuid (file:///opt/PAM/metax_zero_webserver/metax_2/src/db.mjs:75:9)
+    at handle_save_request (file:///opt/PAM/metax_zero_webserver/metax_2/src/db_rest_api.mjs:179:22)
+    at handle_db_request (file:///opt/PAM/metax_zero_webserver/metax_2/src/db_rest_api.mjs:34:4)
+    at Http2SecureServer.route_incoming_request (file:///opt/PAM/metax_zero_webserver/metax_2/src/rest_api.mjs:101:4)
+    at Http2SecureServer.emit (node:events:524:28)
+    at Http2SecureServer.onServerStream (node:internal/http2/compat:974:10) unhandledRejection

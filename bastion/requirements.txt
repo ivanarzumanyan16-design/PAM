@@ -1,0 +1,11 @@
+# PAM Bastion — Python dependencies
+# Only two packages needed (both already installed on the bastion host).
+httpx[http2]>=0.27.0
+h2>=4.0.0
+
+# All other functionality uses Python stdlib:
+#   TOTP          → hmac, hashlib, base64, struct, time  (totp.py)
+#   WebSocket     → ssl, socket, hashlib, base64, struct  (metax_client.py)
+#   sudo injection→ pty, os, select, termios, tty         (session.py)
+#   ttyrec        → struct, time, os                      (session.py)
+#   OS sync       → subprocess, os                        (sync_daemon.py)

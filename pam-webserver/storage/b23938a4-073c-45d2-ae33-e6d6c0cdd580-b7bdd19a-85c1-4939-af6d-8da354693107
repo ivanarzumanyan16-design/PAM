@@ -1,0 +1,11 @@
+{"version": 2, "width": 236, "height": 62, "timestamp": 1776944797, "env": {"TERM": "xterm-256color"}}
+[0.1714, "o", "Last login: Thu Apr 23 14:48:00 2026 from 10.8.8.106\r\r\n"]
+[0.1946, "o", "\u001b[?2004h"]
+[0.1948, "o", "\u001b[1;32mbastion@standardpci440fxpiix1996 [ \u001b[0m~\u001b[1;32m ]$ \u001b[0m"]
+[9.6018, "o", "e"]
+[9.7153, "o", "x"]
+[9.8091, "o", "i"]
+[9.9044, "o", "t"]
+[10.0783, "o", "\r\n\u001b[?2004l\r"]
+[10.0785, "o", "logout\r\n"]
+[10.0799, "o", "Connection to 10.8.8.35 closed.\r\r\n"]
