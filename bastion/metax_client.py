@@ -329,5 +329,3 @@ class MetaxWebSocket:
 
     def close(self):
         self._sock.close()
-
-
