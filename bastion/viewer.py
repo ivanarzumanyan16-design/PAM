@@ -65,40 +65,87 @@ async def handle_play_uuid(request):
 <html>
 <head>
     <meta charset="utf-8">
+    <title>PAM Session Playback</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.8.0/dist/bundle/asciinema-player.css" />
-    <style>body {{ background: #000; margin: 0; padding: 20px; }}</style>
+    <style>
+        body {{ background: #0d0d0d; margin: 0; padding: 30px; font-family: monospace; color: #ccc; }}
+        #error-msg {{ color: #ff5555; padding: 20px; display: none; font-size: 14px; }}
+    </style>
 </head>
 <body>
     <div id="player"></div>
+    <div id="error-msg"></div>
     <script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.8.0/dist/bundle/asciinema-player.min.js"></script>
     <script>
-        AsciinemaPlayer.create('/proxy_db/{uuid}', document.getElementById('player'), {{
-            autoPlay: true,
-            preload: true,
-            cols: 120,
-            rows: 30,
-            fit: 'width'
-        }});
+        var castUrl = '/proxy_db/{uuid}';
+        // Pre-check that the cast file is accessible before handing to player
+        fetch(castUrl)
+            .then(function(resp) {{
+                if (!resp.ok) {{
+                    throw new Error('HTTP ' + resp.status + ': ' + resp.statusText);
+                }}
+                return resp.text();
+            }})
+            .then(function(text) {{
+                if (!text || text.trim().length === 0) {{
+                    throw new Error('Recording file is empty');
+                }}
+                // File is OK — mount the player
+                AsciinemaPlayer.create(castUrl, document.getElementById('player'), {{
+                    autoPlay: true,
+                    preload: true,
+                    cols: 120,
+                    rows: 30,
+                    fit: 'width'
+                }});
+            }})
+            .catch(function(err) {{
+                var el = document.getElementById('error-msg');
+                el.style.display = 'block';
+                el.textContent = '⚠ Cannot load recording: ' + err.message;
+                console.error('Playback load error:', err);
+            }});
     </script>
 </body>
 </html>"""
     return web.Response(text=html, content_type="text/html")
 
 async def handle_proxy_db(request):
+    """Proxy asciicast file from Metax to browser for asciinema-player.
+    
+    asciicast v2 is a text/plain newline-delimited JSON file, NOT binary.
+    The player fetches this URL via JS fetch(), so we must:
+      1. Return correct content-type (text/plain)
+      2. Allow cross-origin if needed
+      3. Use a long timeout for large recordings
+    """
     uuid = request.match_info.get("uuid", "")
     url = f"https://{METAX_HOST}:{METAX_PORT}/db/get?id={uuid}"
     print(f"[viewer] Proxying playback for UUID: {uuid}")
     try:
-        async with httpx.AsyncClient(verify=False, http2=True, timeout=10.0) as client:
-            r = await client.get(url)
-            err_text = r.text if r.status_code != 200 else ""
-            print(f"[viewer] Metax returned status {r.status_code}, error: {err_text}, length {len(r.content)}")
+        async with httpx.AsyncClient(verify=False, http2=True, timeout=120.0) as c:
+            r = await c.get(url)
+            print(f"[viewer] Metax status={r.status_code}, size={len(r.content)} bytes")
             if r.status_code != 200:
-                return web.Response(status=r.status_code, text=f"Metax error: {err_text}")
-            return web.Response(body=r.content, content_type="application/x-asciicast")
+                return web.Response(
+                    status=r.status_code,
+                    text=f"Metax error: {r.text}",
+                    content_type="text/plain",
+                )
+            # asciicast v2 is newline-delimited JSON (text), not binary
+            # Return as text/plain so the browser and asciinema-player accept it
+            return web.Response(
+                body=r.content,
+                content_type="text/plain",
+                charset="utf-8",
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Cache-Control": "no-cache",
+                },
+            )
     except Exception as e:
         print(f"[viewer] Proxy error: {e}")
-        return web.Response(status=500, text=f"Proxy error: {str(e)}")
+        return web.Response(status=500, text=f"Proxy error: {str(e)}", content_type="text/plain")
 
 async def handle_live(request):
     uuid = request.match_info.get("uuid", "")
