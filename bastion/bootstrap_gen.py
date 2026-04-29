@@ -26,12 +26,19 @@ chmod 600 /home/bastion/.ssh/authorized_keys
 chown -R bastion:bastion /home/bastion/.ssh
 
 echo "[3/4] Configuring sudoers and SSH..."
-tee /etc/sudoers.d/bastion << 'EOF' > /dev/null
-# PAM Bastion: allow sudo with password (ephemeral password injected by bastion)
+# Detect real paths of chpasswd and passwd (vary by distro: /usr/sbin vs /sbin)
+CHPASSWD_PATH=$(command -v chpasswd 2>/dev/null || which chpasswd 2>/dev/null || echo /usr/sbin/chpasswd)
+PASSWD_PATH=$(command -v passwd 2>/dev/null || which passwd 2>/dev/null || echo /usr/bin/passwd)
+# Write sudoers: NOPASSWD only for password-management tools (used by PAM engine),
+# PASSWD required for everything else (uses the ephemeral password set by PAM).
+# This way direct SSH to bastion user still requires sudo password — only PAM knows it.
+cat > /etc/sudoers.d/bastion << SUDOEOF
+# PAM Bastion sudoers — do NOT grant NOPASSWD: ALL (security risk)
+# Only the PAM engine can set the ephemeral sudo password via chpasswd.
+# Direct SSH to bastion@host without going through PAM won't grant sudo.
+bastion ALL=(root) NOPASSWD: $CHPASSWD_PATH, $PASSWD_PATH, /usr/sbin/usermod, /sbin/usermod
 bastion ALL=(ALL) PASSWD: ALL
-# Allow bastion to set its own password (ephemeral sudo)
-bastion ALL=(root) NOPASSWD: /usr/sbin/chpasswd
-EOF
+SUDOEOF
 chmod 440 /etc/sudoers.d/bastion
 
 # Ensure PubkeyAuthentication is enabled
@@ -87,5 +94,6 @@ if __name__ == "__main__":
     else:
         # Default: just print the script (pipe manually)
         print(script)
+
 
 

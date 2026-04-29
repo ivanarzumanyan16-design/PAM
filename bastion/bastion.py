@@ -147,11 +147,26 @@ def main():
     # 2. Resolve in Metax2
     try:
         user = mx.get_user_by_username(linux_user)
+        # Fallback: match by name field (handles Mani-created users without username field)
+        if not user:
+            for u in mx.get_users():
+                name_val = u.get("name", "")
+                if isinstance(name_val, dict):
+                    name_val = next(iter(name_val.values()), "")
+                if str(name_val).lower() == linux_user.lower():
+                    # Patch username into Metax so future lookups work directly
+                    try:
+                        u["username"] = linux_user
+                        mx.db_save(u, u["uuid"])
+                    except Exception:
+                        pass
+                    user = u
+                    break
     except Exception as e:
         die(f"Cannot reach Metax2: {e}")
 
     if not user:
-        die("Your account is not registered in PAM. Contact an administrator.")
+        die(f"Account '{linux_user}' is not registered in PAM. Contact an administrator.")
 
     user_uuid = user["uuid"]
     totp_secret = user.get("totp_secret", "")
@@ -220,9 +235,10 @@ def main():
 
     audit.log(user_uuid, audit.ACTION_CONNECT, server_uuid)
 
-    # 10. Build SSH command (must use sudo to access root-owned BASTION_KEY)
+    # Build SSH command — NO local sudo needed: we use setfacl -m g:pam_users:r 
+    # to grant read access to the root-owned BASTION_KEY for the pam_users group.
     ssh_cmd = [
-        "sudo", "ssh",
+        "ssh",
         "-i", BASTION_KEY,
         "-o", "StrictHostKeyChecking=no",
         "-o", "BatchMode=yes",
@@ -260,7 +276,13 @@ def main():
 if __name__ == "__main__":
     try:
         main()
+    except Exception as e:
+        with open("/tmp/bastion_error.log", "a") as f:
+            import traceback
+            f.write(f"\n--- {time.ctime()} ---\n")
+            traceback.print_exc(file=f)
+        print(f"\r\n[bastion FATAL ERROR] {e}\r\n")
+        sys.exit(1)
     except KeyboardInterrupt:
         print("\r\n[bastion] Interrupted.\r\n")
         sys.exit(130)
-

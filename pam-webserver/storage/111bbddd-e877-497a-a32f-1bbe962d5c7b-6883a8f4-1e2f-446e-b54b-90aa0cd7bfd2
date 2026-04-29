@@ -1,0 +1,13 @@
+{"version": 2, "width": 145, "height": 38, "timestamp": 1777450376, "env": {"TERM": "xterm-256color"}}
+[0.2497, "o", "Linux debian 6.12.74+deb13+1-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.74-2 (2026-03-08) x86_64\r\n\r\nThe programs included with the Debian GNU/Linux system are free software;\r\nthe exact distribution terms for each program are described in the\r\nindividual files in /usr/share/doc/*/copyright.\r\n\r\nDebian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent\r\npermitted by applicable law.\r\nLast login: Wed Apr 29 11:04:34 2026 from 10.8.8.106\r\r\n"]
+[0.2603, "o", "\u001b[?2004hbastion@debian:~$ "]
+[63.5308, "o", "c"]
+[63.6939, "o", "l"]
+[63.7551, "o", "e"]
+[65.7173, "o", "^C\u001b[?2004l\r\u001b[?2004h\u001b[?2004l\r\r\n\u001b[?2004hbastion@debian:~$ "]
+[65.9402, "o", "e"]
+[66.0198, "o", "x"]
+[66.0792, "o", "i"]
+[66.1815, "o", "t"]
+[66.2417, "o", "\r\n\u001b[?2004l\rlogout\r\n"]
+[66.2424, "o", "Connection to 10.8.8.107 closed.\r\r\n"]

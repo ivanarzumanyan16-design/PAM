@@ -19,14 +19,14 @@ def log(user_uuid: str, action: str, server_uuid: str = "", result: str = "succe
     """Write one audit record to Metax2 and append to root.audit list.
     Returns the UUID of the created audit record."""
     from metax_client import db_save, get_root, save_root
-    now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    now = time.strftime("%Y-%m-%d | %H:%M:%S", time.gmtime())
     record = {
         "type":      T_AUDIT,
         "name":      f"{action}-{now}",
         "timestamp": now,
-        "user":      user_uuid,
+        "audit_user":      user_uuid,
         "action":    action,
-        "server":    server_uuid,
+        "audit_server":    server_uuid,
         "result":    result,
         "recording": "",   # filled in later by upload_recording()
     }
@@ -47,7 +47,7 @@ def log(user_uuid: str, action: str, server_uuid: str = "", result: str = "succe
 def start_session(user_uuid: str, server_uuid: str) -> str:
     """Create a pam-session object in Metax2. Returns session UUID."""
     from metax_client import db_save, get_root, save_root
-    now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    now = time.strftime("%Y-%m-%d | %H:%M:%S", time.gmtime())
     record = {
         "type":       T_SESSION,
         "name":       f"session-{user_uuid[:8]}-{now}",
@@ -77,7 +77,7 @@ def end_session(session_uuid: str, recording_uuid: str = ""):
     if not session_uuid:
         return
     from metax_client import db_get, db_save
-    now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    now = time.strftime("%Y-%m-%d | %H:%M:%S", time.gmtime())
     try:
         record = db_get(session_uuid)
         record["ended_at"] = now
@@ -136,7 +136,7 @@ def upload_recording(ttyrec_path: str, session_uuid: str = "") -> str:
 
         # Step 2: Create a Video-typed metadata object that wraps the file
         # This makes it visible and playable in Mani's Video viewer
-        now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        now = time.strftime("%Y-%m-%d | %H:%M:%S", time.gmtime())
         video_record = {
             "type":    MANI_VIDEO_TYPE,
             "name":    f"Session-{fname}",

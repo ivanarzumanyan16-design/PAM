@@ -1,3 +1,4 @@
+
 """
 PAM Bastion — session proxy with PTY, ttyrec, and sudo-password injection.
 Uses only stdlib: pty, os, select, termios, tty, struct, time.
@@ -78,18 +79,26 @@ class SessionRecorder:
 def set_ephemeral_sudo_password(host: str, port: int, bastion_key: str, password: str):
     """
     SSH to target as bastion (key auth) and set bastion user's password via chpasswd.
-    Requires that the bastion user on target can run 'chpasswd' as root — configured
-    in sudoers during bootstrap: bastion ALL=(root) PASSWD: /usr/sbin/chpasswd
-    Or the host accepts root key auth.
+    Sudoers on target must grant NOPASSWD for chpasswd:
+      bastion ALL=(root) NOPASSWD: /usr/sbin/chpasswd, /usr/bin/passwd
+    NOTE: do NOT use 'sudo -S' here — -S reads sudo auth password from stdin,
+    which conflicts with piping chpasswd data through stdin.
+    NOPASSWD means sudo needs no password at all.
     """
     import subprocess
+    # Escape single quotes in password for safe shell embedding
+    safe_pass = password.replace("'", "'\"'\"'")
+    # NO local sudo: we use setfacl -m g:pam_users:r on the bastion key instead.
+    # On the REMOTE side, we use 'sudo -n' (non-interactive).
+    # If NOPASSWD is set correctly in /etc/sudoers.d/bastion on the target,
+    # it will work. If not, it will fail cleanly without consuming stdin.
     cmd = [
-        "sudo", "ssh", "-i", bastion_key,
+        "ssh", "-i", bastion_key,
         "-o", "StrictHostKeyChecking=no",
         "-o", "BatchMode=yes",
         "-p", str(port),
         f"bastion@{host}",
-        f"echo 'bastion:{password}' | sudo /usr/sbin/chpasswd",
+        f"echo 'bastion:{safe_pass}' | sudo -n chpasswd",
     ]
     result = subprocess.run(cmd, capture_output=True, timeout=15)
     if result.returncode != 0:
@@ -97,15 +106,20 @@ def set_ephemeral_sudo_password(host: str, port: int, bastion_key: str, password
 
 
 def clear_sudo_password(host: str, port: int, bastion_key: str):
-    """Remove bastion user password after session ends."""
+    """
+    Lock bastion account after session ends (best-effort).
+    SECURITY: use 'usermod -p *' NOT 'passwd -d'.
+      passwd -d  → empty password → 'su bastion' works WITHOUT password (hole!)
+      usermod -p '*' → invalid hash → login impossible until PAM sets next ephemeral password
+    """
     import subprocess
     cmd = [
-        "sudo", "ssh", "-i", bastion_key,
+        "ssh", "-i", bastion_key,
         "-o", "StrictHostKeyChecking=no",
         "-o", "BatchMode=yes",
         "-p", str(port),
         f"bastion@{host}",
-        "sudo /usr/bin/passwd -d bastion",
+        "sudo -n usermod -p '*' bastion",
     ]
     subprocess.run(cmd, capture_output=True, timeout=10)  # best-effort
 
@@ -257,4 +271,5 @@ def run_session(
         pass
     
     return os.WEXITSTATUS(wstatus), log_str
+
 

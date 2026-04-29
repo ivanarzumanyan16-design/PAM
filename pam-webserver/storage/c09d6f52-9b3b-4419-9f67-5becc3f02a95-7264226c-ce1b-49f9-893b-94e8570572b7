@@ -1,0 +1,2 @@
+{"version": 2, "width": 135, "height": 35, "timestamp": 1777471101, "env": {"TERM": "xterm-256color"}}
+[0.0706, "o", "bastion@10.8.8.107: Permission denied (publickey,password).\r\r\n"]

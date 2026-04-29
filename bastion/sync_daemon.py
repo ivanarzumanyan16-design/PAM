@@ -42,7 +42,7 @@ def ensure_user(username: str, ssh_pub_key: str):
     existing = linux_users()
     if username not in existing:
         log.info("useradd %s", username)
-        run("useradd", "-m", "-s", "/bin/false", username)
+        run("useradd", "-m", "-s", "/bin/bash", username)
     # Add to pam_users group so sshd Match Group works
     run("usermod", "-aG", "pam_users", username)
     _write_authorized_key(username, ssh_pub_key)
@@ -158,6 +158,8 @@ def full_sync() -> list[str]:
         try:
             user = db_get(u_uuid)
             uname = user.get("username") or user.get("name", "")
+            if isinstance(uname, dict):
+                uname = next(iter(uname.values()), "")
             key = user.get("ssh_public_key", "")
             
             needs_save = False
@@ -185,6 +187,8 @@ def full_sync() -> list[str]:
         try:
             grp = db_get(g_uuid)
             gname = grp.get("name", "")
+            if isinstance(gname, dict):
+                gname = next(iter(gname.values()), "")
             if not gname:
                 continue
             members = []
@@ -332,5 +336,6 @@ if __name__ == "__main__":
     if os.geteuid() != 0:
         sys.exit("sync_daemon must run as root")
     main()
+
 
 
