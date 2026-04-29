@@ -59,8 +59,73 @@ async def handle_play(request):
 </html>"""
     return web.Response(text=html, content_type="text/html")
 
+async def _resolve_cast_uuid(session_uuid: str) -> tuple[str, str]:
+    """
+    Given a UUID, determine the actual cast file UUID.
+
+    If the UUID points to a SESSION object (contains ttyrec_uuid / recording /
+    video field), return (file_uuid, error_string).
+    If it already points to a raw cast file, return (session_uuid, "").
+    Returns ("", error_msg) on failure.
+    """
+    url = f"https://{METAX_HOST}:{METAX_PORT}/db/get?id={session_uuid}"
+    try:
+        async with httpx.AsyncClient(verify=False, http2=True, timeout=30.0) as c:
+            r = await c.get(url)
+            if r.status_code != 200:
+                return "", f"Metax returned HTTP {r.status_code}"
+
+            raw = r.content
+            # Try to parse as JSON — if it has cast file fields it IS a session object
+            try:
+                obj = r.json()
+            except Exception:
+                # Not JSON → already a raw cast file
+                return session_uuid, ""
+
+            # Detect session-like objects: look for known file-pointer fields
+            for field in ("ttyrec_uuid", "recording", "video", "file"):
+                fid = obj.get(field, "")
+                if fid and isinstance(fid, str) and len(fid) > 8:
+                    print(f"[viewer] Resolved session {session_uuid} → cast file {fid} (via '{field}')")
+                    return fid, ""
+
+            # The JSON object has no file pointer — check if it looks like asciicast
+            # (asciicast v2 starts with a JSON line containing 'version' key)
+            if b'"version"' in raw[:200]:
+                # It IS a cast file stored as JSON — serve it directly
+                return session_uuid, ""
+
+            return "", (f"Session {session_uuid[:8]}… has no recording yet. "
+                        f"Fields present: {list(obj.keys())}")
+    except Exception as e:
+        return "", str(e)
+
+
 async def handle_play_uuid(request):
-    uuid = request.match_info.get("uuid", "")
+    """Serve the asciinema player HTML for a session or cast-file UUID.
+
+    The UUID from Mani's playback_url is the SESSION uuid.  We resolve the
+    actual cast-file UUID on the server side before building the page so
+    the browser never receives a broken URL.
+    """
+    session_uuid = request.match_info.get("uuid", "")
+
+    # Resolve session → cast file UUID
+    cast_uuid, err = await _resolve_cast_uuid(session_uuid)
+
+    if err or not cast_uuid:
+        error_html = f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>PAM — Playback Error</title>
+<style>body{{background:#0d0d0d;color:#ff5555;font-family:monospace;padding:40px;}}</style>
+</head><body>
+<h2>⚠ Cannot load recording</h2>
+<p>{err or 'Recording UUID could not be resolved.'}</p>
+<p><small>Session UUID: {session_uuid}</small></p>
+</body></html>"""
+        return web.Response(text=error_html, content_type="text/html", status=404)
+
+    cast_url = f"/proxy_db/{cast_uuid}"
     html = f"""<!DOCTYPE html>
 <html>
 <head>
@@ -69,40 +134,39 @@ async def handle_play_uuid(request):
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.8.0/dist/bundle/asciinema-player.css" />
     <style>
         body {{ background: #0d0d0d; margin: 0; padding: 30px; font-family: monospace; color: #ccc; }}
+        h3   {{ color: #888; margin-bottom: 16px; }}
         #error-msg {{ color: #ff5555; padding: 20px; display: none; font-size: 14px; }}
     </style>
 </head>
 <body>
+    <h3>PAM Session Recording</h3>
     <div id="player"></div>
     <div id="error-msg"></div>
     <script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.8.0/dist/bundle/asciinema-player.min.js"></script>
     <script>
-        var castUrl = '/proxy_db/{uuid}';
-        // Pre-check that the cast file is accessible before handing to player
+        var castUrl = '{cast_url}';
         fetch(castUrl)
             .then(function(resp) {{
-                if (!resp.ok) {{
-                    throw new Error('HTTP ' + resp.status + ': ' + resp.statusText);
-                }}
+                if (!resp.ok) throw new Error('HTTP ' + resp.status + ' — ' + resp.statusText);
                 return resp.text();
             }})
             .then(function(text) {{
-                if (!text || text.trim().length === 0) {{
-                    throw new Error('Recording file is empty');
-                }}
-                // File is OK — mount the player
+                if (!text || text.trim().length === 0)
+                    throw new Error('Recording file is empty (0 bytes)');
                 AsciinemaPlayer.create(castUrl, document.getElementById('player'), {{
                     autoPlay: true,
                     preload: true,
-                    cols: 120,
-                    rows: 30,
-                    fit: 'width'
+                    cols: 220,
+                    rows: 50,
+                    fit: 'width',
+                    theme: 'monokai'
                 }});
             }})
             .catch(function(err) {{
                 var el = document.getElementById('error-msg');
                 el.style.display = 'block';
-                el.textContent = '⚠ Cannot load recording: ' + err.message;
+                el.innerHTML = '<b>⚠ Cannot load recording:</b> ' + err.message +
+                               '<br><small>cast URL: {cast_url}</small>';
                 console.error('Playback load error:', err);
             }});
     </script>
@@ -110,18 +174,17 @@ async def handle_play_uuid(request):
 </html>"""
     return web.Response(text=html, content_type="text/html")
 
+
 async def handle_proxy_db(request):
-    """Proxy asciicast file from Metax to browser for asciinema-player.
-    
-    asciicast v2 is a text/plain newline-delimited JSON file, NOT binary.
-    The player fetches this URL via JS fetch(), so we must:
-      1. Return correct content-type (text/plain)
-      2. Allow cross-origin if needed
-      3. Use a long timeout for large recordings
+    """Proxy raw cast-file bytes from Metax to the browser.
+
+    asciicast v2 is newline-delimited JSON (text/plain).  The asciinema-player
+    JS library fetches this URL, so we must return text/plain + CORS header.
+    Timeout is generous (120 s) to handle large recordings.
     """
     uuid = request.match_info.get("uuid", "")
     url = f"https://{METAX_HOST}:{METAX_PORT}/db/get?id={uuid}"
-    print(f"[viewer] Proxying playback for UUID: {uuid}")
+    print(f"[viewer] proxy_db → fetching cast file UUID={uuid}")
     try:
         async with httpx.AsyncClient(verify=False, http2=True, timeout=120.0) as c:
             r = await c.get(url)
@@ -132,8 +195,6 @@ async def handle_proxy_db(request):
                     text=f"Metax error: {r.text}",
                     content_type="text/plain",
                 )
-            # asciicast v2 is newline-delimited JSON (text), not binary
-            # Return as text/plain so the browser and asciinema-player accept it
             return web.Response(
                 body=r.content,
                 content_type="text/plain",
@@ -144,7 +205,7 @@ async def handle_proxy_db(request):
                 },
             )
     except Exception as e:
-        print(f"[viewer] Proxy error: {e}")
+        print(f"[viewer] proxy_db error: {e}")
         return web.Response(status=500, text=f"Proxy error: {str(e)}", content_type="text/plain")
 
 async def handle_live(request):
