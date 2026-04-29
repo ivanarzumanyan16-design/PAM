@@ -41,14 +41,23 @@ def db_save(data: dict, uuid: str | None = None) -> str:
     return r.json()["uuid"]
 
 def db_save_file(content: bytes, mime_type: str, uuid: str | None = None) -> str:
+    """Upload binary content to Metax. Uses a fresh client (not singleton)
+    so it can have its own long timeout without affecting other calls."""
     params = {"id": uuid} if uuid else {}
     try:
-        r = client().post(
+        # Do NOT use the singleton client() here — it has a short timeout.
+        # Large recordings need up to 2 minutes to upload.
+        fresh = httpx.Client(
+            base_url=f"https://{METAX_HOST}:{METAX_PORT}",
+            http2=True,
+            verify=False,
+            timeout=120.0,
+        )
+        r = fresh.post(
             "/db/save/node",
             params=params,
             content=content,
             headers={"content-type": mime_type},
-            timeout=60.0  # large recordings need more time
         )
         r.raise_for_status()
         return r.json()["uuid"]
@@ -131,7 +140,6 @@ def create_user(username: str, totp_secret: str, ssh_public_key: str) -> str:
 
 def create_session(user_uuid: str, server_uuid: str, ttyrec_path: str) -> str:
     from config import T_SESSION
-    import urllib.parse
     now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     obj = {
         "type": T_SESSION, "name": f"session-{now}",
@@ -140,23 +148,18 @@ def create_session(user_uuid: str, server_uuid: str, ttyrec_path: str) -> str:
         "ttyrec_path": ttyrec_path,
     }
     uuid = db_save(obj)
-    
-    # Generate URLs using the bastion IP or hostname. We'll use a generic placeholder or dynamic host if possible.
-    # The actual IP of the bastion is typically the one serving Mani, but we can just use relative or hardcoded port for now.
-    # To make it robust, we just assume the viewer is on port 9000 of the same host that Mani points to.
-    basename = urllib.parse.quote(os.path.basename(ttyrec_path))
-    # We use PUBLIC_VIEWER_HOST from config if defined, otherwise fallback to METAX_HOST
+
     try:
         from config import PUBLIC_VIEWER_HOST
         viewer_host = PUBLIC_VIEWER_HOST
     except ImportError:
-        from config import METAX_HOST
         viewer_host = METAX_HOST
-    
+
     obj["uuid"] = uuid
-    obj["live_url"] = f"https://{viewer_host}:9000/live/{uuid}"
-    obj["playback_url"] = f"https://{viewer_host}:9000/play/{basename}"
-    
+    # playback_url always uses SESSION uuid — viewer will resolve the file internally
+    obj["live_url"]     = f"https://{viewer_host}:9000/live/{uuid}"
+    obj["playback_url"] = f"https://{viewer_host}:9000/play_uuid/{uuid}"
+
     db_save(obj, uuid)
     root = get_root()
     root.setdefault("sessions", []).append(uuid)
@@ -168,7 +171,13 @@ def close_session(session_uuid: str, command_log: str = ""):
     sess["ended_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     if command_log:
         sess["description"] = command_log
-    
+
+    try:
+        from config import PUBLIC_VIEWER_HOST
+        viewer_host = PUBLIC_VIEWER_HOST
+    except ImportError:
+        viewer_host = METAX_HOST
+
     # Upload recording to Metax
     ttyrec_path = sess.get("ttyrec_path")
     if ttyrec_path and os.path.exists(ttyrec_path):
@@ -177,23 +186,20 @@ def close_session(session_uuid: str, command_log: str = ""):
             print(f"[metax] Found recording: {ttyrec_path} ({file_size} bytes)")
             with open(ttyrec_path, "rb") as f:
                 content = f.read()
-            print(f"[metax] Uploading to Metax...")
-            file_uuid = db_save_file(content, "application/x-asciicast")
-            print(f"[metax] Upload successful. File UUID: {file_uuid}")
+            print(f"[metax] Uploading {file_size} bytes to Metax...")
+            # Upload as plain text — asciicast v2 is newline-delimited JSON
+            file_uuid = db_save_file(content, "text/plain")
+            print(f"[metax] Upload OK. File UUID: {file_uuid}")
             sess["ttyrec_uuid"] = file_uuid
-            try:
-                from config import PUBLIC_VIEWER_HOST
-                viewer_host = PUBLIC_VIEWER_HOST
-            except ImportError:
-                from config import METAX_HOST
-                viewer_host = METAX_HOST
-            sess["playback_url"] = f"https://{viewer_host}:9000/play_uuid/{file_uuid}"
-            print(f"[metax] Updated playback_url: {sess['playback_url']}")
+            # playback_url points to the SESSION uuid (viewer resolves file internally)
+            sess["playback_url"] = f"https://{viewer_host}:9000/play_uuid/{session_uuid}"
+            print(f"[metax] playback_url: {sess['playback_url']}")
         except Exception as e:
             print(f"\r\n[metax] ERROR during recording upload: {e}\r\n")
             import traceback; traceback.print_exc()
     else:
         print(f"[metax] Recording file not found: {ttyrec_path}")
+
     db_save(sess, session_uuid)
     print(f"[metax] Session {session_uuid} closed.")
 
