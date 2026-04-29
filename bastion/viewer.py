@@ -272,6 +272,57 @@ async def handle_ws_live(request):
 
     return ws
 
+async def handle_debug_session(request):
+    """Diagnostic: show raw Metax object for a UUID.
+    Usage: http://<bastion>:9000/debug/session/<uuid>
+    """
+    uuid = request.match_info.get("uuid", "")
+    url = f"https://{METAX_HOST}:{METAX_PORT}/db/get?id={uuid}"
+    try:
+        async with httpx.AsyncClient(verify=False, http2=True, timeout=30.0) as c:
+            r = await c.get(url)
+        try:
+            obj = r.json()
+            import json as _json
+            pretty = _json.dumps(obj, indent=2, ensure_ascii=False)
+        except Exception:
+            obj = None
+            pretty = r.text[:4000] + ("..." if len(r.text) > 4000 else "")
+
+        # If it's a session object, resolve the cast file UUID
+        cast_uuid = ""
+        cast_info = ""
+        if obj and isinstance(obj, dict):
+            for field in ("ttyrec_uuid", "recording", "video", "file"):
+                fid = obj.get(field, "")
+                if fid and isinstance(fid, str) and len(fid) > 8:
+                    cast_uuid = fid
+                    cast_info = f"Field '<b>{field}</b>' → cast file UUID: <code>{fid}</code>"
+                    break
+
+        status_color = "#55ff55" if r.status_code == 200 else "#ff5555"
+        html = f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>PAM Debug</title>
+<style>
+  body {{ background:#0d0d0d; color:#ccc; font-family:monospace; padding:30px; }}
+  pre  {{ background:#1a1a1a; padding:16px; border-radius:6px; overflow-x:auto; color:#7fff7f; font-size:13px; }}
+  h2   {{ color:#ffcc00; }}
+  .ok  {{ color:#55ff55; }} .err {{ color:#ff5555; }}
+  a    {{ color:#5599ff; }}
+</style></head><body>
+<h2>🔍 Metax Debug — UUID: {uuid}</h2>
+<p>HTTP Status: <span style="color:{status_color}">{r.status_code}</span> &nbsp;|
+   Size: {len(r.content)} bytes</p>
+<p>{cast_info or '<span class="err">⚠ No cast file pointer found in this object</span>'}</p>
+{'<p><a href="/play_uuid/' + uuid + '">▶ Try playback</a> &nbsp;|&nbsp; <a href="/proxy_db/' + cast_uuid + '">⬇ Raw cast file</a></p>' if cast_uuid else ''}
+<h3>Raw Metax response:</h3>
+<pre>{pretty}</pre>
+</body></html>"""
+        return web.Response(text=html, content_type="text/html")
+    except Exception as e:
+        return web.Response(text=f"Error: {e}", status=500, content_type="text/plain")
+
+
 async def start_background_tasks(app):
     loop = asyncio.get_running_loop()
     transport, protocol = await loop.create_datagram_endpoint(
@@ -292,6 +343,7 @@ def main():
         web.get('/cast/{filename}', handle_cast),
         web.get('/live/{uuid}', handle_live),
         web.get('/ws/live/{uuid}', handle_ws_live),
+        web.get('/debug/session/{uuid}', handle_debug_session),
     ])
     app.on_startup.append(start_background_tasks)
     app.on_cleanup.append(cleanup_background_tasks)
