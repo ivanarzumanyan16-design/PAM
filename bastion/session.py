@@ -11,6 +11,7 @@ Flow:
   5. Write ttyrec frames to disk
 """
 import os, sys, pty, select, termios, tty, struct, time, fcntl, signal
+import subprocess
 
 import json
 import socket
@@ -92,13 +93,19 @@ def set_ephemeral_sudo_password(host: str, port: int, bastion_key: str, password
     # On the REMOTE side, we use 'sudo -n' (non-interactive).
     # If NOPASSWD is set correctly in /etc/sudoers.d/bastion on the target,
     # it will work. If not, it will fail cleanly without consuming stdin.
+    # Hash the password locally on the bastion using openssl
+    try:
+        hashed_pass = subprocess.check_output(["openssl", "passwd", "-6", password]).decode().strip()
+    except Exception as e:
+        raise RuntimeError(f"Failed to generate password hash locally: {e}")
+
     cmd = [
-        "ssh", "-i", bastion_key,
+        "sudo", "ssh", "-i", bastion_key,
         "-o", "StrictHostKeyChecking=no",
         "-o", "BatchMode=yes",
         "-p", str(port),
         f"bastion@{host}",
-        f"echo 'bastion:{safe_pass}' | sudo -n chpasswd",
+        f"sudo -n usermod -p '{hashed_pass}' bastion",
     ]
     result = subprocess.run(cmd, capture_output=True, timeout=15)
     if result.returncode != 0:
@@ -114,7 +121,7 @@ def clear_sudo_password(host: str, port: int, bastion_key: str):
     """
     import subprocess
     cmd = [
-        "ssh", "-i", bastion_key,
+        "sudo", "ssh", "-i", bastion_key,
         "-o", "StrictHostKeyChecking=no",
         "-o", "BatchMode=yes",
         "-p", str(port),
