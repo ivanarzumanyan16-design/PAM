@@ -28,6 +28,7 @@ import metax_client as mx
 import totp as totp_mod
 import audit
 from session import run_session, set_ephemeral_sudo_password, clear_sudo_password, check_sudo_access, IDLE_TIMEOUT_SECONDS
+from metax_client import store_session_pid
 from config import BASTION_KEY, RECORDINGS_DIR, M_TRUE
 
 
@@ -234,6 +235,10 @@ def main():
         session_uuid = mx.create_session(user_uuid, server_uuid, rec_path)
     except Exception:
         session_uuid = None
+
+    # 10. Store our PID so CLI/admin can force-kill this session
+    if session_uuid:
+        store_session_pid(session_uuid, os.getpid())
 
     audit.log(user_uuid, audit.ACTION_CONNECT, server_uuid)
 

@@ -206,12 +206,19 @@ def run_session(
 
     # Propagate SIGWINCH (terminal resize) to child
     child_pid = None
+    _force_kill = False  # set to True when SIGHUP received from admin kill command
+
     def _sigwinch(sig, frame):
         if child_pid:
             try:
                 os.kill(child_pid, signal.SIGWINCH)
             except ProcessLookupError:
                 pass
+
+    def _sighup(sig, frame):
+        """Received when admin runs 'pam_cli.py session kill'. Trigger graceful exit."""
+        nonlocal _force_kill
+        _force_kill = True
 
     master_fd, slave_fd = pty.openpty()
 
@@ -240,6 +247,7 @@ def run_session(
     child_pid = pid
     os.close(slave_fd)
     signal.signal(signal.SIGWINCH, _sigwinch)
+    signal.signal(signal.SIGHUP,  _sighup)   # admin force-kill hook
 
     # Put terminal in raw mode
     old_attrs = termios.tcgetattr(sys.stdin.fileno())
@@ -259,6 +267,23 @@ def run_session(
 
             now = time.time()
             idle_secs = now - last_activity
+
+            # ── Force-kill by admin ────────────────────────────────────────────
+            if _force_kill:
+                msg = (
+                    "\r\n\033[31m[bastion] ⛔ Session forcefully terminated by administrator.\033[0m\r\n"
+                )
+                try:
+                    os.write(master_fd, msg.encode())
+                except OSError:
+                    pass
+                sys.stdout.buffer.write(msg.encode())
+                sys.stdout.buffer.flush()
+                try:
+                    os.kill(child_pid, signal.SIGHUP)
+                except ProcessLookupError:
+                    pass
+                break
 
             # ── Idle timeout ───────────────────────────────────────────────────
             if idle_timeout > 0 and idle_secs >= idle_timeout:

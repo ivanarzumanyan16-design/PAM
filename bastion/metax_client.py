@@ -166,6 +166,31 @@ def create_session(user_uuid: str, server_uuid: str, ttyrec_path: str) -> str:
     save_root(root)
     return uuid
 
+def store_session_pid(session_uuid: str, pid: int):
+    """Store bastion process PID in session record for force-kill support."""
+    try:
+        sess = db_get(session_uuid)
+        sess["bastion_pid"] = str(pid)
+        db_save(sess, session_uuid)
+    except Exception:
+        pass  # best-effort
+
+
+def get_active_sessions() -> list[dict]:
+    """Return list of session objects that have no ended_at (still running)."""
+    root = get_root()
+    result = []
+    for s_uuid in root.get("sessions", []):
+        try:
+            sess = db_get(s_uuid)
+            if not sess.get("ended_at"):
+                sess.setdefault("uuid", s_uuid)
+                result.append(sess)
+        except Exception:
+            pass
+    return result
+
+
 def close_session(session_uuid: str, command_log: str = ""):
     sess = db_get(session_uuid)
     sess["ended_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())

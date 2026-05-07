@@ -197,18 +197,122 @@ def cmd_bootstrap(args):
     print(generate(srv, get_bastion_pubkey()))
 
 
-# ── Session / audit listing ────────────────────────────────────────────────────
-def cmd_sessions(args):
+# ── Session commands ───────────────────────────────────────────────────────
+IMPORTED_USERS_CACHE: dict = {}
+IMPORTED_SERVERS_CACHE: dict = {}
+
+def _resolve_name(uuid: str, cache: dict, fetcher) -> str:
+    """Resolve UUID to a human-readable name, with caching."""
+    if uuid not in cache:
+        try:
+            obj = fetcher(uuid)
+            raw = obj.get("name", "") or obj.get("username", "") or uuid[:8]
+            cache[uuid] = raw if isinstance(raw, str) else next(iter(raw.values()), uuid[:8])
+        except Exception:
+            cache[uuid] = uuid[:8]
+    return cache[uuid]
+
+
+def cmd_session_list(args):
+    """List sessions. Default: only active. --all: include ended."""
+    show_all = getattr(args, "all", False)
+
     root = mx.get_root()
-    sessions = [mx.db_get(s) for s in root.get("sessions", [])]
+    sessions = []
+    for s_uuid in root.get("sessions", []):
+        try:
+            s = mx.db_get(s_uuid)
+            s.setdefault("uuid", s_uuid)
+            if show_all or not s.get("ended_at"):
+                sessions.append(s)
+        except Exception:
+            pass
+
     if not sessions:
-        print("No sessions recorded.")
+        label = "No sessions" if show_all else "No active sessions"
+        print(label + " found.")
         return
-    print(f"{'Started':<22} {'User':<36} {'Server':<36} {'Ended'}")
-    print("-" * 110)
-    for s in sessions:
-        print(f"{s.get('started_at',''):<22} {s.get('user',''):<36} "
-              f"{s.get('server',''):<36} {s.get('ended_at','active')}")
+
+    header = "All sessions" if show_all else "Active sessions"
+    print(f"\n{header}:\n")
+    print(f"  {'#':<3} {'Started':<20} {'User':<16} {'Server':<16} {'PID':<7} {'Status':<8} UUID")
+    print("  " + "-" * 100)
+
+    for i, s in enumerate(sessions, 1):
+        user_name  = _resolve_name(s.get("user", ""),   IMPORTED_USERS_CACHE,   mx.db_get)
+        server_name = _resolve_name(s.get("server", ""), IMPORTED_SERVERS_CACHE, mx.db_get)
+        pid_str   = s.get("bastion_pid", "-")
+        ended     = s.get("ended_at", "")
+        status    = "ended" if ended else "\033[32mACTIVE\033[0m"
+        started   = s.get("started_at", "")[:19]
+        print(f"  {i:<3} {started:<20} {user_name:<16} {server_name:<16} {pid_str:<7} {status:<8} {s.get('uuid','')}")
+    print()
+
+
+def cmd_session_kill(args):
+    """
+    Force-terminate an active session by UUID.
+    Sends SIGHUP to the bastion process, which triggers graceful cleanup.
+    """
+    import signal as _signal
+
+    session_uuid = args.session
+    try:
+        sess = mx.db_get(session_uuid)
+    except Exception as e:
+        print(f"Error: cannot fetch session {session_uuid}: {e}")
+        sys.exit(1)
+
+    if sess.get("ended_at"):
+        print(f"Session {session_uuid[:8]}… is already ended ({sess['ended_at']}).")
+        sys.exit(0)
+
+    pid_str = sess.get("bastion_pid", "")
+    if not pid_str:
+        print(f"Error: session {session_uuid[:8]}… has no PID stored.")
+        print("  (This session was started before force-kill support was added.)")
+        sys.exit(1)
+
+    try:
+        pid = int(pid_str)
+    except ValueError:
+        print(f"Error: invalid PID '{pid_str}' in session record.")
+        sys.exit(1)
+
+    # Verify process exists before sending signal
+    try:
+        os.kill(pid, 0)  # signal 0 = existence check
+    except ProcessLookupError:
+        print(f"Process PID {pid} not found — session may have already ended.")
+        # Clean up stale Metax record
+        import time as _t
+        sess["ended_at"] = _t.strftime("%Y-%m-%dT%H:%M:%SZ", _t.gmtime())
+        sess["description"] = (sess.get("description") or "") + "\n[force-kill: process already gone]"
+        mx.db_save(sess, session_uuid)
+        print("  Metax session record marked as ended.")
+        sys.exit(0)
+    except PermissionError:
+        print(f"Permission denied to signal PID {pid}. Run as root or the bastion user.")
+        sys.exit(1)
+
+    # Send SIGHUP — session.py handler will display a message to the user and exit
+    user_name   = _resolve_name(sess.get("user", ""),   IMPORTED_USERS_CACHE,   mx.db_get)
+    server_name = _resolve_name(sess.get("server", ""), IMPORTED_SERVERS_CACHE, mx.db_get)
+    print(f"Sending SIGHUP to session {session_uuid[:8]}…")
+    print(f"  User:   {user_name}")
+    print(f"  Server: {server_name}")
+    print(f"  PID:    {pid}")
+
+    if not getattr(args, "yes", False):
+        confirm = input("Confirm force-kill? [y/N] ").strip().lower()
+        if confirm not in ("y", "yes"):
+            print("Aborted.")
+            sys.exit(0)
+
+    os.kill(pid, _signal.SIGHUP)
+    print(f"  ✅ SIGHUP sent. Session will terminate within ~1 second.")
+    print(f"  The user will see: '⛔ Session forcefully terminated by administrator.'")
+
 
 
 # ── Argument parser ────────────────────────────────────────────────────────────
@@ -261,7 +365,16 @@ def build_parser():
     pb = sub.add_parser("bootstrap")
     pb.add_argument("--server", required=True)
 
-    # sessions
+    # session
+    ps2 = sub.add_parser("session", help="Manage active sessions")
+    ss2 = ps2.add_subparsers(dest="action")
+    sl = ss2.add_parser("list", help="List sessions (default: active only)")
+    sl.add_argument("--all", action="store_true", help="Include ended sessions")
+    sk = ss2.add_parser("kill", help="Force-terminate an active session")
+    sk.add_argument("--session", required=True, metavar="UUID", help="Session UUID to kill")
+    sk.add_argument("-y", "--yes", action="store_true", help="Skip confirmation prompt")
+
+    # sessions (legacy alias — kept for backward compat)
     sub.add_parser("sessions")
 
     return p
@@ -272,18 +385,20 @@ def main():
     args = p.parse_args()
 
     dispatch = {
-        ("user",    "add"):          cmd_user_add,
-        ("user",    "list"):         cmd_user_list,
-        ("group",   "add"):          cmd_group_add,
-        ("group",   "add-member"):   cmd_group_add_member,
-        ("server",  "add"):          cmd_server_add,
-        ("server",  "list"):         cmd_server_list,
-        ("server",  "gen-token"):    cmd_server_gen_token,
-        ("server",  "check-sudo"):   cmd_server_check_sudo,
-        ("perm",    "add"):          cmd_perm_add,
-        ("perm",    "list"):         cmd_perm_list,
-        ("bootstrap", None):         cmd_bootstrap,
-        ("sessions",  None):         cmd_sessions,
+        ("user",     "add"):          cmd_user_add,
+        ("user",     "list"):         cmd_user_list,
+        ("group",    "add"):          cmd_group_add,
+        ("group",    "add-member"):   cmd_group_add_member,
+        ("server",   "add"):          cmd_server_add,
+        ("server",   "list"):         cmd_server_list,
+        ("server",   "gen-token"):    cmd_server_gen_token,
+        ("server",   "check-sudo"):   cmd_server_check_sudo,
+        ("perm",     "add"):          cmd_perm_add,
+        ("perm",     "list"):         cmd_perm_list,
+        ("session",  "list"):         cmd_session_list,
+        ("session",  "kill"):         cmd_session_kill,
+        ("bootstrap", None):          cmd_bootstrap,
+        ("sessions",  None):          cmd_session_list,   # legacy alias
     }
 
     key = (args.entity, getattr(args, "action", None))
