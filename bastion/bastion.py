@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 import metax_client as mx
 import totp as totp_mod
 import audit
-from session import run_session, set_ephemeral_sudo_password, clear_sudo_password
+from session import run_session, set_ephemeral_sudo_password, clear_sudo_password, check_sudo_access, IDLE_TIMEOUT_SECONDS
 from config import BASTION_KEY, RECORDINGS_DIR, M_TRUE
 
 
@@ -216,8 +216,10 @@ def main():
         sudo_pass = secrets.token_urlsafe(24)
         try:
             set_ephemeral_sudo_password(target_host, target_port, BASTION_KEY, sudo_pass)
+            print(f"\033[32m[bastion] Sudo password injected. 'sudo ...' commands will work automatically.\033[0m\r\n")
         except Exception as e:
-            print(f"\r\n[warn] Could not set sudo password: {e}\r\n")
+            print(f"\r\n\033[33m[warn] Could not set sudo password on {target_host}: {e}\033[0m\r\n")
+            print(f"\033[33m[hint] Run: python3 pam_cli.py server check-sudo --host {target_host} --port {target_port}\033[0m\r\n")
             sudo_pass = None
 
     # 8. Prepare recording path
@@ -250,7 +252,12 @@ def main():
     print(f"\033[32mConnecting to {target_user}@{target_host}:{target_port} …\033[0m\r\n")
 
     # 11. Run session (PTY + asciicast + sudo injection + live stream + command log)
-    exit_code, command_log = run_session(ssh_cmd, rec_path, session_uuid=session_uuid, sudo_password=sudo_pass)
+    exit_code, command_log = run_session(
+        ssh_cmd, rec_path,
+        session_uuid=session_uuid,
+        sudo_password=sudo_pass,
+        idle_timeout=IDLE_TIMEOUT_SECONDS,
+    )
 
     # 12. Cleanup
     if allow_sudo and sudo_pass:

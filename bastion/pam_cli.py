@@ -16,7 +16,7 @@ import sys, os, argparse, base64, hmac, hashlib, struct, secrets
 sys.path.insert(0, os.path.dirname(__file__))
 
 import metax_client as mx
-from config import T_USER, T_GROUP, T_SERVER, T_PERMISSION
+from config import T_USER, T_GROUP, T_SERVER, T_PERMISSION, BASTION_KEY, M_TRUE
 
 
 # ── TOTP secret generation ─────────────────────────────────────────────────────
@@ -106,6 +106,27 @@ def cmd_server_gen_token(args):
     cli_gen_token(args.server)
 
 
+def cmd_server_check_sudo(args):
+    """
+    Check if bastion user can run NOPASSWD sudo on the given server.
+    Useful for diagnosing why sudo auto-fill isn't working.
+    Usage: python3 pam_cli.py server check-sudo --host 10.0.0.5 --port 22
+    """
+    from session import check_sudo_access
+    host = args.host
+    port = args.port
+    print(f"Checking NOPASSWD sudo access on bastion@{host}:{port} …")
+    ok = check_sudo_access(host, port, BASTION_KEY)
+    if ok:
+        print(f"  ✅ NOPASSWD sudo is configured correctly on {host}.")
+        print(f"     PAM will be able to inject the sudo password automatically.")
+    else:
+        print(f"  ❌ NOPASSWD sudo is NOT working on {host}.")
+        print(f"     Fix: ensure /etc/sudoers.d/bastion on {host} contains:")
+        print(f"       bastion ALL=(root) NOPASSWD: /usr/sbin/usermod, /sbin/usermod")
+        print(f"     Or re-run bootstrap: python3 pam_cli.py server gen-token --server <uuid>")
+
+
 # ── Permission commands ────────────────────────────────────────────────────────
 def cmd_perm_add(args):
     root = mx.get_root()
@@ -126,6 +147,47 @@ def cmd_perm_add(args):
     grp.setdefault("permissions", []).append(uuid)
     mx.db_save(grp, args.group)
     print(f"Created permission  UUID: {uuid}  (sudo={args.sudo})")
+
+
+def cmd_perm_list(args):
+    """List all permissions showing group→server mapping and sudo flag."""
+    root = mx.get_root()
+    perms = [mx.db_get(p) for p in root.get("permissions", [])]
+    if not perms:
+        print("No permissions configured.")
+        return
+
+    # Build lookup tables
+    users_by_uuid = {u["uuid"]: u for u in mx.get_users()}
+    groups_by_uuid = {}
+    for g_uuid in root.get("groups", []):
+        try:
+            g = mx.db_get(g_uuid)
+            groups_by_uuid[g_uuid] = g
+        except Exception:
+            pass
+    servers_by_uuid = {}
+    for s_uuid in root.get("servers", []):
+        try:
+            s = mx.db_get(s_uuid)
+            servers_by_uuid[s_uuid] = s
+        except Exception:
+            pass
+
+    print(f"{'Group':<20} {'Server':<20} {'Host':<18} {'Sudo':<6} {'Permission UUID'}")
+    print("-" * 95)
+    for p in perms:
+        g_uuid = p.get("group", "")
+        s_uuid = p.get("server", "")
+        grp = groups_by_uuid.get(g_uuid, {})
+        srv = servers_by_uuid.get(s_uuid, {})
+        gname = grp.get("name", g_uuid[:8])
+        sname = srv.get("name", s_uuid[:8])
+        shost = srv.get("host", "")
+        sudo_flag = p.get("allow_sudo", "false")
+        is_sudo = sudo_flag == "true" or sudo_flag == M_TRUE
+        sudo_str = "yes" if is_sudo else "no"
+        print(f"{gname:<20} {sname:<20} {shost:<18} {sudo_str:<6} {p.get('uuid','')}")
 
 
 # ── Bootstrap ──────────────────────────────────────────────────────────────────
@@ -182,6 +244,9 @@ def build_parser():
     ss.add_parser("list")
     gt = ss.add_parser("gen-token", help="Generate a one-time bootstrap token for a server")
     gt.add_argument("--server", required=True, help="Server UUID")
+    cs = ss.add_parser("check-sudo", help="Check if NOPASSWD sudo is configured on target server")
+    cs.add_argument("--host", required=True, help="Target server host/IP")
+    cs.add_argument("--port", type=int, default=22, help="Target server SSH port")
 
     # perm
     pp = sub.add_parser("perm")
@@ -190,6 +255,7 @@ def build_parser():
     pa.add_argument("--group", required=True)
     pa.add_argument("--server", required=True)
     pa.add_argument("--sudo", action="store_true")
+    sp.add_parser("list", help="List all permissions (group→server mappings)")
 
     # bootstrap
     pb = sub.add_parser("bootstrap")
@@ -206,16 +272,18 @@ def main():
     args = p.parse_args()
 
     dispatch = {
-        ("user",    "add"):        cmd_user_add,
-        ("user",    "list"):       cmd_user_list,
-        ("group",   "add"):        cmd_group_add,
-        ("group",   "add-member"): cmd_group_add_member,
-        ("server",  "add"):        cmd_server_add,
-        ("server",  "list"):       cmd_server_list,
-        ("server",  "gen-token"):  cmd_server_gen_token,
-        ("perm",    "add"):        cmd_perm_add,
-        ("bootstrap", None):       cmd_bootstrap,
-        ("sessions",  None):       cmd_sessions,
+        ("user",    "add"):          cmd_user_add,
+        ("user",    "list"):         cmd_user_list,
+        ("group",   "add"):          cmd_group_add,
+        ("group",   "add-member"):   cmd_group_add_member,
+        ("server",  "add"):          cmd_server_add,
+        ("server",  "list"):         cmd_server_list,
+        ("server",  "gen-token"):    cmd_server_gen_token,
+        ("server",  "check-sudo"):   cmd_server_check_sudo,
+        ("perm",    "add"):          cmd_perm_add,
+        ("perm",    "list"):         cmd_perm_list,
+        ("bootstrap", None):         cmd_bootstrap,
+        ("sessions",  None):         cmd_sessions,
     }
 
     key = (args.entity, getattr(args, "action", None))

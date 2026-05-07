@@ -7,51 +7,55 @@ import os
 BOOTSTRAP_TEMPLATE = """\
 #!/bin/bash
 # PAM Bastion bootstrap script for {name} ({host})
-# This script must be run as root (via sudo -S bash).
+# This script must be run as root (via sudo bash).
 set -euo pipefail
 
 BASTION_PUBKEY="{bastion_pubkey}"
 
-echo "[1/4] Creating bastion user..."
+echo "[1/5] Creating bastion user..."
 if ! id bastion &>/dev/null; then
     /usr/sbin/useradd -m -s /bin/bash bastion
     /usr/sbin/usermod -p '*' bastion
 fi
 
-echo "[2/4] Installing bastion SSH key..."
+echo "[2/5] Installing bastion SSH key..."
 mkdir -p /home/bastion/.ssh
 echo "$BASTION_PUBKEY" > /home/bastion/.ssh/authorized_keys
 chmod 700 /home/bastion/.ssh
 chmod 600 /home/bastion/.ssh/authorized_keys
 chown -R bastion:bastion /home/bastion/.ssh
 
-echo "[3/4] Configuring sudoers and SSH..."
-# Detect real paths of chpasswd and passwd (vary by distro: /usr/sbin vs /sbin)
-CHPASSWD_PATH=$(command -v chpasswd 2>/dev/null || which chpasswd 2>/dev/null || echo /usr/sbin/chpasswd)
-PASSWD_PATH=$(command -v passwd 2>/dev/null || which passwd 2>/dev/null || echo /usr/bin/passwd)
-# Write sudoers: NOPASSWD only for password-management tools (used by PAM engine),
-# PASSWD required for everything else (uses the ephemeral password set by PAM).
-# This way direct SSH to bastion user still requires sudo password — only PAM knows it.
-cat > /etc/sudoers.d/bastion << SUDOEOF
-# PAM Bastion sudoers — do NOT grant NOPASSWD: ALL (security risk)
-# Only the PAM engine can set the ephemeral sudo password via chpasswd.
-# Direct SSH to bastion@host without going through PAM won't grant sudo.
-bastion ALL=(root) NOPASSWD: $CHPASSWD_PATH, $PASSWD_PATH, /usr/sbin/usermod, /sbin/usermod
+echo "[3/5] Configuring sudoers for PAM..."
+# We ONLY grant NOPASSWD for usermod (password rotation by PAM engine).
+# All other sudo commands require the ephemeral password set by PAM at login.
+# This means: direct SSH → su bastion → sudo needs password → user can't sudo without PAM.
+USERMOD_PATH=$(command -v usermod 2>/dev/null || echo /usr/sbin/usermod)
+cat > /etc/sudoers.d/bastion <<SUDOEOF
+# PAM Bastion sudoers
+# ONLY usermod is NOPASSWD — used by PAM engine to rotate the ephemeral sudo password.
+# Everything else (sudo su, sudo ls, etc.) requires the PAM-injected ephemeral password.
+# Direct SSH to bastion@host (bypassing PAM) won't know this password → sudo blocked.
+bastion ALL=(root) NOPASSWD: $$USERMOD_PATH
 bastion ALL=(ALL) PASSWD: ALL
 SUDOEOF
 chmod 440 /etc/sudoers.d/bastion
+visudo -cf /etc/sudoers.d/bastion && echo "  Sudoers OK" || echo "  WARNING: sudoers validation failed"
 
+echo "[4/5] Configuring SSH..."
 # Ensure PubkeyAuthentication is enabled
 if grep -q "^#PubkeyAuthentication yes" /etc/ssh/sshd_config; then
     sed -i "s/^#PubkeyAuthentication yes/PubkeyAuthentication yes/" /etc/ssh/sshd_config
-    systemctl restart sshd || service ssh restart
+    systemctl restart sshd 2>/dev/null || service ssh restart 2>/dev/null || true
 elif ! grep -q "^PubkeyAuthentication yes" /etc/ssh/sshd_config; then
     echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
-    systemctl restart sshd || service ssh restart
+    systemctl restart sshd 2>/dev/null || service ssh restart 2>/dev/null || true
 fi
 
-echo "[4/4] Done. Server {name} ({host}) is ready for PAM bastion."
+echo "[5/5] Done. Server {name} ({host}) is ready for PAM bastion."
 echo "The server has been automatically marked as bootstrapped in Mani."
+echo ""
+echo "NOTE: Direct access (ssh bastion@{host}) requires sudo password that only PAM knows."
+echo "      This is by design — use PAM bastion for normal access."
 """
 
 def generate(server: dict, bastion_pubkey: str) -> str:
