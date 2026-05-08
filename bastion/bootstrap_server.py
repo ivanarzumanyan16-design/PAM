@@ -49,11 +49,18 @@ class BootstrapHandler(BaseHTTPRequestHandler):
         self._respond(404, "text/plain", b"Not found\n")
 
     def do_POST(self):
-        """POST /gen-token/<server-uuid> → create bootstrap token, return JSON."""
+        """POST /gen-token/<server-uuid> → create bootstrap token, return JSON.
+           POST /register-sudo-pass → receive initial password from bootstrap script.
+        """
         if self.path.startswith("/gen-token/"):
             server_uuid = self.path[len("/gen-token/"):].split("?")[0].rstrip("/")
             self._handle_gen_token(server_uuid)
             return
+
+        if self.path == "/register-sudo-pass":
+            self._handle_register_pass()
+            return
+
         self._respond(404, "text/plain", b"Not found\n")
 
     def _handle_gen_token(self, server_uuid: str):
@@ -79,6 +86,37 @@ class BootstrapHandler(BaseHTTPRequestHandler):
         log.info("Generated bootstrap token for server '%s' (%s)",
                  srv.get("name"), server_uuid)
         self._respond(200, "application/json", body.encode())
+
+    def _handle_register_pass(self):
+        auth = self.headers.get("Authorization", "")
+        if not auth.startswith("Bearer "):
+            self._respond(401, "application/json", b'{"error":"Missing token"}\n')
+            return
+        token = auth[len("Bearer "):]
+
+        content_len = int(self.headers.get("Content-Length", 0))
+        try:
+            data = json.loads(self.rfile.read(content_len).decode())
+            server_uuid = data.get("server_uuid")
+            password = data.get("password")
+        except Exception:
+            self._respond(400, "application/json", b'{"error":"Invalid JSON"}\n')
+            return
+
+        # Verify token matches the server (tokens are Metax UUIDs, so we check Metax)
+        obj = mx.get_bootstrap_token(token)
+        if not obj or obj.get("server") != server_uuid:
+            self._respond(403, "application/json", b'{"error":"Invalid token context"}\n')
+            return
+
+        try:
+            from metax_client import set_server_sudo_password
+            set_server_sudo_password(server_uuid, password)
+            log.info("Registered initial sudo password for server %s", server_uuid)
+            self._respond(200, "application/json", b'{"ok":true}\n')
+        except Exception as e:
+            log.error("Failed to save initial password for %s: %s", server_uuid, e)
+            self._respond(500, "application/json", b'{"error":"Database error"}\n')
 
     def _handle_bootstrap(self, token: str):
         client_ip = self.client_address[0]
@@ -116,7 +154,12 @@ class BootstrapHandler(BaseHTTPRequestHandler):
 
         # Generate bootstrap shell script
         try:
-            script = generate(srv, get_bastion_pubkey())
+            reg_url = f"http://{PUBLIC_VIEWER_HOST}:{BOOTSTRAP_PORT}/register-sudo-pass"
+            script = generate(
+                srv, get_bastion_pubkey(),
+                bootstrap_token=token,
+                register_url=reg_url
+            )
         except Exception as e:
             log.error("Bootstrap: script generation failed: %s", e)
             self._respond(500, "text/plain", b"Script generation failed\n")
