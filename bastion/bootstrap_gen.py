@@ -13,7 +13,7 @@ set -euo pipefail
 BASTION_PUBKEY="{bastion_pubkey}"
 PAM_USER="{bastion_user}"
 SERVER_UUID="{server_uuid}"
-BASSTION_REGISTER_URL="{register_url}"
+BASTION_REGISTER_URL="{register_url}"
 BOOTSTRAP_TOKEN="{bootstrap_token}"
 
 echo "[1/6] Creating PAM system user ($PAM_USER)..."
@@ -56,12 +56,16 @@ fi
 
 echo "[6/6] Registering initial sudo password with PAM..."
 # Send the plaintext password to the bastion — it will encrypt and store it.
-curl -k -sf -X POST "$BASSTIONN_REGISTER_URL" \
-  -H "Authorization: Bearer $BOOTSTRAP_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d "{{\"server_uuid\": \"$SERVER_UUID\", \"password\": \"$INIT_PASS\"}}" \
-  && echo "  Password registered OK" \
-  || echo "  WARNING: Could not register password — run: pam_cli.py server reset-sudo --host {host}"
+if [ -n "$BASTION_REGISTER_URL" ]; then
+    curl -k -sf -X POST "$BASTION_REGISTER_URL" \
+      -H "Authorization: Bearer $BOOTSTRAP_TOKEN" \
+      -H "Content-Type: application/json" \
+      -d "{\\"server_uuid\\": \\"$SERVER_UUID\\", \\"password\\": \\"$INIT_PASS\\"}" \
+      && echo "  Password registered OK" \
+      || echo "  WARNING: Could not register password — run: pam_cli.py server reset-sudo --host {host}"
+else
+    echo "  WARNING: BASTION_REGISTER_URL not set — run: pam_cli.py server reset-sudo --host {host}"
+fi
 
 echo ""
 echo "Done. Server {name} ({host}) is ready for PAM bastion."
