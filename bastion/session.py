@@ -82,28 +82,30 @@ class SessionRecorder:
 
 
 # ── Sudo password setter (separate SSH connection before session) ──────────────
-def set_ephemeral_sudo_password(host: str, port: int, bastion_key: str, password: str):
+def set_ephemeral_sudo_password(
+    host: str, port: int, bastion_key: str,
+    old_password: str, new_password: str,
+    pam_user: str = "bastion"
+) -> None:
     """
-    SSH to target as bastion (key auth) and set bastion user's password via usermod -p.
-    Uses openssl passwd -6 to hash locally — avoids chpasswd PAM restrictions.
+    SSH to target as pam_user and rotate the sudo password from old to new.
+    Uses 'sudo -S' — reads password from stdin (old_password).
+    No NOPASSWD needed in sudoers.
 
-    Sudoers on target must grant (from bootstrap):
-      bastion ALL=(root) NOPASSWD: /usr/sbin/usermod, /sbin/usermod
+    Sudoers on target only needs:
+      <pam_user> ALL=(ALL) PASSWD: ALL
     """
-    # Hash the password locally using openssl (avoids sending plaintext over stdin)
     try:
-        hashed_pass = subprocess.check_output(
-            ["openssl", "passwd", "-6", password],
+        hashed = subprocess.check_output(
+            ["openssl", "passwd", "-6", new_password],
             stderr=subprocess.DEVNULL
         ).decode().strip()
     except Exception as e:
-        raise RuntimeError(f"Failed to generate password hash locally: {e}")
+        raise RuntimeError(f"Failed to hash new password: {e}")
 
-    # Escape single quotes for safe shell embedding
-    safe_hash = hashed_pass.replace("'", "'\"'\"'")
+    safe_hash = hashed.replace("'", "'\"'\"'")
 
-    # IMPORTANT: do NOT prefix with "sudo" locally — the BASTION_KEY is readable
-    # by pam_users group via setfacl. We SSH as bastion, then sudo -n on the remote.
+    # sudo -S reads password from stdin; we pass old_password on the first line
     cmd = [
         "ssh",
         "-i", bastion_key,
@@ -111,29 +113,26 @@ def set_ephemeral_sudo_password(host: str, port: int, bastion_key: str, password
         "-o", "BatchMode=yes",
         "-o", "ConnectTimeout=10",
         "-p", str(port),
-        f"bastion@{host}",
-        f"sudo -n usermod -p '{safe_hash}' bastion",
+        f"{pam_user}@{host}",
+        f"echo '{old_password}' | sudo -S usermod -p '{safe_hash}' {pam_user}",
     ]
     result = subprocess.run(cmd, capture_output=True, timeout=15)
     if result.returncode != 0:
         stderr = result.stderr.decode().strip()
         raise RuntimeError(
-            f"Failed to set sudo password on {host}: {stderr}\n"
-            f"Check: bastion ALL=(root) NOPASSWD: /usr/sbin/usermod in /etc/sudoers.d/bastion"
+            f"Failed to rotate sudo password on {host}: {stderr}\n"
+            f"Possible desync — run: python3 pam_cli.py server reset-sudo --host {host}"
         )
 
 
-def clear_sudo_password(host: str, port: int, bastion_key: str):
+def clear_sudo_password(
+    host: str, port: int, bastion_key: str,
+    current_password: str,
+    pam_user: str = "bastion"
+) -> str:
     """
-    Rotate bastion account password to a new random value after session ends.
-
-    SECURITY DESIGN:
-      - We do NOT use passwd -d (empty password) — that allows su bastion without password!
-      - We do NOT use usermod -p '*' — that locks completely, but we want the user
-        to be required to enter a password when doing 'su bastion' directly (emergency).
-      - We SET a NEW random password hash. This means:
-        * su bastion (direct, emergency) → asks for password → user doesn't know it → BLOCKED
-        * Next PAM session → PAM sets a fresh ephemeral password → sudo works again
+    Rotate pam_user password to a new random value after session ends.
+    Returns the new random password (caller should save it to Metax).
     """
     import secrets as _sec
     random_pass = _sec.token_urlsafe(32)
@@ -143,7 +142,6 @@ def clear_sudo_password(host: str, port: int, bastion_key: str):
             stderr=subprocess.DEVNULL
         ).decode().strip()
     except Exception:
-        # Fallback: lock the account (still better than nothing)
         hashed = "*"
 
     safe_hash = hashed.replace("'", "'\"'\"'")
@@ -154,10 +152,16 @@ def clear_sudo_password(host: str, port: int, bastion_key: str):
         "-o", "BatchMode=yes",
         "-o", "ConnectTimeout=10",
         "-p", str(port),
-        f"bastion@{host}",
-        f"sudo -n usermod -p '{safe_hash}' bastion",
+        f"{pam_user}@{host}",
+        f"echo '{current_password}' | sudo -S usermod -p '{safe_hash}' {pam_user}",
     ]
-    subprocess.run(cmd, capture_output=True, timeout=10)  # best-effort
+    result = subprocess.run(cmd, capture_output=True, timeout=10)
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"clear_sudo_password failed on {host}: {result.stderr.decode().strip()}"
+        )
+    return random_pass  # caller must save this to Metax
+
 
 
 def check_sudo_access(host: str, port: int, bastion_key: str) -> bool:

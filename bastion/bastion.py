@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-PAM Bastion — main entry point.
+PAM Bastion main entry point.
 
 Invoked via SSH authorized_keys command= restriction:
   command="python3 /opt/bastion/bastion.py",no-port-forwarding,...
 
 SSH_ORIGINAL_COMMAND format:
-  alice@prod-web-01          → connect as bastion@prod-web-01:22
-  alice@prod-web-01:2222     → connect as bastion@prod-web-01:2222
-  (empty)                    → show interactive server list
+  alice@prod-web-01          connect as bastion@prod-web-01:22
+  alice@prod-web-01:2222     connect as bastion@prod-web-01:2222
+  (empty)                    show interactive server list
 
 Flow:
   1. Parse SSH_ORIGINAL_COMMAND
-  2. Resolve Linux user → Metax2 user object (by username)
-  3. Prompt for TOTP → verify
-  4. Check permission (user's groups × server)
+  2. Resolve Linux user - Metax2 user object (by username)
+  3. Prompt for TOTP  verify
+  4. Check permission (user's groups - server)
   5. (if allow_sudo) set ephemeral sudo password on target
   6. Open ttyrec recording
   7. SSH proxy via PTY (with sudo injection)
@@ -28,11 +28,11 @@ import metax_client as mx
 import totp as totp_mod
 import audit
 from session import run_session, set_ephemeral_sudo_password, clear_sudo_password, check_sudo_access, IDLE_TIMEOUT_SECONDS
-from metax_client import store_session_pid
+from metax_client import store_session_pid, get_server_sudo_password, set_server_sudo_password
 from config import BASTION_KEY, RECORDINGS_DIR, M_TRUE
 
 
-# ── Helpers ────────────────────────────────────────────────────────────────────
+# ------- Helpers -----------------------
 
 def die(msg: str, code: int = 1):
     print(f"\r\n\033[31m[bastion] {msg}\033[0m\r\n", file=sys.stderr)
@@ -212,16 +212,31 @@ def main():
     allow_sudo = str(perm.get("allow_sudo")).lower() == "true" or perm.get("allow_sudo") == M_TRUE
 
     # 7. Sudo password setup
-    sudo_pass = None
+    sudo_pass = None          # new session password (loaded into PTY injector)
+    current_pass = None       # current password in Metax (needed for rotation + cleanup)
+    pam_user = server.get("bastion_user", "bastion")
     if allow_sudo:
-        sudo_pass = secrets.token_urlsafe(24)
-        try:
-            set_ephemeral_sudo_password(target_host, target_port, BASTION_KEY, sudo_pass)
-            print(f"\033[32m[bastion] Sudo password injected. 'sudo ...' commands will work automatically.\033[0m\r\n")
-        except Exception as e:
-            print(f"\r\n\033[33m[warn] Could not set sudo password on {target_host}: {e}\033[0m\r\n")
-            print(f"\033[33m[hint] Run: python3 pam_cli.py server check-sudo --host {target_host} --port {target_port}\033[0m\r\n")
-            sudo_pass = None
+        # Read current password from Metax
+        current_pass = get_server_sudo_password(server_uuid)
+        if current_pass is None:
+            print(f"\r\n\033[33m[warn] No sudo password found in PAM for {target_host}.\033[0m\r\n")
+            print(f"\033[33m[hint] Run bootstrap again or: pam_cli.py server reset-sudo --host {target_host}\033[0m\r\n")
+        else:
+            sudo_pass = secrets.token_urlsafe(24)
+            try:
+                set_ephemeral_sudo_password(
+                    target_host, target_port, BASTION_KEY,
+                    old_password=current_pass,
+                    new_password=sudo_pass,
+                    pam_user=pam_user,
+                )
+                # Save new password to Metax immediately after successful rotation
+                set_server_sudo_password(server_uuid, sudo_pass)
+                print(f"\033[32m[bastion] Sudo password rotated. 'sudo ...' commands will work automatically.\033[0m\r\n")
+            except Exception as e:
+                print(f"\r\n\033[33m[warn] Could not rotate sudo password on {target_host}: {e}\033[0m\r\n")
+                sudo_pass = None
+                current_pass = None
 
     # 8. Prepare recording path
     ts = time.strftime("%Y%m%d_%H%M%S")
@@ -264,12 +279,18 @@ def main():
         idle_timeout=IDLE_TIMEOUT_SECONDS,
     )
 
-    # 12. Cleanup
-    if allow_sudo and sudo_pass:
+    # 12. Cleanup — rotate sudo password to a new random value after session
+    if allow_sudo and sudo_pass and current_pass is not None:
         try:
-            clear_sudo_password(target_host, target_port, BASTION_KEY)
-        except Exception:
-            pass
+            new_final_pass = clear_sudo_password(
+                target_host, target_port, BASTION_KEY,
+                current_password=sudo_pass,
+                pam_user=pam_user,
+            )
+            # Save the post-session password to Metax
+            set_server_sudo_password(server_uuid, new_final_pass)
+        except Exception as e:
+            print(f"\r\n[bastion] warn: post-session password rotation failed: {e}\r\n")
 
     if session_uuid:
         try:
