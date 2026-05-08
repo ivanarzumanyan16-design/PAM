@@ -65,11 +65,13 @@ def cmd_perm_add(a):
     print(f"Created permission {uid} (sudo={a.sudo})")
 
 def cmd_perm_list(a):
+    from config import M_TRUE
     users, grps, srvs = {u["uuid"]: u for u in mx.get_list("users")}, {g["uuid"]: g for g in mx.get_list("groups")}, {s["uuid"]: s for s in mx.get_list("servers")}
     print(f"{'Group':<20} {'Server':<20} {'Host':<18} {'Sudo':<6} UUID\n{'-'*95}")
     for p in mx.get_list("permissions"):
         g, s = grps.get(p.get("group"), {}), srvs.get(p.get("server"), {})
-        print(f"{g.get('name', '')[:20]:<20} {s.get('name', '')[:20]:<20} {s.get('host', '')[:18]:<18} {'yes' if str(p.get('allow_sudo')).lower()=='true' else 'no':<6} {p.get('uuid','')}")
+        is_sudo = str(p.get('allow_sudo')).lower() == 'true' or p.get('allow_sudo') == M_TRUE
+        print(f"{g.get('name', '')[:20]:<20} {s.get('name', '')[:20]:<20} {s.get('host', '')[:18]:<18} {'yes' if is_sudo else 'no':<6} {p.get('uuid','')}")
 
 def cmd_bootstrap(a):
     from bootstrap_gen import generate, get_bastion_pubkey
