@@ -12,7 +12,7 @@ Deletion logic:
 
 Run as root (needs useradd/userdel/groupadd/gpasswd).
 """
-import sys, os, json, subprocess, time, logging, threading
+import sys, os, json, subprocess, time, logging, threading, signal
 from metax_client import MetaxWebSocket, db_get, db_save, get_root, client, create_bootstrap_token
 import totp
 from config import PAM_ROOT, AUTHORIZED_KEYS, PUBLIC_VIEWER_HOST, BOOTSTRAP_PORT, TOKEN_REGEN_MINUTES
@@ -252,7 +252,95 @@ def full_sync() -> list[str]:
     log.info("Full sync done. Users: wanted=%d, managed=%d, removed=%d. Groups: %d",
              len(wanted_set), len(managed), len(stale_users), len(wanted_groups))
 
+    # Also subscribe to session UUIDs so Mani status changes trigger WS events
+    for s_uuid in root.get("sessions", []):
+        if s_uuid not in all_uuids:
+            all_uuids.append(s_uuid)
+
     return all_uuids
+
+
+# ── Session kill watcher ───────────────────────────────────────────────────────
+
+def check_session_kills():
+    """
+    Scan all active sessions in Metax.
+    If a session has status='inactive' and still has a live bastion PID
+    → send SIGHUP to terminate it gracefully.
+
+    Called by the sync daemon on every full_sync cycle and on WebSocket
+    update events so that Mani UI changes take effect within seconds.
+    """
+    try:
+        root = get_root()
+    except Exception as e:
+        log.warning("check_session_kills: cannot reach Metax: %s", e)
+        return
+
+    killed = 0
+    for s_uuid in root.get("sessions", []):
+        try:
+            sess = db_get(s_uuid)
+        except Exception:
+            continue
+
+        # Only care about sessions that are still "open" in Metax
+        if sess.get("ended_at"):
+            continue
+
+        # Check if Mani/admin set status → inactive
+        if sess.get("status", "").lower() != "inactive":
+            continue
+
+        pid_str = sess.get("bastion_pid", "")
+        if not pid_str:
+            # No PID stored — session was started before force-kill support.
+            # Mark ended_at so we don't keep looping over it.
+            log.warning("Session %s marked inactive but has no PID. Closing record only.", s_uuid[:8])
+            sess["ended_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            sess["description"] = (sess.get("description") or "") + "\n[sync-daemon: inactive, no pid]"
+            try:
+                db_save(sess, s_uuid)
+            except Exception:
+                pass
+            continue
+
+        try:
+            pid = int(pid_str)
+        except ValueError:
+            log.warning("Session %s has invalid PID '%s', skipping.", s_uuid[:8], pid_str)
+            continue
+
+        # Check process still alive
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            # Process already gone — just tidy up Metax
+            log.info("Session %s (PID %d) already gone. Closing Metax record.", s_uuid[:8], pid)
+            sess["ended_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            sess["description"] = (sess.get("description") or "") + "\n[sync-daemon: process already gone]"
+            try:
+                db_save(sess, s_uuid)
+            except Exception:
+                pass
+            continue
+        except PermissionError:
+            log.error("Cannot signal PID %d for session %s: permission denied.", pid, s_uuid[:8])
+            continue
+
+        # Send SIGHUP → session.py handler shows message to user and exits cleanly
+        try:
+            os.kill(pid, signal.SIGHUP)
+            log.info(
+                "Sent SIGHUP to session %s (PID %d) — status set to inactive in Mani.",
+                s_uuid[:8], pid
+            )
+            killed += 1
+        except Exception as e:
+            log.error("Failed to kill session %s (PID %d): %s", s_uuid[:8], pid, e)
+
+    if killed:
+        log.info("check_session_kills: terminated %d session(s).", killed)
 
 
 # ── WebSocket event loop ───────────────────────────────────────────────────────
@@ -311,7 +399,10 @@ def main():
                     new_uuids = full_sync()
                     last_sync = time.time()
 
-                    # Subscribe to any new UUIDs (e.g., newly created users)
+                    # Always check for inactive sessions after every sync
+                    check_session_kills()
+
+                    # Subscribe to any new UUIDs (e.g., newly created sessions)
                     for uuid in new_uuids:
                         if uuid not in subscribed:
                             try:
@@ -321,10 +412,12 @@ def main():
                             except Exception:
                                 pass
 
+                # Fast-path: if a WS update came in for a session UUID, check kills immediately
+                # even if full_sync is not needed yet (e.g. only one session changed)
+                elif msg is not None and msg.get("event") == "update":
+                    check_session_kills()
+
                 if msg is None:
-                    # recv returned None — possible disconnect or timeout
-                    # Check if periodic sync is due; if WS is dead, it'll throw
-                    # on next recv and we'll reconnect
                     pass
 
         except Exception as e:
@@ -336,6 +429,7 @@ if __name__ == "__main__":
     if os.geteuid() != 0:
         sys.exit("sync_daemon must run as root")
     main()
+
 
 
 

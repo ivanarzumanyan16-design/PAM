@@ -145,6 +145,7 @@ def create_session(user_uuid: str, server_uuid: str, ttyrec_path: str) -> str:
         "type": T_SESSION, "name": f"session-{now}",
         "user": user_uuid, "server": server_uuid,
         "started_at": now, "ended_at": "",
+        "status": "active",
         "ttyrec_path": ttyrec_path,
     }
     uuid = db_save(obj)
@@ -194,6 +195,7 @@ def get_active_sessions() -> list[dict]:
 def close_session(session_uuid: str, command_log: str = ""):
     sess = db_get(session_uuid)
     sess["ended_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    sess["status"] = "ended"
     if command_log:
         sess["description"] = command_log
 
@@ -354,3 +356,4 @@ class MetaxWebSocket:
 
     def close(self):
         self._sock.close()
+
