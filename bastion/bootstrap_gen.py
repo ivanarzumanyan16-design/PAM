@@ -11,38 +11,41 @@ BOOTSTRAP_TEMPLATE = """\
 set -euo pipefail
 
 BASTION_PUBKEY="{bastion_pubkey}"
+PAM_USER="{bastion_user}"
+SERVER_UUID="{server_uuid}"
+BASSTION_REGISTER_URL="{register_url}"
+BOOTSTRAP_TOKEN="{bootstrap_token}"
 
-echo "[1/5] Creating bastion user..."
-if ! id bastion &>/dev/null; then
-    /usr/sbin/useradd -m -s /bin/bash bastion
-    /usr/sbin/usermod -p '*' bastion
+echo "[1/6] Creating PAM system user ($PAM_USER)..."
+if ! id "$PAM_USER" &>/dev/null; then
+    /usr/sbin/useradd -m -s /bin/bash "$PAM_USER"
 fi
 
-echo "[2/5] Installing bastion SSH key..."
-mkdir -p /home/bastion/.ssh
-echo "$BASTION_PUBKEY" > /home/bastion/.ssh/authorized_keys
-chmod 700 /home/bastion/.ssh
-chmod 600 /home/bastion/.ssh/authorized_keys
-chown -R bastion:bastion /home/bastion/.ssh
+echo "[2/6] Installing bastion SSH key for $PAM_USER..."
+mkdir -p /home/$PAM_USER/.ssh
+echo "$BASTION_PUBKEY" > /home/$PAM_USER/.ssh/authorized_keys
+chmod 700 /home/$PAM_USER/.ssh
+chmod 600 /home/$PAM_USER/.ssh/authorized_keys
+chown -R $PAM_USER:$PAM_USER /home/$PAM_USER/.ssh
 
-echo "[3/5] Configuring sudoers for PAM..."
-# We ONLY grant NOPASSWD for usermod (password rotation by PAM engine).
-# All other sudo commands require the ephemeral password set by PAM at login.
-# This means: direct SSH → su bastion → sudo needs password → user can't sudo without PAM.
-USERMOD_PATH=$(command -v usermod 2>/dev/null || echo /usr/sbin/usermod)
-cat > /etc/sudoers.d/bastion <<SUDOEOF
-# PAM Bastion sudoers
-# ONLY usermod is NOPASSWD — used by PAM engine to rotate the ephemeral sudo password.
-# Everything else (sudo su, sudo ls, etc.) requires the PAM-injected ephemeral password.
-# Direct SSH to bastion@host (bypassing PAM) won't know this password → sudo blocked.
-bastion ALL=(root) NOPASSWD: $$USERMOD_PATH
-bastion ALL=(ALL) PASSWD: ALL
+echo "[3/6] Setting initial sudo password..."
+# Generate a strong random password
+INIT_PASS=$(openssl rand -base64 32 | tr -d '\n')
+# Set password hash directly (we have root here during bootstrap)
+/usr/sbin/usermod -p "$(openssl passwd -6 "$INIT_PASS")" "$PAM_USER"
+
+echo "[4/6] Configuring sudoers for PAM ($PAM_USER)..."
+# NO NOPASSWD — only regular PASSWD sudo.
+# The bastion engine knows the current password and uses sudo -S to rotate it.
+cat > /etc/sudoers.d/pam_bastion <<SUDOEOF
+# PAM Bastion sudoers — managed automatically, do not edit.
+# No NOPASSWD: bastion engine authenticates with the current known password.
+$PAM_USER ALL=(ALL) PASSWD: ALL
 SUDOEOF
-chmod 440 /etc/sudoers.d/bastion
-visudo -cf /etc/sudoers.d/bastion && echo "  Sudoers OK" || echo "  WARNING: sudoers validation failed"
+chmod 440 /etc/sudoers.d/pam_bastion
+visudo -cf /etc/sudoers.d/pam_bastion && echo "  Sudoers OK" || echo "  WARNING: sudoers validation failed"
 
-echo "[4/5] Configuring SSH..."
-# Ensure PubkeyAuthentication is enabled
+echo "[5/6] Configuring SSH..."
 if grep -q "^#PubkeyAuthentication yes" /etc/ssh/sshd_config; then
     sed -i "s/^#PubkeyAuthentication yes/PubkeyAuthentication yes/" /etc/ssh/sshd_config
     systemctl restart sshd 2>/dev/null || service ssh restart 2>/dev/null || true
@@ -51,19 +54,31 @@ elif ! grep -q "^PubkeyAuthentication yes" /etc/ssh/sshd_config; then
     systemctl restart sshd 2>/dev/null || service ssh restart 2>/dev/null || true
 fi
 
-echo "[5/5] Done. Server {name} ({host}) is ready for PAM bastion."
-echo "The server has been automatically marked as bootstrapped in Mani."
+echo "[6/6] Registering initial sudo password with PAM..."
+# Send the plaintext password to the bastion — it will encrypt and store it.
+curl -k -sf -X POST "$BASSTIONN_REGISTER_URL" \
+  -H "Authorization: Bearer $BOOTSTRAP_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{{\"server_uuid\": \"$SERVER_UUID\", \"password\": \"$INIT_PASS\"}}" \
+  && echo "  Password registered OK" \
+  || echo "  WARNING: Could not register password — run: pam_cli.py server reset-sudo --host {host}"
+
 echo ""
-echo "NOTE: Direct access (ssh bastion@{host}) requires sudo password that only PAM knows."
-echo "      This is by design — use PAM bastion for normal access."
+echo "Done. Server {name} ({host}) is ready for PAM bastion."
+echo "PAM system user: $PAM_USER"
+echo "NOTE: No NOPASSWD — bastion uses stored encrypted password for sudo rotation."
 """
 
-def generate(server: dict, bastion_pubkey: str) -> str:
+def generate(server: dict, bastion_pubkey: str, bootstrap_token: str = "", register_url: str = "") -> str:
     """Return a bootstrap shell script string for the given server."""
     return BOOTSTRAP_TEMPLATE.format(
         name=server.get("name", "unknown"),
         host=server.get("host", ""),
         bastion_pubkey=bastion_pubkey,
+        bastion_user=server.get("bastion_user", "bastion"),
+        server_uuid=server.get("uuid", ""),
+        bootstrap_token=bootstrap_token,
+        register_url=register_url,
     )
 
 def get_bastion_pubkey() -> str:

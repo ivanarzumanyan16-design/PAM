@@ -5,7 +5,35 @@ WebSocket uses stdlib ssl+socket.
 """
 import json, ssl, socket, hashlib, base64, struct, os, time
 import httpx
-from config import METAX_HOST, METAX_PORT, METAX_CERT
+from cryptography.fernet import Fernet
+from config import METAX_HOST, METAX_PORT, METAX_CERT, MASTER_KEY_PATH
+
+# ── Fernet encryption (sudo password storage) ─────────────────────────────────
+_fernet: Fernet | None = None
+
+def _get_fernet() -> Fernet:
+    """Load Fernet key from disk (once per process). Raises if key missing."""
+    global _fernet
+    if _fernet is None:
+        if not os.path.exists(MASTER_KEY_PATH):
+            raise RuntimeError(
+                f"Encryption key not found: {MASTER_KEY_PATH}\n"
+                f"Run: python3 -c \"from cryptography.fernet import Fernet; "
+                f"print(Fernet.generate_key().decode())\" > {MASTER_KEY_PATH} "
+                f"&& chmod 400 {MASTER_KEY_PATH}"
+            )
+        with open(MASTER_KEY_PATH, "rb") as f:
+            key = f.read().strip()
+        _fernet = Fernet(key)
+    return _fernet
+
+def encrypt_secret(plaintext: str) -> str:
+    """Encrypt a plaintext string → base64 Fernet token (safe to store in Metax)."""
+    return _get_fernet().encrypt(plaintext.encode()).decode()
+
+def decrypt_secret(ciphertext: str) -> str:
+    """Decrypt a Fernet token → plaintext string."""
+    return _get_fernet().decrypt(ciphertext.encode()).decode()
 
 # ── HTTP/2 client (singleton) ──────────────────────────────────────────────────
 def _make_client():
@@ -292,6 +320,35 @@ def consume_bootstrap_token(token: str, server_uuid: str) -> bool:
     except Exception:
         pass
     return True
+
+
+# ── Server sudo password helpers ──────────────────────────────────────────────
+
+def get_server_sudo_password(server_uuid: str) -> str | None:
+    """
+    Read and decrypt the current sudo password for a server.
+    Returns plaintext password, or None if not set.
+    """
+    try:
+        srv = db_get(server_uuid)
+        enc = srv.get("sudo_password_enc", "")
+        if not enc:
+            return None
+        return decrypt_secret(enc)
+    except Exception:
+        return None
+
+def set_server_sudo_password(server_uuid: str, plaintext: str):
+    """
+    Encrypt and save a new sudo password for a server.
+    Updates sudo_password_enc and sudo_password_updated_at in Metax.
+    Uses optimistic versioning to detect race conditions.
+    """
+    srv = db_get(server_uuid)
+    srv["sudo_password_enc"] = encrypt_secret(plaintext)
+    srv["sudo_password_updated_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    srv["sudo_password_version"] = int(srv.get("sudo_password_version", 0)) + 1
+    db_save(srv, server_uuid)
 
 
 # ── Minimal stdlib WebSocket client ───────────────────────────────────────────

@@ -15,6 +15,7 @@ TOKEN_REGEN_MINUTES   = 1            # generate a new bootstrap command if older
 
 # ── Bastion host paths ─────────────────────────────────────────────────────────
 BASTION_KEY       = "/var/pam/bastion_ed25519"          # SSH key for outgoing connections
+MASTER_KEY_PATH   = "/var/pam/master.key"               # Fernet key for encrypting sudo passwords
 RECORDINGS_DIR    = "/var/pam/recordings"
 AUTHORIZED_KEYS   = "/etc/pam_authorized_keys"           # shared authorized_keys managed by sync_daemon
 
