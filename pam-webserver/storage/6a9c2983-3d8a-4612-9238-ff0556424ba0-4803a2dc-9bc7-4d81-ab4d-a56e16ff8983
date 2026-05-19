@@ -1,0 +1,12 @@
+{"version": 2, "width": 145, "height": 38, "timestamp": 1778830855, "env": {"TERM": "xterm-256color"}}
+[0.0621, "o", "Warning: Permanently added '10.8.8.36' (ED25519) to the list of known hosts.\r\r\n"]
+[0.2559, "o", "Linux aripari 6.1.0-38-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.147-1 (2025-08-02) x86_64\r\n\r\nThe programs included with the Debian GNU/Linux system are free software;\r\nthe exact distribution terms for each program are described in the\r\nindividual files in /usr/share/doc/*/copyright.\r\n\r\n"]
+[0.256, "o", "Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent\r\npermitted by applicable law.\r\n"]
+[0.2667, "o", "\u001b[?2004h"]
+[0.2669, "o", "\u001b]0;bastion@aripari: ~\u0007\u001b[01;32mbastion@aripari\u001b[00m:\u001b[01;34m~\u001b[00m$ "]
+[87.7421, "o", "e"]
+[87.8823, "o", "x"]
+[87.942, "o", "i"]
+[88.0624, "o", "t"]
+[88.2456, "o", "\r\n\u001b[?2004l\rlogout\r\n"]
+[88.2471, "o", "Connection to 10.8.8.36 closed.\r\r\n"]

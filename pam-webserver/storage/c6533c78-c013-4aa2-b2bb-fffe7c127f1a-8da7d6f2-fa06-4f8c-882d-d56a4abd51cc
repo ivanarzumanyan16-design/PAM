@@ -1,0 +1,4 @@
+{"version": 2, "width": 172, "height": 42, "timestamp": 1778593808, "env": {"TERM": "xterm-256color"}}
+[0.3784, "o", "Warning: Permanently added '10.8.8.35' (ED25519) to the list of known hosts.\r\r\n"]
+[0.4365, "o", "bastion@10.8.8.35: Permission denied (publickey,password).\r"]
+[0.4366, "o", "\r\n"]

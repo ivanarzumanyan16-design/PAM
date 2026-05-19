@@ -281,3 +281,98 @@ Trace 2026-4-28 2:53:2.57 webserver: starting read-only server
 Trace 2026-4-28 2:53:2.60 webserver: starting write server
 Trace 2026-4-28 2:53:2.61 webserver: read-only server running on port: 8001
 Trace 2026-4-28 2:53:2.61 webserver: write server running on port: 8002
+Trace 2026-5-12 17:46:14.397 webserver: logger configured.
+Trace 2026-5-12 17:46:14.397 webserver: configure_webserver
+Trace 2026-5-12 17:46:14.397 webserver: END configure_webserver
+Trace 2026-5-12 17:46:14.397 webserver: connecting to host metax.
+Trace 2026-5-12 17:46:14.423 webserver: successfully connected to host metax.
+Trace 2026-5-12 17:46:14.441 webserver: connected to metax websocket.
+Error 2026-5-12 17:46:14.454 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-5-12 17:46:14.455 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-5-12 17:46:14.458 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-5-12 17:46:14.461 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-5-12 17:46:14.461 webserver: get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Error 2026-5-12 17:46:14.464 webserver: unable to get private key for [object Object], defaulting
+Trace 2026-5-12 17:46:14.465 webserver: END get_website for 16aae722-2bd6-4c49-8bf4-d5dea972499f-03d1ad4e-4903-4f53-98e5-9c91bc1c105a
+Trace 2026-5-12 17:46:14.465 notifier: construct_transporter_package
+Trace 2026-5-12 17:46:14.465 notifier: END construct_transporter_package
+Trace 2026-5-12 17:46:14.465 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-5-12 17:46:14.465 notifier: construct_transporter_package
+Trace 2026-5-12 17:46:14.465 notifier: END construct_transporter_package
+Trace 2026-5-12 17:46:14.465 notifier: [object Object] doesn't have mailing credentials, skipping
+Trace 2026-5-12 17:46:14.466 webserver: starting read-only server
+Trace 2026-5-12 17:46:14.469 webserver: starting write server
+Trace 2026-5-12 17:46:14.469 webserver: read-only server running on port: 8001
+Trace 2026-5-12 17:46:14.469 webserver: write server running on port: 8002
+Trace 2026-5-13 10:46:30.168 webserver: handle_sitemap_uuid_update
+Trace 2026-5-13 10:46:30.169 webserver: END handle_sitemap_uuid_update
+Trace 2026-5-13 10:46:30.169 router: received handle_metax_update_message with uuid: 4495be55-3255-11f1-9aa8-bc24117073f9-4495d151-3255-11f1-9667-bc24117073f9
+Trace 2026-5-13 10:50:51.440 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:50:51.698 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:5.977 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:9.140 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:10.135 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:10.875 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:11.256 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:11.852 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:11.890 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:11.934 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:11.971 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.10 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.54 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.89 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.132 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.170 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.212 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.253 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.292 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.333 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.371 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.411 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.453 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.488 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.534 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:12.571 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:15.545 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:30.967 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 10:51:31.818 webserver: trying new secure connection pam.cyberhayq.am
+Trace 2026-5-13 23:15:8.92 webserver: host metax connection closed
+Trace 2026-5-13 23:15:9.93 webserver: connecting to host metax.
+Error 2026-5-13 23:15:9.96 webserver: failed to connect to host metax: AggregateError
+Trace 2026-5-15 11:7:25.160 webserver: logger configured.
+Trace 2026-5-15 11:7:25.161 webserver: configure_webserver
+Trace 2026-5-15 11:7:25.161 webserver: END configure_webserver
+Trace 2026-5-15 11:7:25.161 webserver: connecting to host metax.
+Trace 2026-5-15 11:7:25.180 webserver: successfully connected to host metax.
+Trace 2026-5-15 11:7:25.189 webserver: connected to metax websocket.
+Error 2026-5-15 11:7:25.194 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-5-15 11:7:25.195 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-5-15 11:7:25.197 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-5-15 11:7:25.200 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-5-15 11:7:25.200 notifier: construct_transporter_package
+Trace 2026-5-15 11:7:25.200 notifier: END construct_transporter_package
+Trace 2026-5-15 11:7:25.200 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-5-15 11:7:25.200 webserver: starting read-only server
+Trace 2026-5-15 11:7:25.203 webserver: starting write server
+Trace 2026-5-15 11:7:25.204 webserver: read-only server running on port: 8001
+Trace 2026-5-15 11:7:25.204 webserver: write server running on port: 8002
+Trace 2026-5-15 17:9:45.35 webserver: host metax connection closed
+Trace 2026-5-15 17:9:46.37 webserver: connecting to host metax.
+Error 2026-5-15 17:9:46.39 webserver: failed to connect to host metax: AggregateError
+Trace 2026-5-19 12:21:44.577 webserver: logger configured.
+Trace 2026-5-19 12:21:44.578 webserver: configure_webserver
+Trace 2026-5-19 12:21:44.578 webserver: END configure_webserver
+Trace 2026-5-19 12:21:44.578 webserver: connecting to host metax.
+Trace 2026-5-19 12:21:44.598 webserver: successfully connected to host metax.
+Trace 2026-5-19 12:21:44.608 webserver: connected to metax websocket.
+Error 2026-5-19 12:21:44.619 webserver: unable to get sitemap permission requests object: {"error":"invalid uuid."}
+Trace 2026-5-19 12:21:44.621 webserver: get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Error 2026-5-19 12:21:44.623 webserver: unable to get private key for  PAM, defaulting
+Trace 2026-5-19 12:21:44.625 webserver: END get_website for e058e76b-fd60-483e-9a7f-0d2706939ff9-3a93b8d7-1360-4197-bb7a-fb307379ea7a
+Trace 2026-5-19 12:21:44.625 notifier: construct_transporter_package
+Trace 2026-5-19 12:21:44.625 notifier: END construct_transporter_package
+Trace 2026-5-19 12:21:44.625 notifier:  PAM doesn't have mailing credentials, skipping
+Trace 2026-5-19 12:21:44.626 webserver: starting read-only server
+Trace 2026-5-19 12:21:44.628 webserver: starting write server
+Trace 2026-5-19 12:21:44.629 webserver: read-only server running on port: 8001
+Trace 2026-5-19 12:21:44.629 webserver: write server running on port: 8002

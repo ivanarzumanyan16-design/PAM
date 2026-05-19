@@ -1,0 +1,2 @@
+{"version": 2, "width": 145, "height": 38, "timestamp": 1777707363, "env": {"TERM": "xterm-256color"}}
+[0.1208, "o", "Load key \"/var/pam/bastion_ed25519\": Permission denied\r\r\nbastion@10.8.8.35: Permission denied (publickey,password,keyboard-interactive).\r\r\n"]

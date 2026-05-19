@@ -1,0 +1,10 @@
+{"version": 2, "width": 167, "height": 41, "timestamp": 1778833898, "env": {"TERM": "xterm-256color"}}
+[0.17, "o", "Linux meet.cyberhayq.am 6.1.0-44-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.164-1 (2026-03-09) x86_64\r\n\r\nThe programs included with the Debian GNU/Linux system are free software;\r\nthe exact distribution terms for each program are described in the\r\nindividual files in /usr/share/doc/*/copyright.\r\n\r\nDebian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent\r\npermitted by applicable law.\r\nLast login: Fri May 15 11:36:55 2026 from 10.8.8.110\r\r\n"]
+[0.1818, "o", "\u001b[?2004h\u001b]0;bastion@meet: ~\u0007\u001b[01;32mbastion@meet\u001b[00m:\u001b[01;34m~\u001b[00m$ "]
+[1.9693, "o", "e"]
+[2.0838, "o", "x"]
+[2.1992, "o", "i"]
+[2.3335, "o", "t"]
+[2.4886, "o", "\r\n\u001b[?2004l\r"]
+[2.4888, "o", "logout\r\n"]
+[2.4901, "o", "Connection to 10.8.8.30 closed.\r\r\n"]
