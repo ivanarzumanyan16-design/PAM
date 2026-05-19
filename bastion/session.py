@@ -138,7 +138,9 @@ def clear_sudo_password(
     random_pass = _sec.token_urlsafe(32)
     try:
         hashed = subprocess.check_output(
-            ["openssl", "passwd", "-6", random_pass],
+            #["openssl", "passwd", "-6", random_pass],
+            ["openssl", "passwd", "-6", "-stdin"],
+            input=random_pass.encode(),
             stderr=subprocess.DEVNULL
         ).decode().strip()
     except Exception:

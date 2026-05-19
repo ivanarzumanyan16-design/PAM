@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 import metax_client as mx
 import totp as totp_mod
 import audit
-from session import run_session, set_ephemeral_sudo_password, clear_sudo_password, check_sudo_access, IDLE_TIMEOUT_SECONDS
+from session import run_session, set_ephemeral_sudo_password, clear_sudo_password, check_sudo_access, generate_ephemeral_password, IDLE_TIMEOUT_SECONDS
 from metax_client import store_session_pid, get_server_sudo_password, set_server_sudo_password
 from config import BASTION_KEY, RECORDINGS_DIR, M_TRUE
 
@@ -178,7 +178,7 @@ def main():
         die("TOTP is not configured for your account. Contact an administrator.")
 
     for attempt in range(3):
-        code = prompt(f"TOTP code for {linux_user}: ", echo=False)
+        code = prompt(f"TOTP code for {linux_user}: ", echo=True)
         if totp_mod.verify(totp_secret, code):
             break
         print("Invalid code.\r")
@@ -212,31 +212,30 @@ def main():
     allow_sudo = str(perm.get("allow_sudo")).lower() == "true" or perm.get("allow_sudo") == M_TRUE
 
     # 7. Sudo password setup
-    sudo_pass = None          # new session password (loaded into PTY injector)
-    current_pass = None       # current password in Metax (needed for rotation + cleanup)
+    sudo_pass = None
     pam_user = server.get("bastion_user", "bastion")
     if allow_sudo:
-        # Read current password from Metax
-        current_pass = get_server_sudo_password(server_uuid)
-        if current_pass is None:
-            print(f"\r\n\033[33m[warn] No sudo password found in PAM for {target_host}.\033[0m\r\n")
-            print(f"\033[33m[hint] Run bootstrap again or: pam_cli.py server reset-sudo --host {target_host}\033[0m\r\n")
-        else:
-            sudo_pass = secrets.token_urlsafe(24)
-            try:
-                set_ephemeral_sudo_password(
-                    target_host, target_port, BASTION_KEY,
-                    old_password=current_pass,
-                    new_password=sudo_pass,
-                    pam_user=pam_user,
-                )
-                # Save new password to Metax immediately after successful rotation
-                set_server_sudo_password(server_uuid, sudo_pass)
-                print(f"\033[32m[bastion] Sudo password rotated. 'sudo ...' commands will work automatically.\033[0m\r\n")
-            except Exception as e:
-                print(f"\r\n\033[33m[warn] Could not rotate sudo password on {target_host}: {e}\033[0m\r\n")
-                sudo_pass = None
-                current_pass = None
+        # Read password policy from server object
+        try:
+            pw_length = int(server.get("password_length") or 24)
+        except (ValueError, TypeError):
+            pw_length = 24
+        pw_chars = (server.get("password_chars") or "").strip()
+
+        # Generate new ephemeral password (no need to know the old one — NOPASSWD)
+        sudo_pass = generate_ephemeral_password(pw_length, pw_chars)
+        try:
+            set_ephemeral_sudo_password(
+                target_host, target_port, BASTION_KEY,
+                new_password=sudo_pass,
+                pam_user=pam_user,
+            )
+            # Save new password to Metax immediately after successful rotation
+            set_server_sudo_password(server_uuid, sudo_pass)
+            print(f"\033[32m[bastion] Sudo password rotated. 'sudo ...' commands will work automatically.\033[0m\r\n")
+        except Exception as e:
+            print(f"\r\n\033[33m[warn] Could not rotate sudo password on {target_host}: {e}\033[0m\r\n")
+            sudo_pass = None
 
     # 8. Prepare recording path
     ts = time.strftime("%Y%m%d_%H%M%S")
@@ -280,11 +279,10 @@ def main():
     )
 
     # 12. Cleanup — rotate sudo password to a new random value after session
-    if allow_sudo and sudo_pass and current_pass is not None:
+    if allow_sudo and sudo_pass:
         try:
             new_final_pass = clear_sudo_password(
                 target_host, target_port, BASTION_KEY,
-                current_password=sudo_pass,
                 pam_user=pam_user,
             )
             # Save the post-session password to Metax
@@ -319,3 +317,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\r\n[bastion] Interrupted.\r\n")
         sys.exit(130)
+
+
+

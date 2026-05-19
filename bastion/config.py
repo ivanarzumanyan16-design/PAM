@@ -7,9 +7,9 @@ All UUIDs are fixed at setup time by setup_types.py and committed here.
 METAX_HOST  = "localhost"
 METAX_PORT  = 8000
 METAX_CERT  = "/opt/PAM/metax_zero_webserver/certs/metax.crt"  # self-signed
-PUBLIC_VIEWER_HOST    = "10.8.8.106"
+PUBLIC_VIEWER_HOST    = "10.8.8.110"
 BOOTSTRAP_PORT        = 8766          # port for bootstrap token HTTP server
-TOKEN_TTL_MINUTES     = 30            # bootstrap tokens expire after this many minutes
+TOKEN_TTL_MINUTES     = 1            # bootstrap tokens expire after this many minutes
 TOKEN_REGEN_MINUTES   = 1            # generate a new bootstrap command if older than this many minutes
 
 
