@@ -81,19 +81,35 @@ class SessionRecorder:
             pass
 
 
-# ── Sudo password setter (separate SSH connection before session) ──────────────
+# ── Ephemeral password generator ─────────────────────────────────────────────
+def generate_ephemeral_password(
+    length: int = 24,
+    chars: str = ""
+) -> str:
+    """
+    Generate an ephemeral password.
+    - length: number of characters (default 24)
+    - chars:  allowed character set string; if empty uses secrets.token_urlsafe.
+    """
+    import secrets as _sec
+    if chars:
+        return "".join(_sec.choice(chars) for _ in range(length))
+    # Default: URL-safe base64 truncated to `length`
+    raw = _sec.token_urlsafe(length * 2)
+    return raw[:length]
+
+
+# ── Sudo password setter (SSH as root → usermod directly) ───────────────────
 def set_ephemeral_sudo_password(
     host: str, port: int, bastion_key: str,
-    old_password: str, new_password: str,
-    pam_user: str = "bastion"
+    new_password: str,
+    pam_user: str = "bastion",
+    # kept for backwards compat — no longer used
+    old_password: str = "",
 ) -> None:
     """
-    SSH to target as pam_user and rotate the sudo password from old to new.
-    Uses 'sudo -S' — reads password from stdin (old_password).
-    No NOPASSWD needed in sudoers.
-
-    Sudoers on target only needs:
-      <pam_user> ALL=(ALL) PASSWD: ALL
+    SSH to target as ROOT and set pam_user's password to new_password.
+    Root can run usermod directly — no sudo or NOPASSWD needed.
     """
     try:
         hashed = subprocess.check_output(
@@ -105,7 +121,7 @@ def set_ephemeral_sudo_password(
 
     safe_hash = hashed.replace("'", "'\"'\"'")
 
-    # sudo -S reads password from stdin; we pass old_password on the first line
+    # SSH as root — root can run usermod directly, no sudo needed
     cmd = [
         "ssh",
         "-i", bastion_key,
@@ -113,32 +129,31 @@ def set_ephemeral_sudo_password(
         "-o", "BatchMode=yes",
         "-o", "ConnectTimeout=10",
         "-p", str(port),
-        f"{pam_user}@{host}",
-        f"echo '{old_password}' | sudo -S usermod -p '{safe_hash}' {pam_user}",
+        f"root@{host}",
+        f"usermod -p '{safe_hash}' {pam_user}",
     ]
     result = subprocess.run(cmd, capture_output=True, timeout=15)
     if result.returncode != 0:
         stderr = result.stderr.decode().strip()
         raise RuntimeError(
-            f"Failed to rotate sudo password on {host}: {stderr}\n"
-            f"Possible desync — run: python3 pam_cli.py server reset-sudo --host {host}"
+            f"Failed to set password for {pam_user} on {host}: {stderr}\n"
+            f"Ensure bastion SSH key is in root@{host}:.ssh/authorized_keys"
         )
 
 
 def clear_sudo_password(
     host: str, port: int, bastion_key: str,
-    current_password: str,
-    pam_user: str = "bastion"
+    pam_user: str = "bastion",
+    # kept for backwards compat
+    current_password: str = "",
 ) -> str:
     """
-    Rotate pam_user password to a new random value after session ends.
+    SSH as root and rotate pam_user password to a new random value after session ends.
     Returns the new random password (caller should save it to Metax).
     """
-    import secrets as _sec
-    random_pass = _sec.token_urlsafe(32)
+    random_pass = generate_ephemeral_password(32)
     try:
         hashed = subprocess.check_output(
-            #["openssl", "passwd", "-6", random_pass],
             ["openssl", "passwd", "-6", "-stdin"],
             input=random_pass.encode(),
             stderr=subprocess.DEVNULL
@@ -154,8 +169,8 @@ def clear_sudo_password(
         "-o", "BatchMode=yes",
         "-o", "ConnectTimeout=10",
         "-p", str(port),
-        f"{pam_user}@{host}",
-        f"echo '{current_password}' | sudo -S usermod -p '{safe_hash}' {pam_user}",
+        f"root@{host}",
+        f"usermod -p '{safe_hash}' {pam_user}",
     ]
     result = subprocess.run(cmd, capture_output=True, timeout=10)
     if result.returncode != 0:
@@ -166,11 +181,11 @@ def clear_sudo_password(
 
 
 
+
 def check_sudo_access(host: str, port: int, bastion_key: str) -> bool:
     """
-    Check if bastion user can run sudo -n usermod on the target server.
-    Returns True if NOPASSWD sudo is configured correctly.
-    Used for diagnostics (pam_cli.py server check-sudo).
+    Check if bastion SSH key has root access on the target server.
+    Returns True if root SSH login works.
     """
     cmd = [
         "ssh",
@@ -179,15 +194,11 @@ def check_sudo_access(host: str, port: int, bastion_key: str) -> bool:
         "-o", "BatchMode=yes",
         "-o", "ConnectTimeout=10",
         "-p", str(port),
-        f"bastion@{host}",
-        "sudo -n usermod --help",
+        f"root@{host}",
+        "echo ok",
     ]
     result = subprocess.run(cmd, capture_output=True, timeout=10)
-    # sudo -n usermod --help returns 0 or 1 (usage), but NOT 1 with "sudo: ... password required"
-    stderr = result.stderr.decode()
-    if "sudo: " in stderr and "password" in stderr.lower():
-        return False
-    return True
+    return result.returncode == 0 and b"ok" in result.stdout
 
 
 # ── Main session runner ────────────────────────────────────────────────────────
